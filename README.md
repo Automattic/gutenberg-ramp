@@ -1,21 +1,21 @@
-# Ramp for Gutenberg
+# Gutenberg Ramp
 
 _Experimental: not ready for production environments, but testing and contributions are welcome_
 
 ### Overview
 
-Ramp for Gutenberg is a plugin that manages the state of Gutenberg in the post-edit context.  It loads or unloads Gutenberg in post-edit according to criteria specified in theme code.  It is agnostic about whether Gutenberg is loading from core or via the plugin.
+Gutenberg Ramp is a plugin that manages the state of Gutenberg in the post-edit context.  It loads or unloads Gutenberg in post-edit according to criteria specified in theme code.  It is agnostic about whether Gutenberg is loading from core or via the plugin.
 
 ### How it Works
 
-Ramp for Gutenberg assumes one of the following states:
+Gutenberg Ramp assumes one of the following states:
 
 - WordPress 4.9 and the Gutenberg plugin (either activated or not)
 - WordPress 5.0 and the Classic Editor plugin 
 
 If it detects neither of these conditions, it will do nothing.
 
-Ramp for Gutenberg makes a decision early in the WordPress load sequence (`plugins_loaded`) about whether to take action.  It will take action if the following are true:
+Gutenberg Ramp makes a decision early in the WordPress load sequence (`plugins_loaded`) about whether to take action.  It will take action if the following are true:
 
 - the `wp-admin/post.php` is going to load AND
 - according to code-configured criteria either: Gutenberg should load for the current post and will not OR Gutenberg shouldn't load for the current post and will.
