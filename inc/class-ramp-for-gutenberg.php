@@ -1,14 +1,14 @@
 <?php
 
-class Pause_The_Presses {
+class Ramp_For_Gutenberg {
 	
 	private static $instance;
-	public $option_name = 'pause_the_presses_load_critera';
+	public $option_name = 'ramp_for_gutenberg_load_critera';
 	public $active = false;
 	
 	public static function get_instance() {
 		if ( !self::$instance ) {
-		 	self::$instance = new Pause_The_Presses;
+		 	self::$instance = new Ramp_For_Gutenberg;
 		}
 		return self::$instance;
 	}
@@ -16,7 +16,7 @@ class Pause_The_Presses {
 	private function __construct() {}
 	
 	public function option_name() {
-		return apply_filters( 'pause_the_presses_option_name', $this->option_name );
+		return apply_filters( 'ramp_for_gutenberg_option_name', $this->option_name );
 	}
 
 	public function get_criteria() {
@@ -117,24 +117,24 @@ class Pause_The_Presses {
 		// 1. we are attempting to load post.php ... there's an available post_id
 		// 2. there's an available post_id in the URL to check
 		
-		$pause_the_presses_post_id = $this->get_current_post_id();
-		if ( !$pause_the_presses_post_id ) {
+		$ramp_for_gutenberg_post_id = $this->get_current_post_id();
+		if ( !$ramp_for_gutenberg_post_id ) {
 			return false;
 		}
 			
 		// grab the criteria
-		$pause_the_presses_post_ids = ( isset( $criteria[ 'post_ids' ] ) ) ? $criteria[ 'post_ids' ] : [];
-		$pause_the_presses_post_types = ( isset( $criteria[ 'post_types' ] ) ) ? $criteria[ 'post_types' ] : [];
-		$pause_the_presses_terms = ( isset( $criteria[ 'terms' ] ) ) ? $criteria[ 'terms' ] : [];
+		$ramp_for_gutenberg_post_ids = ( isset( $criteria[ 'post_ids' ] ) ) ? $criteria[ 'post_ids' ] : [];
+		$ramp_for_gutenberg_post_types = ( isset( $criteria[ 'post_types' ] ) ) ? $criteria[ 'post_types' ] : [];
+		$ramp_for_gutenberg_terms = ( isset( $criteria[ 'terms' ] ) ) ? $criteria[ 'terms' ] : [];
 		
 		// check post_ids
-		if ( in_array( $pause_the_presses_post_id, $pause_the_presses_post_ids ) ) {
+		if ( in_array( $ramp_for_gutenberg_post_id, $ramp_for_gutenberg_post_ids ) ) {
 			return true;
 		}
 		
 		// check post_types
-		$pause_the_presses_current_post_type = get_post_type( $pause_the_presses_post_id );
-		if ( in_array( $pause_the_presses_current_post_type, $pause_the_presses_post_types ) ) {
+		$ramp_for_gutenberg_current_post_type = get_post_type( $ramp_for_gutenberg_post_id );
+		if ( in_array( $ramp_for_gutenberg_current_post_type, $ramp_for_gutenberg_post_types ) ) {
 			return true;
 		}
 		
@@ -161,9 +161,9 @@ class Pause_The_Presses {
 	// load gutenberg from the plugin
 	public function gutenberg_load() {
 		// perform any actions required before loading gutenberg
-		do_action( 'pause_the_presses_before_load_gutenberg' );
+		do_action( 'ramp_for_gutenberg_before_load_gutenberg' );
 		//@todo hmm maybe there's a better way to do this
-		$gutenberg_include = apply_filters( 'pause_the_presses_gutenberg_load_path', plugin_dir_path( __FILE__ ) . '../../gutenberg/gutenberg.php' );
+		$gutenberg_include = apply_filters( 'ramp_for_gutenberg_gutenberg_load_path', plugin_dir_path( __FILE__ ) . '../../gutenberg/gutenberg.php' );
 		if ( file_exists( $gutenberg_include ) ) {
 			include_once( $gutenberg_include );
 		}

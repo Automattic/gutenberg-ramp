@@ -1,9 +1,9 @@
 	<?php
 	/**
-	 * Pause the Presses
+	 * Gutenberg Ramp
 	 *
-	 * Plugin Name: Pause the Presses
-	 * Description: Allows theme authors to control the circumstances under which the Gutenberg editor loads. Options include "load" (1 loads all the time, 0 loads never) "post_ids" (load for particular posts) "post_types" (load for particular posts types) "terms" (load for posts with particular terms.)
+	 * Plugin Name: Gutenberg Ramp
+	 * Description: Allows theme authors to control the circumstances under which the Gutenberg editor loads. Options include "load" (1 loads all the time, 0 loads never) "post_ids" (load for particular posts) "post_types" (load for particular posts types.)
 	 * Version:     0.1
 	 * Author:      Automattic, Inc.
 	 * License:     GPL-2.0+
@@ -20,7 +20,7 @@
 	 *
 	 */
 
-	include(  __DIR__ . '/inc/class-pause-the-presses.php' );
+	include(  __DIR__ . '/inc/class-ramp-for-gutenberg.php' );
 	
 	/**
 	*
@@ -30,20 +30,20 @@
 	*
 	*/
 	//@todo when criteria change the bahavior changes on the second (not first) reload
-	function pause_the_presses_load_gutenberg( $criteria = false ) {
-		$PTP = Pause_The_Presses::get_instance();
+	function ramp_for_gutenberg_load_gutenberg( $criteria = false ) {
+		$RFG = Ramp_For_Gutenberg::get_instance();
 		$criteria = ( !$criteria ) ? [ 'load' => 1 ] : $criteria;
-		$stored_criteria = $PTP->get_criteria();
+		$stored_criteria = $RFG->get_criteria();
 		if ( $criteria !== $stored_criteria ) {
-			$criteria = $PTP->save_criteria( $criteria );
+			$criteria = $RFG->save_criteria( $criteria );
 		}
-		$PTP->active = true;
+		$RFG->active = true;
 	}
 	
 	/** grab the plugin **/
-	$PTP = Pause_The_Presses::get_instance();
+	$RFG = Ramp_For_Gutenberg::get_instance();
 	
 	/** off to the races **/
-	add_action( 'plugins_loaded', [ $PTP, 'load_decision' ], 20, 0 );
+	add_action( 'plugins_loaded', [ $RFG, 'load_decision' ], 20, 0 );
 	/** if pause_the_presses_load_gutenberg() has not been called, perform cleanup **/
-	add_action( 'shutdown' , [ $PTP, 'cleanup_option' ], 10, 0 );
+	add_action( 'shutdown' , [ $RFG, 'cleanup_option' ], 10, 0 );
