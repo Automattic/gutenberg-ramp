@@ -1,4 +1,4 @@
-	<?php
+<?php
 	/**
 	 * Gutenberg Ramp
 	 *
@@ -20,30 +20,29 @@
 	 *
 	 */
 
-	include(  __DIR__ . '/inc/class-ramp-for-gutenberg.php' );
-	
+	require __DIR__ . '/inc/class-ramp-for-gutenberg.php';
+
 	/**
-	*
-	* This functions allows themes to specify Gutenberg loadiung critera.
-	* In and of itself it doesn't cause any change to Gutenberg's loading behavior.
-	* However, it governs the option which stores the criteria under which Gutenberg will load 
-	*
-	*/
-	//@todo when criteria change the bahavior changes on the second (not first) reload
-	function ramp_for_gutenberg_load_gutenberg( $criteria = false ) {
-		$RFG = Ramp_For_Gutenberg::get_instance();
-		$criteria = ( !$criteria ) ? [ 'load' => 1 ] : $criteria;
-		$stored_criteria = $RFG->get_criteria();
-		if ( $criteria !== $stored_criteria ) {
-			$criteria = $RFG->save_criteria( $criteria );
-		}
-		$RFG->active = true;
+	 *
+	 * This functions allows themes to specify Gutenberg loadiung critera.
+	 * In and of itself it doesn't cause any change to Gutenberg's loading behavior.
+	 * However, it governs the option which stores the criteria under which Gutenberg will load
+	 */
+	// @todo when criteria change the bahavior changes on the second (not first) reload
+function ramp_for_gutenberg_load_gutenberg( $criteria = false ) {
+	$RFG             = Ramp_For_Gutenberg::get_instance();
+	$criteria        = ( ! $criteria ) ? [ 'load' => 1 ] : $criteria;
+	$stored_criteria = $RFG->get_criteria();
+	if ( $criteria !== $stored_criteria ) {
+		$criteria = $RFG->save_criteria( $criteria );
 	}
-	
-	/** grab the plugin **/
+	$RFG->active = true;
+}
+
+	/** grab the plugin */
 	$RFG = Ramp_For_Gutenberg::get_instance();
-	
-	/** off to the races **/
+
+	/** off to the races */
 	add_action( 'plugins_loaded', [ $RFG, 'load_decision' ], 20, 0 );
-	/** if pause_the_presses_load_gutenberg() has not been called, perform cleanup **/
-	add_action( 'shutdown' , [ $RFG, 'cleanup_option' ], 10, 0 );
+	/** if pause_the_presses_load_gutenberg() has not been called, perform cleanup */
+	add_action( 'shutdown', [ $RFG, 'cleanup_option' ], 10, 0 );
