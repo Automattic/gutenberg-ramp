@@ -64,7 +64,7 @@ class Ramp_For_Gutenberg {
 					}
 					break;
 				case 'load':
-					if ( ! in_array( $value, [ 0, 1 ] ) ) {
+					if ( !in_array( $value, [ 0, 1 ], true ) ) {
 						return false;
 					}
 					break;
@@ -127,13 +127,13 @@ class Ramp_For_Gutenberg {
 		$ramp_for_gutenberg_terms      = ( isset( $criteria['terms'] ) ) ? $criteria['terms'] : [];
 
 		// check post_ids
-		if ( in_array( $ramp_for_gutenberg_post_id, $ramp_for_gutenberg_post_ids ) ) {
+		if ( in_array( $ramp_for_gutenberg_post_id, $ramp_for_gutenberg_post_ids, true ) ) {
 			return true;
 		}
 
 		// check post_types
 		$ramp_for_gutenberg_current_post_type = get_post_type( $ramp_for_gutenberg_post_id );
-		if ( in_array( $ramp_for_gutenberg_current_post_type, $ramp_for_gutenberg_post_types ) ) {
+		if ( in_array( $ramp_for_gutenberg_current_post_type, $ramp_for_gutenberg_post_types, true ) ) {
 			return true;
 		}
 
@@ -160,8 +160,10 @@ class Ramp_For_Gutenberg {
 	public function gutenberg_load() {
 		// perform any actions required before loading gutenberg
 		do_action( 'ramp_for_gutenberg_before_load_gutenberg' );
-		// @todo hmm maybe there's a better way to do this
-		$gutenberg_include = apply_filters( 'ramp_for_gutenberg_gutenberg_load_path', plugin_dir_path( __FILE__ ) . '../../gutenberg/gutenberg.php' );
+		$gutenberg_include = apply_filters( 'ramp_for_gutenberg_gutenberg_load_path', WP_PLUGIN_DIR . '/gutenberg/gutenberg.php' );
+		if ( validate_file( $gutenberg_include ) !== 0 ) {
+			return false;
+		}
 		if ( file_exists( $gutenberg_include ) ) {
 			include_once $gutenberg_include;
 		}
@@ -178,8 +180,8 @@ class Ramp_For_Gutenberg {
 	}
 
 	public function is_eligible_admin_url() {
-		$path = sanitize_text_field( parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ) );
-		// @todo verify that this is narrow enough -- do we also need to verify that the action is edit?
+		$path = sanitize_text_field( wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ) );
+		//@todo verify that this is narrow enough -- do we also need to verify that the action is edit?
 		return ( '/wp-admin/post.php' === trim( $path ) );
 	}
 
