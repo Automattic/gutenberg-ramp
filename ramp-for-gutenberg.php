@@ -45,5 +45,5 @@ $RFG = Ramp_For_Gutenberg::get_instance();
 
 /** off to the races **/
 add_action( 'plugins_loaded', [ $RFG, 'load_decision' ], 20, 0 );
-/** if pause_the_presses_load_gutenberg() has not been called, perform cleanup **/
+/** if ramp_for_gutenberg_load_gutenberg() has not been called, perform cleanup **/
 add_action( 'shutdown' , [ $RFG, 'cleanup_option' ], 10, 0 );
