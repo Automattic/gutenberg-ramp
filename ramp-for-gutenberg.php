@@ -24,19 +24,26 @@ include(  __DIR__ . '/inc/class-ramp-for-gutenberg.php' );
 
 /**
 *
-* This functions allows themes to specify Gutenberg loadiung critera.
+* This function allows themes to specify Gutenberg loadiung critera.
 * In and of itself it doesn't cause any change to Gutenberg's loading behavior.
 * However, it governs the option which stores the criteria under which Gutenberg will load 
 *
+* `ramp_for_gutenberg_load_gutenberg` must be called in the theme before `admin_init`, normally from functions.php or the like
+*
 */
-//@todo when criteria change the bahavior changes on the second (not first) reload
 function ramp_for_gutenberg_load_gutenberg( $criteria = false ) {
+	// prevent the front-end from interacting with this plugin at all
+	if ( !is_admin() ) {
+		return;
+	}
 	$RFG = Ramp_For_Gutenberg::get_instance();
 	$criteria = ( !$criteria ) ? [ 'load' => 1 ] : $criteria;
 	$stored_criteria = $RFG->get_criteria();
 	if ( $criteria !== $stored_criteria ) {
+		// the criteria specified in code have changed -- update them
 		$criteria = $RFG->save_criteria( $criteria );
 	}
+	// indicate that we've loaded the plugin. 
 	$RFG->active = true;
 }
 
@@ -45,5 +52,7 @@ $RFG = Ramp_For_Gutenberg::get_instance();
 
 /** off to the races **/
 add_action( 'plugins_loaded', [ $RFG, 'load_decision' ], 20, 0 );
-/** if ramp_for_gutenberg_load_gutenberg() has not been called, perform cleanup **/
-add_action( 'shutdown' , [ $RFG, 'cleanup_option' ], 10, 0 );
+// if ramp_for_gutenberg_load_gutenberg() has not been called, perform cleanup
+// unfortunately this must be done on every admin pageload to detect the case where
+// criteria were previously being set in a theme, but now are not (due to a code change)
+add_action( 'admin_init' , [ $RFG, 'cleanup_option' ], 10, 0 );
