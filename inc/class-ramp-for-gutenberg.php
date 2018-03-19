@@ -91,6 +91,11 @@ class Ramp_For_Gutenberg {
 
 	// this happens very early -- on plugins_loaded.  We'll probably have to do some ghetto stuff here
 	public function gutenberg_should_load() {
+		
+		// always load Gutenberg on the front-end -- this allows blocks to render correctly etc
+		if ( !is_admin() ) {
+			return true;
+		}
 
 		// we only conditionally load Gutenberg on the edit screen.
 		if ( ! $this->is_eligible_admin_url() ) {
