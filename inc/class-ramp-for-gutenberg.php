@@ -181,16 +181,17 @@ class Ramp_For_Gutenberg {
 
 	public function is_eligible_admin_url() {
 		$path = sanitize_text_field( wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ) );
-		//@todo verify that this is narrow enough -- do we also need to verify that the action is edit?
 		return ( '/wp-admin/post.php' === trim( $path ) );
 	}
 
 	public function cleanup_option() {
+		// if the criteria are already such that Gutenberg will never load, no change is needed
 		if ( $this->get_criteria() === [ 'load' => 0 ] ) {
 			return;
 		}
+		// if the theme did not call its function, then remove the option containing criteria, which will prevent all loading
 		if ( ! $this->active ) {
-			update_option( $this->option_name(), [ 'load' => 0 ] );
+			delete_option( $this->option_name() );
 		}
 	}
 }
