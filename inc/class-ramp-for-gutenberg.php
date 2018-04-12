@@ -21,14 +21,11 @@ class Ramp_For_Gutenberg {
 	}
 
 	public function get_criteria() {
-		error_log( 'get_criteria: ' . json_encode( get_option( $this->option_name ) ) );
 		return get_option( $this->option_name() );
 	}
 
 	public function save_criteria( $criteria ) {
-		error_log( 'save_criteria' );
 		if ( $this->validate_criteria( $criteria ) ) {
-			error_log( json_encode( $criteria ) );
 			return update_option( $this->option_name(), $criteria );
 		}
 		return false;
@@ -181,7 +178,6 @@ class Ramp_For_Gutenberg {
 
 	// @todo
 	public function gutenberg_unload() {
-		error_log( 'gutenberg_unload' );
 		$this->load_gutenberg = false;
 	}
 
@@ -204,7 +200,6 @@ class Ramp_For_Gutenberg {
 		}
 		// if the theme did not call its function, then remove the option containing criteria, which will prevent all loading
 		if ( ! $this->active ) {
-			error_log( 'deleting option' );
 			delete_option( $this->option_name() );
 		}
 	}
@@ -224,11 +219,9 @@ class Ramp_For_Gutenberg {
 	 * @return void
 	 */
 	public function maybe_disable_gutenberg( $post_type, $can_edit ) {
-		error_log( 'maybe_disable_gutenberg: ' . ( $this->load_gutenberg ? "true" : "false" ) );
 		$ramp_for_gutenberg_post_id = $this->get_current_post_id();
 		if ( ( $ramp_for_gutenberg_post_id > 0 ) && 
 			 ( false === $this->load_gutenberg ) ) {
-			error_log( 'disabling gutenberg' );
 			return false;
 		}
 		return $can_edit;
