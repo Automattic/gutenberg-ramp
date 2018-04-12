@@ -5,6 +5,7 @@ class Ramp_For_Gutenberg {
 	private static $instance;
 	public $option_name = 'ramp_for_gutenberg_load_critera';
 	public $active      = false;
+	public $load_gutenberg = null;
 
 	public static function get_instance() {
 		if ( ! self::$instance ) {
@@ -20,11 +21,14 @@ class Ramp_For_Gutenberg {
 	}
 
 	public function get_criteria() {
+		error_log( 'get_criteria: ' . json_encode( get_option( $this->option_name ) ) );
 		return get_option( $this->option_name() );
 	}
 
 	public function save_criteria( $criteria ) {
+		error_log( 'save_criteria' );
 		if ( $this->validate_criteria( $criteria ) ) {
+			error_log( json_encode( $criteria ) );
 			return update_option( $this->option_name(), $criteria );
 		}
 		return false;
@@ -169,13 +173,17 @@ class Ramp_For_Gutenberg {
 		if ( validate_file( $gutenberg_include ) !== 0 ) {
 			return false;
 		}
+		$this->load_gutenberg = true;
 		if ( file_exists( $gutenberg_include ) ) {
 			include_once $gutenberg_include;
 		}
 	}
 
 	// @todo
-	public function gutenberg_unload() {}
+	public function gutenberg_unload() {
+		error_log( 'gutenberg_unload' );
+		$this->load_gutenberg = false;
+	}
 
 	// utility functions
 	public function get_current_post_id() {
@@ -196,7 +204,33 @@ class Ramp_For_Gutenberg {
 		}
 		// if the theme did not call its function, then remove the option containing criteria, which will prevent all loading
 		if ( ! $this->active ) {
+			error_log( 'deleting option' );
 			delete_option( $this->option_name() );
 		}
+	}
+
+	/**
+	 * disable Gutenberg if the current post should unload it
+	 * 
+	 * This is a slight hack since there's no filter (yet) in Gutenberg on the
+	 * post id, just the post type, but because it's (currently) only used to check the
+	 * primary post id when loading the editor, it can be leveraged.
+	 * 
+	 * The instance variable load_gutenberg might be set during the load
+	 * decision code above. If it's explicitly false, then the filter returns false,
+	 * else it returns the original value.
+	 *
+	 * @param [type] $post_type
+	 * @return void
+	 */
+	public function maybe_disable_gutenberg( $post_type, $can_edit ) {
+		error_log( 'maybe_disable_gutenberg: ' . ( $this->load_gutenberg ? "true" : "false" ) );
+		$ramp_for_gutenberg_post_id = $this->get_current_post_id();
+		if ( ( $ramp_for_gutenberg_post_id > 0 ) && 
+			 ( false === $this->load_gutenberg ) ) {
+			error_log( 'disabling gutenberg' );
+			return false;
+		}
+		return $can_edit;
 	}
 }

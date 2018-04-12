@@ -56,3 +56,11 @@ add_action( 'plugins_loaded', [ $RFG, 'load_decision' ], 20, 0 );
 // unfortunately this must be done on every admin pageload to detect the case where
 // criteria were previously being set in a theme, but now are not (due to a code change)
 add_action( 'admin_init' , [ $RFG, 'cleanup_option' ], 10, 0 );
+
+/**
+ * tell Gutenberg when not to load
+ * 
+ * Gutenberg only calls this filter when checking the primary post
+ * @TODO duplicate this for WP5.0 core with the new filter name, it's expected to change
+ */
+add_filter( 'gutenberg_can_edit_post_type', [ $RFG, 'maybe_disable_gutenberg' ], 20, 2 );
