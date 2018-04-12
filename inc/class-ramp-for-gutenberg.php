@@ -170,6 +170,7 @@ class Ramp_For_Gutenberg {
 		if ( validate_file( $gutenberg_include ) !== 0 ) {
 			return false;
 		}
+		// flag this for the filter
 		$this->load_gutenberg = true;
 		if ( file_exists( $gutenberg_include ) ) {
 			include_once $gutenberg_include;
@@ -178,7 +179,9 @@ class Ramp_For_Gutenberg {
 
 	// @todo
 	public function gutenberg_unload() {
+		// flag this for the filter
 		$this->load_gutenberg = false;
+		// @todo load the Classic editor if it's configured
 	}
 
 	// utility functions
