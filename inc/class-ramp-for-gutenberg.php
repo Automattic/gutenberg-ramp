@@ -215,8 +215,9 @@ class Ramp_For_Gutenberg {
 	 * decision code above. If it's explicitly false, then the filter returns false,
 	 * else it returns the original value.
 	 *
-	 * @param [type] $post_type
-	 * @return void
+	 * @param string $post_type - the post type
+	 * @param boolean $can_edit whether Gutenberg should edit this post type
+	 * @return boolean - whether Gutenberg should edit this post
 	 */
 	public function maybe_disable_gutenberg( $post_type, $can_edit ) {
 		$ramp_for_gutenberg_post_id = $this->get_current_post_id();
