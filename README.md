@@ -38,7 +38,8 @@ In theme/functions.php:
 
 ```php
 if ( function_exists( 'ramp_for_gutenberg_load_gutenberg' ) ) {
-	ramp_for_gutenberg_load_gutenberg();
+	$blocks_config = [ 'load' => 1 ];
+	ramp_for_gutenberg_load_gutenberg( $blocks_config );
 }
 ```
 
