@@ -72,5 +72,7 @@ add_filter( 'gutenberg_can_edit_post_type', [ $RFG, 'maybe_disable_gutenberg' ],
 
 add_action( 'plugins_loaded', function() {
 	remove_action( 'admin_menu', 'gutenberg_menu' );
+	remove_filter( 'admin_url', 'gutenberg_modify_add_new_button_url' );
+	remove_action( 'admin_print_scripts-edit.php', 'gutenberg_replace_default_add_new_button' );
 });
 
