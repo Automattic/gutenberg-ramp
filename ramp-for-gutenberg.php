@@ -64,3 +64,13 @@ add_action( 'admin_init' , [ $RFG, 'cleanup_option' ], 10, 0 );
  * @TODO duplicate this for WP5.0 core with the new filter name, it's expected to change
  */
 add_filter( 'gutenberg_can_edit_post_type', [ $RFG, 'maybe_disable_gutenberg' ], 20, 2 );
+
+/**
+* remove split new post links and Gutenberg menu h/t Ozz 
+* see https://github.com/azaozz/classic-editor/blob/master/classic-editor.php#L108
+*/
+
+add_action( 'plugins_loaded', function() {
+	remove_action( 'admin_menu', 'gutenberg_menu' );
+});
+
