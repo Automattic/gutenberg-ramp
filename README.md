@@ -34,13 +34,7 @@ Loading behavior is controlled by the `ramp_for_gutenberges_load_gutenberg()` fu
 
 ### Examples
 
-In theme/functions.php:
-
-```php
-if ( function_exists( 'ramp_for_gutenberg_load_gutenberg' ) ) {
-	ramp_for_gutenberg_load_gutenberg();
-}
-```
+`ramp_for_gutenberg_load_gutenberg();`
 
 Load Gutenberg for all posts.
 
@@ -55,9 +49,3 @@ Load Gutenberg for posts with ids 12, 13 and 122.
 `ramp_for_gutenberg_load_gutenberg( [ 'post_types' => [ 'test', 'scratch' ], 'post_ids' => [ 12 ] ] );`
 
 Load Gutenberg for post_id 12 and all posts of type `test` and `scratch`
-
-### Advanced
-
-The typical use case is as shown above, the parameters do not change except when theme code is updated.
-
-If making more dynamic changes, note that the parameter supplied is persisted in a site option; when the parameters are changed in code, one page load is necessary to update the site option before the editor can use the new setting.
