@@ -192,8 +192,10 @@ class Ramp_For_Gutenberg {
 	}
 
 	public function is_eligible_admin_url() {
+		// just based on the URI, what is the path?
 		$path = sanitize_text_field( wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ) );
-		return ( '/wp-admin/post.php' === trim( $path ) );
+		$admin_slug = trim( wp_parse_url( get_admin_url(), PHP_URL_PATH ), '/' );
+		return ( "/$admin_slug/post.php" === trim( $path ) );
 	}
 
 	public function cleanup_option() {
