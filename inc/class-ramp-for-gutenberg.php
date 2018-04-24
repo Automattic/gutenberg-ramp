@@ -223,7 +223,7 @@ class Ramp_For_Gutenberg {
 	 *
 	 * @return boolean - whether Gutenberg should edit this post
 	 */
-	public function maybe_disable_gutenberg( $post_type, $can_edit ) {
+	public function maybe_allow_gutenberg_to_load( $post_type, $can_edit ) {
 
 		// Don't enable Gutenberg in post types that don't support Gutenberg.
 		if ( false === $can_edit ) {
