@@ -20,8 +20,26 @@ class Ramp_For_Gutenberg {
 		return apply_filters( 'ramp_for_gutenberg_option_name', $this->option_name );
 	}
 
-	public function get_criteria() {
-		return get_option( $this->option_name() );
+	/**
+	 * Get the desired criteria
+	 * @param string $criteria_name - post_types, post_ids, terms, load
+	 *
+	 * @return bool|mixed|void
+	 */
+	public function get_criteria( $criteria_name = '' ) {
+
+		$options = get_option( $this->option_name() );
+
+		if ( '' === $criteria_name ) {
+			return $options;
+		}
+
+		if ( ! isset( $options[ $criteria_name ] ) ) {
+			return false;
+		}
+
+		return $options[ $criteria_name ];
+
 	}
 
 	public function save_criteria( $criteria ) {
