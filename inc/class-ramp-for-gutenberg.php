@@ -141,13 +141,18 @@ class Ramp_For_Gutenberg {
 		// 1. we are attempting to load post.php ... there's an available post_id
 		// 2. there's an available post_id in the URL to check
 		$ramp_for_gutenberg_post_id = $this->get_current_post_id();
+
+		// check post_types
+		if ( $this->is_allowed_post_type( $ramp_for_gutenberg_post_id ) ) {
+			return true;
+		}
+
 		if ( ! $ramp_for_gutenberg_post_id ) {
 			return false;
 		}
 
 		// grab the criteria
 		$ramp_for_gutenberg_post_ids   = ( isset( $criteria['post_ids'] ) ) ? $criteria['post_ids'] : [];
-		$ramp_for_gutenberg_post_types = ( isset( $criteria['post_types'] ) ) ? $criteria['post_types'] : [];
 		$ramp_for_gutenberg_terms      = ( isset( $criteria['terms'] ) ) ? $criteria['terms'] : [];
 
 		// check post_ids
@@ -155,14 +160,50 @@ class Ramp_For_Gutenberg {
 			return true;
 		}
 
-		// check post_types
-		$ramp_for_gutenberg_current_post_type = get_post_type( $ramp_for_gutenberg_post_id );
-		if ( in_array( $ramp_for_gutenberg_current_post_type, $ramp_for_gutenberg_post_types, true ) ) {
-			return true;
-		}
-
 		// check if the post has one of the terms
 		// @todo
+	}
+
+	/**
+	 * Check whether current post type is defined as gutenberg-friendly
+	 *
+	 * @param $post_id
+	 *
+	 * @return bool
+	 */
+	public function is_allowed_post_type( $post_id ) {
+
+		$allowed_post_types = $this->get_criteria( 'post_types' );
+
+		// Exit early, if no allowed post types are found
+		if ( false === $allowed_post_types || ! is_array( $allowed_post_types ) ) {
+			return false;
+		}
+
+		// Find the current post type
+		$current_post_type = false;
+		if ( 0 === (int) $post_id ) {
+
+			if ( isset( $_GET['post_type'] ) ) {
+				$current_post_type = sanitize_title( $_GET['post_type'] );
+			}
+
+			// Regular posts are plain `post-new.php` with no `post_type` parameter defined.
+			elseif ( $this->is_eligible_admin_url( [ 'post-new.php' ] ) ) {
+				$current_post_type = 'post';
+			}
+
+		} else {
+			$current_post_type = get_post_type( $post_id );
+		}
+
+		// Exit if no current post type found
+		if ( false === $current_post_type ) {
+			return false;
+		}
+
+		return in_array( $current_post_type, $allowed_post_types, true );
+
 	}
 
 	public function gutenberg_will_load() {
