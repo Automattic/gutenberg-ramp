@@ -216,12 +216,11 @@ class Ramp_For_Gutenberg {
 		}
 		// also, the gutenberg plugin might be the source of an attempted load
 		if (
-			( has_filter( 'replace_editor', 'gutenberg_init' )
-			  ||
-			  has_filter( 'load-post.php', 'gutenberg_intercept_edit_post' )
-			  ||
-			  has_filter( 'load-post-new.php', 'gutenberg_intercept_post_new' )
-			)
+			has_filter( 'replace_editor', 'gutenberg_init' )
+			||
+			has_filter( 'load-post.php', 'gutenberg_intercept_edit_post' )
+			||
+			has_filter( 'load-post-new.php', 'gutenberg_intercept_post_new' )
 		) {
 			return true;
 		}
