@@ -284,7 +284,7 @@ class Ramp_For_Gutenberg {
 	}
 
 	/**
-	 * Disable Gutenberg if the load decidion has been made to should unload it
+	 * Disable Gutenberg if the load decidion has been made to unload it
 	 *
 	 * This is a slight hack since there's no filter (yet) in Gutenberg on the
 	 * post id, just the post type, but because it's (currently) only used to check the
