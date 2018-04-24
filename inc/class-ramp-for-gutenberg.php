@@ -259,12 +259,13 @@ class Ramp_For_Gutenberg {
 
 	public function is_eligible_admin_url( $supported_filenames = ['post.php', 'post-new.php'] ) {
 
-		$path = sanitize_text_field( wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ) );
-		$path = trim( $path );
+		$path          = sanitize_text_field( wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ) );
+		$path          = trim( $path );
+		$wp_admin_slug = trim( wp_parse_url( get_admin_url(), PHP_URL_PATH ), '/' );
 
 		foreach ( $supported_filenames as $filename ) {
 			// Require $filename not to be empty to avoid accidents like matching against a plain `/wp-admin/`
-			if ( ! empty( $filename ) && "/wp-admin/{$filename}" === $path ) {
+			if ( ! empty( $filename ) && "/{$wp_admin_slug}/{$filename}" === $path ) {
 				return true;
 			}
 		}
