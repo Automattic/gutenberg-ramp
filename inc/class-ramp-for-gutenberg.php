@@ -34,7 +34,7 @@ class Ramp_For_Gutenberg {
 			return $options;
 		}
 
-		if ( ! isset( $options[ $criteria_name ] ) ) {
+		if ( empty( $options[ $criteria_name ] ) ) {
 			return false;
 		}
 
