@@ -24,7 +24,7 @@ class Ramp_For_Gutenberg {
 	 * Get the desired criteria
 	 * @param string $criteria_name - post_types, post_ids, terms, load
 	 *
-	 * @return bool|mixed|void
+	 * @return mixed
 	 */
 	public function get_criteria( $criteria_name = '' ) {
 
