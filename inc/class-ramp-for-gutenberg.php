@@ -252,7 +252,7 @@ class Ramp_For_Gutenberg {
 	// utility functions
 	public function get_current_post_id() {
 		if ( isset( $_GET['post'] ) && is_numeric( $_GET['post'] ) && ( (int) $_GET['post'] > 0 ) ) {
-			return (int) $_GET['post'];
+			return absint( $_GET['post'] );
 		}
 
 		return 0;
