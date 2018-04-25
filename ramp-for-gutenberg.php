@@ -20,7 +20,8 @@
  *
  */
 
-include(  __DIR__ . '/inc/class-ramp-for-gutenberg.php' );
+include __DIR__ . '/inc/class-ramp-for-gutenberg.php';
+include __DIR__ . '/inc/admin/class-ramp-for-gutenberg-post-type-settings-ui.php';
 
 /**
 *
@@ -64,3 +65,13 @@ add_action( 'admin_init' , [ $RFG, 'cleanup_option' ], 10, 0 );
  * @TODO duplicate this for WP5.0 core with the new filter name, it's expected to change
  */
 add_filter( 'gutenberg_can_edit_post_type', [ $RFG, 'maybe_allow_gutenberg_to_load' ], 20, 2 );
+
+
+/**
+ * Initialize Admin UI
+ */
+function ramp_for_gutenberg_initialize_admin_ui() {
+	new Ramp_For_Gutenberg_Post_Type_Settings_UI();
+}
+
+add_action( 'admin_init', 'ramp_for_gutenberg_initialize_admin_ui' );
