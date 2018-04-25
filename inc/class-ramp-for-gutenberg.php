@@ -254,6 +254,8 @@ class Ramp_For_Gutenberg {
 		if ( isset( $_GET['post'] ) && is_numeric( $_GET['post'] ) && ( (int) $_GET['post'] > 0 ) ) {
 			return (int) $_GET['post'];
 		}
+
+		return 0;
 	}
 
 	public function is_eligible_admin_url( $supported_filenames = ['post.php', 'post-new.php'] ) {
