@@ -76,7 +76,7 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 		 * Even though `disabled` attribute prevents data from being submitted to server
 		 * This is just going to make sure it accidentally doesn't fall through
 		 */
-		$helper_enabled_post_types = $this->ramp_for_gutenberg->get_criteria( 'post_types' );
+		$helper_enabled_post_types = (array) $this->ramp_for_gutenberg->get_criteria( 'post_types' );
 		$validated_post_types      = array_diff( $validated_post_types, $helper_enabled_post_types );
 
 		return $validated_post_types;
