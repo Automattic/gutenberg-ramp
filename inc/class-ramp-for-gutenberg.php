@@ -123,12 +123,12 @@ class Ramp_For_Gutenberg {
 
 		$criteria = $this->get_criteria();
 		// if criteria is empty, we never load gutenberg
-		if ( ! $criteria ) {
+		if ( ! $criteria && empty( $this->get_enabled_post_types() ) ) {
 			return false;
 		}
 
 		// check if we should always or never load
-		if ( array_key_exists( 'load', $criteria ) ) {
+		if ( false !== $criteria && array_key_exists( 'load', $criteria ) ) {
 			if ( $criteria['load'] === 1 ) {
 				return true;
 			} elseif ( $criteria['load'] === 0 ) {
