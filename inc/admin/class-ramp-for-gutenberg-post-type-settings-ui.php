@@ -72,10 +72,7 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 		$post_types                          = $this->get_supported_post_types();
 		$rfg                                 = Ramp_For_Gutenberg::get_instance();
 		$programmatically_enabled_post_types = $rfg->get_criteria( 'post_types' );
-		$selected_post_types                 = array_merge(
-			(array) get_option( 'ramp_for_gutenberg_post_types', array() ),
-			(array) $programmatically_enabled_post_types
-		);
+		$selected_post_types                 = $rfg->get_enabled_post_types();
 		?>
 		<div class="ramp-for-gutenberg-description">
 			<p>
