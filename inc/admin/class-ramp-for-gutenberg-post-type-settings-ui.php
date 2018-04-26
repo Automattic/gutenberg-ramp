@@ -86,7 +86,7 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 		$post_types                = $this->get_supported_post_types();
 		$rfg                       = Ramp_For_Gutenberg::get_instance();
 		$helper_enabled_post_types = $rfg->get_criteria( 'post_types' );
-		$selected_post_types       = $rfg->get_enabled_post_types();
+		$enabled_post_types        = $rfg->get_enabled_post_types();
 		?>
 		<div class="ramp-for-gutenberg-description">
 			<p>
@@ -111,10 +111,10 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 									   type="checkbox"
 									   id="rfg-post-type-<?php echo esc_attr( $slug ) ?>"
 										<?php
-										// checked="checked":
-										checked( in_array( $slug, $selected_post_types, true ) );
+										// maybe display "checked"attribute?
+										checked( in_array( $slug, $enabled_post_types, true ), true );
 
-										// disabled="disabled":
+										// maybe display "disabled" attribute?
 										if ( $is_helper_enabled_post_type ) {
 											echo ' disabled ';
 										}
