@@ -3,6 +3,11 @@
 class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 
 	/**
+	 * @var Ramp_For_Gutenberg instance
+	 */
+	protected $ramp_for_gutenberg;
+
+	/**
 	 * Ramp_For_Gutenberg_Post_Type_Settings_UI constructor.
 	 */
 	public function __construct() {
@@ -11,6 +16,7 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 			return;
 		}
 
+		$this->ramp_for_gutenberg = Ramp_For_Gutenberg::get_instance();
 		$this->add_writing_settings_section();
 	}
 
@@ -71,8 +77,7 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 		 * Even though `disabled` attribute prevents data from being submitted to server
 		 * This is just going to make sure it accidentally doesn't fall through
 		 */
-		$rfg                       = Ramp_For_Gutenberg::get_instance();
-		$helper_enabled_post_types = $rfg->get_criteria( 'post_types' );
+		$helper_enabled_post_types = $this->ramp_for_gutenberg->get_criteria( 'post_types' );
 		$validated_post_types      = array_diff( $validated_post_types, $helper_enabled_post_types );
 
 		return $validated_post_types;
@@ -84,9 +89,8 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 	function render_settings_section() {
 
 		$post_types                = $this->get_supported_post_types();
-		$rfg                       = Ramp_For_Gutenberg::get_instance();
-		$helper_enabled_post_types = $rfg->get_criteria( 'post_types' );
-		$enabled_post_types        = $rfg->get_enabled_post_types();
+		$helper_enabled_post_types = $this->ramp_for_gutenberg->get_criteria( 'post_types' );
+		$enabled_post_types        = $this->ramp_for_gutenberg->get_enabled_post_types();
 		?>
 		<div class="ramp-for-gutenberg-description">
 			<p>
