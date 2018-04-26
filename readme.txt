@@ -58,7 +58,6 @@ If making more dynamic changes, note that the parameter supplied is persisted in
 
 Contributions are welcome via our [GitHub repo.](https://github.com/Automattic/ramp-for-gutenberg)
 
-
 == Installation ==
 
 1. Install & activate the plugin through the WordPress 'Plugins' dashboard.
@@ -79,11 +78,9 @@ The parameter supplied in the function is persisted in a site option. Therefore,
 
 Absolutely! Please create issues and pull requests on [GitHub here.](https://github.com/Automattic/ramp-for-gutenberg)
 
-
 == Screenshots ==
 
 1. Settings for Gutenberg Ramp via Settings -> Writing
-
 
 == Changelog ==
 
