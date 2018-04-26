@@ -45,8 +45,12 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 	 */
 	public function sanitize_post_types_callback( $post_types ) {
 
+		$post_types           = array_unique( (array) $post_types );
 		$supported_post_types = array_keys( $this->get_supported_post_types() );
 
+		/**
+		 * Validate & Sanitize
+		 */
 		$validated_post_types = [];
 		foreach ( $post_types as $post_type ) {
 			if ( in_array( $post_type, $supported_post_types, true ) ) {
@@ -61,7 +65,17 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 			}
 		}
 
-		return array_unique( $validated_post_types );
+		/*
+		 * Don't store post types enabled through the helper function
+		 *
+		 * Even though `disabled` attribute prevents data from being submitted to server
+		 * This is just going to make sure it accidentally doesn't fall through
+		 */
+		$rfg                       = Ramp_For_Gutenberg::get_instance();
+		$helper_enabled_post_types = $rfg->get_criteria( 'post_types' );
+		$validated_post_types      = array_diff( $validated_post_types, $helper_enabled_post_types );
+
+		return $validated_post_types;
 	}
 
 	/**
