@@ -11,6 +11,22 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 			return;
 		}
 
+		$this->add_writing_settings_section();
+	}
+
+	/**
+	 * This method will add a "Ramp for Gutenberg" section to "Settings -> Writing"
+	 */
+	public function add_writing_settings_section() {
+
+		register_setting(
+			'writing',
+			'ramp_for_gutenberg_post_types',
+			[
+				'sanitize_callback' => [ $this, 'sanitize_post_types_callback' ],
+			]
+		);
+
 		add_settings_section(
 			'ramp_for_gutenberg_post_types',
 			esc_html__( 'Ramp for Gutenberg', 'ramp-for-gutenberg' ),
@@ -19,9 +35,42 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 		);
 	}
 
-	function render_settings_section( $args ) {
+	/**
+	 * Make sure that only supported post types are saved as Gutenberg-enabled
+	 * Used as a callback for `register_setting`
+	 *
+	 * @param $post_types
+	 *
+	 * @return array
+	 */
+	public function sanitize_post_types_callback( $post_types ) {
 
-		$post_types = $this->get_supported_post_types();
+		$supported_post_types = array_keys( $this->get_supported_post_types() );
+
+		$validated_post_types = [];
+		foreach ( $post_types as $post_type ) {
+			if ( in_array( $post_type, $supported_post_types, true ) ) {
+				$validated_post_types[] = $post_type;
+			} else {
+				$sanitized_post_type_slug = sanitize_title( $post_type );
+				add_settings_error(
+					'ramp_for_gutenberg_post_types',
+					'ramp_for_gutenberg_post_types',
+					sprintf( esc_html__( "Can't enable Gutenberg for post type \"%s\"" ), $sanitized_post_type_slug )
+				);
+			}
+		}
+
+		return array_unique( $validated_post_types );
+	}
+
+	/**
+	 * Render the "Ramp for Gutenberg" section in the dashboard
+	 */
+	function render_settings_section() {
+
+		$post_types          = $this->get_supported_post_types();
+		$selected_post_types = (array) get_option( 'ramp_for_gutenberg_post_types', array() );
 		?>
 		<div class="ramp-for-gutenberg-description">
 			<p>
@@ -40,11 +89,11 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 						<?php foreach ( $post_types as $slug => $label ) : ?>
 
 							<label for="<?php echo esc_attr( $slug ) ?>">
-								<input name="rfg_post_types[<?php echo esc_attr( $slug ) ?>]"
+								<input name="ramp_for_gutenberg_post_types[]"
 									   type="checkbox"
 									   id="rfg-post-type-<?php echo esc_attr( $slug ) ?>"
-									   value="1"
-									<?php checked( 0, 1 ); ?>
+									   value="<?php echo esc_attr( $slug ) ?>"
+									<?php checked( in_array( $slug, $selected_post_types, true ) ); ?>
 								>
 								<span><?php echo esc_html( $label ) ?></span>
 							</label>
@@ -74,7 +123,7 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 
 		$post_types = get_post_types(
 			[
-				'show_ui' => true,
+				'show_ui'      => true,
 				'show_in_rest' => true,
 			],
 			'object'
