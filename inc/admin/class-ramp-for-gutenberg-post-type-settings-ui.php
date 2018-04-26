@@ -62,11 +62,10 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 			if ( in_array( $post_type, $supported_post_types, true ) ) {
 				$validated_post_types[] = $post_type;
 			} else {
-				$sanitized_post_type_slug = sanitize_title( $post_type );
 				add_settings_error(
 					'ramp_for_gutenberg_post_types',
 					'ramp_for_gutenberg_post_types',
-					sprintf( esc_html__( "Can't enable Gutenberg for post type \"%s\"" ), $sanitized_post_type_slug )
+					sprintf( esc_html__( "Can't enable Gutenberg for post type \"%s\"" ), sanitize_title( $post_type ) )
 				);
 			}
 		}
