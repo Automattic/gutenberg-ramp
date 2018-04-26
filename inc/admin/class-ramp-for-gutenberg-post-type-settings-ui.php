@@ -69,10 +69,10 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 	 */
 	function render_settings_section() {
 
-		$post_types                          = $this->get_supported_post_types();
-		$rfg                                 = Ramp_For_Gutenberg::get_instance();
-		$programmatically_enabled_post_types = $rfg->get_criteria( 'post_types' );
-		$selected_post_types                 = $rfg->get_enabled_post_types();
+		$post_types                = $this->get_supported_post_types();
+		$rfg                       = Ramp_For_Gutenberg::get_instance();
+		$helper_enabled_post_types = $rfg->get_criteria( 'post_types' );
+		$selected_post_types       = $rfg->get_enabled_post_types();
 		?>
 		<div class="ramp-for-gutenberg-description">
 			<p>
@@ -89,21 +89,27 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 						<legend class="screen-reader-text"><span><?php esc_html_e( 'Enable Gutenberg on', 'ramp-for-gutenberg' ); ?> </span></legend>
 
 						<?php foreach ( $post_types as $slug => $label ) : ?>
-							<?php $post_type_enabled_programmatically = in_array( $slug, $programmatically_enabled_post_types, true ); ?>
+							<?php $is_helper_enabled_post_type = in_array( $slug, $helper_enabled_post_types, true ); ?>
 
-							<label for="<?php echo esc_attr( $slug ) ?>">
+							<label for="rfg-post-type-<?php echo esc_attr( $slug ) ?>">
+
 								<input name="ramp_for_gutenberg_post_types[]"
 									   type="checkbox"
 									   id="rfg-post-type-<?php echo esc_attr( $slug ) ?>"
-									<?php if ( $post_type_enabled_programmatically ) : ?>
-										disabled="disabled"
-									<?php endif; ?>
-									   value="<?php echo esc_attr( $slug ) ?>"
-									<?php checked( in_array( $slug, $selected_post_types, true ) ); ?>
-								>
+										<?php
+										// checked="checked":
+										checked( in_array( $slug, $selected_post_types, true ) );
+
+										// disabled="disabled":
+										if ( $is_helper_enabled_post_type ) {
+											echo ' disabled ';
+										}
+										?>
+									   value="<?php echo esc_attr( $slug ) ?>">
+
 								<span><?php echo esc_html( $label ) ?></span>
 							</label>
-							<?php if ( $post_type_enabled_programmatically ): ?>
+							<?php if ( $is_helper_enabled_post_type ): ?>
 								<small style="margin-left: 1rem;">
 									<a href="#"><?php esc_html_e( 'Why is this disabled?', 'ramp-for-gutenberg' ); ?></a>
 								</small>
