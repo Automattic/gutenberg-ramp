@@ -172,7 +172,7 @@ class Ramp_For_Gutenberg {
 	public function get_enabled_post_types() {
 
 		$ui_enabled_post_types     = (array) get_option( 'ramp_for_gutenberg_post_types', array() );
-		$helper_enabled_post_types = $this->get_criteria( 'post_types' );
+		$helper_enabled_post_types = (array) $this->get_criteria( 'post_types' );
 
 		return array_unique( array_merge( $ui_enabled_post_types, $helper_enabled_post_types ) );
 
