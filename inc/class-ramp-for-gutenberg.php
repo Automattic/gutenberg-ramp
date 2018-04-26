@@ -173,7 +173,7 @@ class Ramp_For_Gutenberg {
 	 */
 	public function is_allowed_post_type( $post_id ) {
 
-		$allowed_post_types = $this->get_criteria( 'post_types' );
+		$allowed_post_types = array_merge( (array) get_option('ramp_for_gutenberg_post_types', array() ) , $this->get_criteria( 'post_types' ) );
 
 		// Exit early, if no allowed post types are found
 		if ( false === $allowed_post_types || ! is_array( $allowed_post_types ) ) {
