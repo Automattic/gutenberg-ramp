@@ -20,8 +20,26 @@ class Ramp_For_Gutenberg {
 		return apply_filters( 'ramp_for_gutenberg_option_name', $this->option_name );
 	}
 
-	public function get_criteria() {
-		return get_option( $this->option_name() );
+	/**
+	 * Get the desired criteria
+	 * @param string $criteria_name - post_types, post_ids, terms, load
+	 *
+	 * @return mixed
+	 */
+	public function get_criteria( $criteria_name = '' ) {
+
+		$options = get_option( $this->option_name() );
+
+		if ( '' === $criteria_name ) {
+			return $options;
+		}
+
+		if ( empty( $options[ $criteria_name ] ) ) {
+			return false;
+		}
+
+		return $options[ $criteria_name ];
+
 	}
 
 	public function save_criteria( $criteria ) {
@@ -123,13 +141,18 @@ class Ramp_For_Gutenberg {
 		// 1. we are attempting to load post.php ... there's an available post_id
 		// 2. there's an available post_id in the URL to check
 		$ramp_for_gutenberg_post_id = $this->get_current_post_id();
+
+		// check post_types
+		if ( $this->is_allowed_post_type( $ramp_for_gutenberg_post_id ) ) {
+			return true;
+		}
+
 		if ( ! $ramp_for_gutenberg_post_id ) {
 			return false;
 		}
 
 		// grab the criteria
 		$ramp_for_gutenberg_post_ids   = ( isset( $criteria['post_ids'] ) ) ? $criteria['post_ids'] : [];
-		$ramp_for_gutenberg_post_types = ( isset( $criteria['post_types'] ) ) ? $criteria['post_types'] : [];
 		$ramp_for_gutenberg_terms      = ( isset( $criteria['terms'] ) ) ? $criteria['terms'] : [];
 
 		// check post_ids
@@ -137,14 +160,50 @@ class Ramp_For_Gutenberg {
 			return true;
 		}
 
-		// check post_types
-		$ramp_for_gutenberg_current_post_type = get_post_type( $ramp_for_gutenberg_post_id );
-		if ( in_array( $ramp_for_gutenberg_current_post_type, $ramp_for_gutenberg_post_types, true ) ) {
-			return true;
-		}
-
 		// check if the post has one of the terms
 		// @todo
+	}
+
+	/**
+	 * Check whether current post type is defined as gutenberg-friendly
+	 *
+	 * @param $post_id
+	 *
+	 * @return bool
+	 */
+	public function is_allowed_post_type( $post_id ) {
+
+		$allowed_post_types = $this->get_criteria( 'post_types' );
+
+		// Exit early, if no allowed post types are found
+		if ( false === $allowed_post_types || ! is_array( $allowed_post_types ) ) {
+			return false;
+		}
+
+		// Find the current post type
+		$current_post_type = false;
+		if ( 0 === (int) $post_id ) {
+
+			if ( isset( $_GET['post_type'] ) ) {
+				$current_post_type = sanitize_title( $_GET['post_type'] );
+			}
+
+			// Regular posts are plain `post-new.php` with no `post_type` parameter defined.
+			elseif ( $this->is_eligible_admin_url( [ 'post-new.php' ] ) ) {
+				$current_post_type = 'post';
+			}
+
+		} else {
+			$current_post_type = get_post_type( $post_id );
+		}
+
+		// Exit if no current post type found
+		if ( false === $current_post_type ) {
+			return false;
+		}
+
+		return in_array( $current_post_type, $allowed_post_types, true );
+
 	}
 
 	public function gutenberg_will_load() {
@@ -156,7 +215,13 @@ class Ramp_For_Gutenberg {
 			return true;
 		}
 		// also, the gutenberg plugin might be the source of an attempted load
-		if ( ( has_filter( 'replace_editor', 'gutenberg_init' ) || has_filter( 'load-post.php', 'gutenberg_intercept_edit_post' ) ) ) {
+		if (
+			has_filter( 'replace_editor', 'gutenberg_init' )
+			||
+			has_filter( 'load-post.php', 'gutenberg_intercept_edit_post' )
+			||
+			has_filter( 'load-post-new.php', 'gutenberg_intercept_post_new' )
+		) {
 			return true;
 		}
 		return false;
@@ -191,11 +256,20 @@ class Ramp_For_Gutenberg {
 		}
 	}
 
-	public function is_eligible_admin_url() {
-		// just based on the URI, what is the path?
-		$path = sanitize_text_field( wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ) );
-		$admin_slug = trim( wp_parse_url( get_admin_url(), PHP_URL_PATH ), '/' );
-		return ( "/$admin_slug/post.php" === trim( $path ) );
+	public function is_eligible_admin_url( $supported_filenames = ['post.php', 'post-new.php'] ) {
+
+		$path          = sanitize_text_field( wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ) );
+		$path          = trim( $path );
+		$wp_admin_slug = trim( wp_parse_url( get_admin_url(), PHP_URL_PATH ), '/' );
+
+		foreach ( $supported_filenames as $filename ) {
+			// Require $filename not to be empty to avoid accidents like matching against a plain `/wp-admin/`
+			if ( ! empty( $filename ) && "/{$wp_admin_slug}/{$filename}" === $path ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	public function cleanup_option() {
@@ -210,26 +284,33 @@ class Ramp_For_Gutenberg {
 	}
 
 	/**
-	 * disable Gutenberg if the current post should unload it
-	 * 
+	 * Disable Gutenberg if the load decidion has been made to unload it
+	 *
 	 * This is a slight hack since there's no filter (yet) in Gutenberg on the
 	 * post id, just the post type, but because it's (currently) only used to check the
 	 * primary post id when loading the editor, it can be leveraged.
-	 * 
+	 *
 	 * The instance variable load_gutenberg might be set during the load
 	 * decision code above. If it's explicitly false, then the filter returns false,
 	 * else it returns the original value.
 	 *
-	 * @param string $post_type - the post type
-	 * @param boolean $can_edit whether Gutenberg should edit this post type
+	 * @param string  $post_type - the post type
+	 * @param boolean $can_edit  - whether Gutenberg should edit this post type
+	 *
 	 * @return boolean - whether Gutenberg should edit this post
 	 */
-	public function maybe_disable_gutenberg( $post_type, $can_edit ) {
-		$ramp_for_gutenberg_post_id = $this->get_current_post_id();
-		if ( ( $ramp_for_gutenberg_post_id > 0 ) && 
-			 ( false === $this->load_gutenberg ) ) {
+	public function maybe_allow_gutenberg_to_load( $post_type, $can_edit ) {
+
+		// Don't enable Gutenberg in post types that don't support Gutenberg.
+		if ( false === $can_edit ) {
 			return false;
 		}
+
+		// Return the decision, if a decision has been made.
+		if ( null !== $this->load_gutenberg ) {
+			return (bool) $this->load_gutenberg;
+		}
+
 		return $can_edit;
 	}
 }
