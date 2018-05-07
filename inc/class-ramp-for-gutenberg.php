@@ -123,12 +123,12 @@ class Ramp_For_Gutenberg {
 
 		$criteria = $this->get_criteria();
 		// if criteria is empty, we never load gutenberg
-		if ( ! $criteria ) {
+		if ( ! $criteria && empty( $this->get_enabled_post_types() ) ) {
 			return false;
 		}
 
 		// check if we should always or never load
-		if ( array_key_exists( 'load', $criteria ) ) {
+		if ( false !== $criteria && array_key_exists( 'load', $criteria ) ) {
 			if ( $criteria['load'] === 1 ) {
 				return true;
 			} elseif ( $criteria['load'] === 0 ) {
@@ -165,6 +165,20 @@ class Ramp_For_Gutenberg {
 	}
 
 	/**
+	 * Get all post types with Gutenberg enabled
+	 *
+	 * @return array
+	 */
+	public function get_enabled_post_types() {
+
+		$ui_enabled_post_types     = (array) get_option( 'ramp_for_gutenberg_post_types', array() );
+		$helper_enabled_post_types = (array) $this->get_criteria( 'post_types' );
+
+		return array_unique( array_merge( $ui_enabled_post_types, $helper_enabled_post_types ) );
+
+	}
+
+	/**
 	 * Check whether current post type is defined as gutenberg-friendly
 	 *
 	 * @param $post_id
@@ -173,7 +187,7 @@ class Ramp_For_Gutenberg {
 	 */
 	public function is_allowed_post_type( $post_id ) {
 
-		$allowed_post_types = $this->get_criteria( 'post_types' );
+		$allowed_post_types = $this->get_enabled_post_types();
 
 		// Exit early, if no allowed post types are found
 		if ( false === $allowed_post_types || ! is_array( $allowed_post_types ) ) {
@@ -252,8 +266,10 @@ class Ramp_For_Gutenberg {
 	// utility functions
 	public function get_current_post_id() {
 		if ( isset( $_GET['post'] ) && is_numeric( $_GET['post'] ) && ( (int) $_GET['post'] > 0 ) ) {
-			return (int) $_GET['post'];
+			return absint( $_GET['post'] );
 		}
+
+		return 0;
 	}
 
 	public function is_eligible_admin_url( $supported_filenames = ['post.php', 'post-new.php'] ) {
