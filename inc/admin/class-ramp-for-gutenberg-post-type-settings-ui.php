@@ -28,15 +28,15 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 		register_setting(
 			'writing',
 			'ramp_for_gutenberg_post_types',
-			[
-				'sanitize_callback' => [ $this, 'sanitize_post_types_callback' ],
-			]
+			array(
+				'sanitize_callback' => array( $this, 'sanitize_post_types_callback' ),
+			)
 		);
 
 		add_settings_section(
 			'ramp_for_gutenberg_post_types',
 			esc_html__( 'Ramp for Gutenberg', 'ramp-for-gutenberg' ),
-			[ $this, 'render_settings_section' ],
+			array( $this, 'render_settings_section' ),
 			'writing'
 		);
 	}
@@ -57,7 +57,7 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 		/**
 		 * Validate & Sanitize
 		 */
-		$validated_post_types = [];
+		$validated_post_types = array();
 		foreach ( $post_types as $post_type ) {
 			if ( in_array( $post_type, $supported_post_types, true ) ) {
 				$validated_post_types[] = $post_type;
@@ -176,10 +176,10 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 		}
 
 		$post_types = get_post_types(
-			[
+			array(
 				'show_ui'      => true,
 				'show_in_rest' => true,
-			],
+			),
 			'object'
 		);
 

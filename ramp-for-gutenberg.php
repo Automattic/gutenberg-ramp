@@ -39,7 +39,7 @@ function ramp_for_gutenberg_load_gutenberg( $criteria = false ) {
 		return;
 	}
 	$RFG = Ramp_For_Gutenberg::get_instance();
-	$criteria = ( !$criteria ) ? [ 'load' => 1 ] : $criteria;
+	$criteria = ( !$criteria ) ? array( 'load' => 1 ) : $criteria;
 	$stored_criteria = $RFG->get_criteria();
 	if ( $criteria !== $stored_criteria ) {
 		// the criteria specified in code have changed -- update them
@@ -53,11 +53,11 @@ function ramp_for_gutenberg_load_gutenberg( $criteria = false ) {
 $RFG = Ramp_For_Gutenberg::get_instance();
 
 /** off to the races **/
-add_action( 'plugins_loaded', [ $RFG, 'load_decision' ], 20, 0 );
+add_action( 'plugins_loaded', array( $RFG, 'load_decision' ), 20, 0 );
 // if ramp_for_gutenberg_load_gutenberg() has not been called, perform cleanup
 // unfortunately this must be done on every admin pageload to detect the case where
 // criteria were previously being set in a theme, but now are not (due to a code change)
-add_action( 'admin_init' , [ $RFG, 'cleanup_option' ], 10, 0 );
+add_action( 'admin_init' , array( $RFG, 'cleanup_option' ), 10, 0 );
 
 /**
  * tell Gutenberg when not to load
@@ -65,7 +65,7 @@ add_action( 'admin_init' , [ $RFG, 'cleanup_option' ], 10, 0 );
  * Gutenberg only calls this filter when checking the primary post
  * @TODO duplicate this for WP5.0 core with the new filter name, it's expected to change
  */
-add_filter( 'gutenberg_can_edit_post_type', [ $RFG, 'maybe_allow_gutenberg_to_load' ], 20, 2 );
+add_filter( 'gutenberg_can_edit_post_type', array( $RFG, 'maybe_allow_gutenberg_to_load' ), 20, 2 );
 
 /**
 * remove split new post links and Gutenberg menu h/t Ozz 

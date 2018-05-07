@@ -55,7 +55,7 @@ class Ramp_For_Gutenberg {
 			return false;
 		}
 
-		$criteria_whitelist = [ 'post_ids', 'post_types', 'terms', 'load' ];
+		$criteria_whitelist = array( 'post_ids', 'post_types', 'terms', 'load' );
 		foreach ( $criteria as $key => $value ) {
 			if ( ! in_array( $key, $criteria_whitelist, true ) ) {
 				return false;
@@ -83,7 +83,7 @@ class Ramp_For_Gutenberg {
 					}
 					break;
 				case 'load':
-					if ( !in_array( $value, [ 0, 1 ], true ) ) {
+					if ( !in_array( $value, array( 0, 1 ), true ) ) {
 						return false;
 					}
 					break;
@@ -152,8 +152,8 @@ class Ramp_For_Gutenberg {
 		}
 
 		// grab the criteria
-		$ramp_for_gutenberg_post_ids   = ( isset( $criteria['post_ids'] ) ) ? $criteria['post_ids'] : [];
-		$ramp_for_gutenberg_terms      = ( isset( $criteria['terms'] ) ) ? $criteria['terms'] : [];
+		$ramp_for_gutenberg_post_ids   = ( isset( $criteria['post_ids'] ) ) ? $criteria['post_ids'] : array();
+		$ramp_for_gutenberg_terms      = ( isset( $criteria['terms'] ) ) ? $criteria['terms'] : array();
 
 		// check post_ids
 		if ( in_array( $ramp_for_gutenberg_post_id, $ramp_for_gutenberg_post_ids, true ) ) {
@@ -203,7 +203,7 @@ class Ramp_For_Gutenberg {
 			}
 
 			// Regular posts are plain `post-new.php` with no `post_type` parameter defined.
-			elseif ( $this->is_eligible_admin_url( [ 'post-new.php' ] ) ) {
+			elseif ( $this->is_eligible_admin_url( array( 'post-new.php' ) ) ) {
 				$current_post_type = 'post';
 			}
 
@@ -272,7 +272,7 @@ class Ramp_For_Gutenberg {
 		return 0;
 	}
 
-	public function is_eligible_admin_url( $supported_filenames = ['post.php', 'post-new.php'] ) {
+	public function is_eligible_admin_url( $supported_filenames = array('post.php', 'post-new.php') ) {
 
 		$path          = sanitize_text_field( wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ) );
 		$path          = trim( $path );
@@ -290,7 +290,7 @@ class Ramp_For_Gutenberg {
 
 	public function cleanup_option() {
 		// if the criteria are already such that Gutenberg will never load, no change is needed
-		if ( $this->get_criteria() === [ 'load' => 0 ] ) {
+		if ( $this->get_criteria() === array( 'load' => 0 ) ) {
 			return;
 		}
 		// if the theme did not call its function, then remove the option containing criteria, which will prevent all loading
