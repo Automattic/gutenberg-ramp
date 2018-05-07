@@ -21,8 +21,8 @@
  *
  */
 
-include __DIR__ . '/inc/class-ramp-for-gutenberg.php';
-include __DIR__ . '/inc/admin/class-ramp-for-gutenberg-post-type-settings-ui.php';
+include dirname(__FILE__) . '/inc/class-ramp-for-gutenberg.php';
+include dirname( __FILE__ ) . '/inc/admin/class-ramp-for-gutenberg-post-type-settings-ui.php';
 
 /**
 *
