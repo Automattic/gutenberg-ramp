@@ -154,6 +154,21 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 		<?php
 	}
 
+	/**
+	 * Get post types that can be supported by Gutenberg.
+	 *
+	 * This will get all registered post types and remove post types:
+	 *        * that aren't shown in the admin menu
+	 *        * like attachment, revision, etc.
+	 *        * that don't support native editor UI
+	 *
+	 *
+	 * Also removes post types that don't support `show_in_rest`
+	 *
+	 * @link https://github.com/WordPress/gutenberg/issues/3066
+	 *
+	 * @return array of formatted post types as [ 'slug' => 'label' ]
+	 */
 	public function get_supported_post_types() {
 
 		$post_types = get_post_types(
