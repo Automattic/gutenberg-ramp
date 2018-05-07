@@ -122,9 +122,13 @@ class Ramp_For_Gutenberg {
 		}
 
 		$criteria = $this->get_criteria();
-		// if criteria is empty, we never load gutenberg
-		if ( ! $criteria && empty( $this->get_enabled_post_types() ) ) {
-			return false;
+		// if criteria is empty and there are no UI enabled post types, we never load gutenberg
+		if ( ! $criteria ) {
+			// can't inline this because empty( expression() ) is only supported in PHP 5.5+
+			$enabled_post_types = $this->get_enabled_post_types();
+			if ( empty( $enabled_post_types ) ) {
+				return false;
+			}
 		}
 
 		// check if we should always or never load
