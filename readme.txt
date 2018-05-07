@@ -3,7 +3,7 @@ Contributors: automattic
 Tags: gutenberg, ramp, classic editor, legacy editor, gutenberg ramp
 Requires at least: 2.7
 Tested up to: 5.0
-Requires PHP: 5.4
+Requires PHP: 5.2.4
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
