@@ -71,11 +71,12 @@ add_filter( 'gutenberg_can_edit_post_type', array( $RFG, 'maybe_allow_gutenberg_
 * remove split new post links and Gutenberg menu h/t Ozz 
 * see https://github.com/azaozz/classic-editor/blob/master/classic-editor.php#L108
 */
-add_action( 'plugins_loaded', function() {
+function ramp_for_gutenberg_remove_gutenberg_links() {
 	remove_action( 'admin_menu', 'gutenberg_menu' );
 	remove_filter( 'admin_url', 'gutenberg_modify_add_new_button_url' );
 	remove_action( 'admin_print_scripts-edit.php', 'gutenberg_replace_default_add_new_button' );
-});
+}
+add_action( 'plugins_loaded', 'ramp_for_gutenberg_remove_gutenberg_links');
 
 
 /**
