@@ -171,6 +171,10 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 	 */
 	public function get_supported_post_types() {
 
+		if ( 0 === did_action( 'init' ) && ! doing_action( 'init' ) ) {
+			trigger_error( "get_supported_post_types() was called before the init hook. Some post types might not be registered yet.", E_USER_WARNING );
+		}
+
 		$post_types = get_post_types(
 			[
 				'show_ui'      => true,
