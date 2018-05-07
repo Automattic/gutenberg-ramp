@@ -67,6 +67,16 @@ add_action( 'admin_init' , [ $RFG, 'cleanup_option' ], 10, 0 );
  */
 add_filter( 'gutenberg_can_edit_post_type', [ $RFG, 'maybe_allow_gutenberg_to_load' ], 20, 2 );
 
+/**
+* remove split new post links and Gutenberg menu h/t Ozz 
+* see https://github.com/azaozz/classic-editor/blob/master/classic-editor.php#L108
+*/
+add_action( 'plugins_loaded', function() {
+	remove_action( 'admin_menu', 'gutenberg_menu' );
+	remove_filter( 'admin_url', 'gutenberg_modify_add_new_button_url' );
+	remove_action( 'admin_print_scripts-edit.php', 'gutenberg_replace_default_add_new_button' );
+});
+
 
 /**
  * Initialize Admin UI
@@ -74,5 +84,4 @@ add_filter( 'gutenberg_can_edit_post_type', [ $RFG, 'maybe_allow_gutenberg_to_lo
 function ramp_for_gutenberg_initialize_admin_ui() {
 	new Ramp_For_Gutenberg_Post_Type_Settings_UI();
 }
-
 add_action( 'admin_init', 'ramp_for_gutenberg_initialize_admin_ui' );

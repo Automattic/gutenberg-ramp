@@ -26,7 +26,7 @@ The currently supported criteria are post ID (load for only specified posts) and
 
 Criteria are stored in an option and specified by calling a function any time after `plugins_loaded`, typically in theme code or on a hook such as `init`.
 
-Loading behavior is controlled by the `ramp_for_gutenberges_load_gutenberg()` function.  Calling this function without its single optional parameter causes Gutenberg to load on all post-edit screens.  An optional associative array of criteria can be passed.  The possible keys and values are:
+Loading behavior is controlled by the `ramp_for_gutenberg_load_gutenberg()` function.  Calling this function without its single optional parameter causes Gutenberg to load on all post-edit screens.  An optional associative array of criteria can be passed.  The possible keys and values are:
 
 - `load` (Int): `0|1`:  never or always load Gutenberg
 - `posts` (Array of post_ids): loads Gutenberg for the specified post_ids
@@ -34,7 +34,11 @@ Loading behavior is controlled by the `ramp_for_gutenberges_load_gutenberg()` fu
 
 ### Examples
 
-`ramp_for_gutenberg_load_gutenberg();`
+```
+if ( function_exists( 'wpcom_vip_load_gutenberg' ) ) {
+	ramp_for_gutenberg_load_gutenberg();
+}
+```
 
 Load Gutenberg for all posts.
 
@@ -49,3 +53,9 @@ Load Gutenberg for posts with ids 12, 13 and 122.
 `ramp_for_gutenberg_load_gutenberg( [ 'post_types' => [ 'test', 'scratch' ], 'post_ids' => [ 12 ] ] );`
 
 Load Gutenberg for post_id 12 and all posts of type `test` and `scratch`
+
+### Advanced	
+
+The typical use case is as shown above, the parameters do not change except when theme code is updated.	
+
+If making more dynamic changes, note that the parameter supplied is persisted in a site option; when the parameters are changed in code, one page load is necessary to update the site option before the editor can use the new setting.
