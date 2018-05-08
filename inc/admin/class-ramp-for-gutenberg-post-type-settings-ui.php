@@ -95,13 +95,6 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 			<p>
 				<?php esc_html_e( 'Use these settings to enable Gutenberg for specific post types.', 'ramp-for-gutenberg' ); ?>
 			</p>
-			<p>
-				<?php printf(
-					esc_html__( 'For more granular control you can use the %s function.', 'ramp-for-gutenberg' ),
-					'<code>ramp_for_gutenberg_load_gutenberg()</code>'
-				); ?>
-				<a href="https://github.com/Automattic/ramp-for-gutenberg#faqs" target="_blank"><?php esc_html_e( 'Learn more', 'ramp-for-gutenberg' ); ?></a>
-			</p>
 		</div>
 
 		<table class="form-table">
@@ -135,7 +128,8 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 							</label>
 							<?php if ( $is_helper_enabled_post_type ): ?>
 								<small style="margin-left: 1rem;">
-									<a href="https://github.com/Automattic/ramp-for-gutenberg#faqs"><?php esc_html_e( 'Why is this disabled?', 'ramp-for-gutenberg' ); ?></a>
+									<?php // @TODO: Insert URL Here ?>
+									<a href="#"><?php esc_html_e( 'Why is this disabled?', 'ramp-for-gutenberg' ); ?></a>
 								</small>
 							<?php endif; ?>
 							<br>
@@ -147,6 +141,16 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 			</tbody>
 		</table>
 
+		<div class="ramp-for-gutenberg-description">
+			<p>
+				<?php printf(
+					esc_html__( 'For more granular control you can use the %s function.', 'ramp-for-gutenberg' ),
+					'<code>ramp_for_gutenberg_load_gutenberg()</code>'
+				); ?>
+				<?php // @TODO: Insert URL Here ?>
+				<a href="#" target="_blank"><?php esc_html_e( 'Learn more', 'ramp-for-gutenberg' ); ?></a>
+			</p>
+		</div>
 		<?php
 	}
 
