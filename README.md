@@ -1,7 +1,5 @@
 # Gutenberg Ramp
 
-_Experimental: not ready for production environments, but testing and contributions are welcome_
-
 ### Overview
 
 Gutenberg Ramp is a plugin that manages the state of Gutenberg in the post-edit context.  It loads or unloads Gutenberg in post-edit according to criteria specified in theme code.  It is agnostic about whether Gutenberg is loading from core or via the plugin.
@@ -59,3 +57,17 @@ Load Gutenberg for post_id 12 and all posts of type `test` and `scratch`
 The typical use case is as shown above, the parameters do not change except when theme code is updated.	
 
 If making more dynamic changes, note that the parameter supplied is persisted in a site option; when the parameters are changed in code, one page load is necessary to update the site option before the editor can use the new setting.
+
+### FAQs
+
+**Why is a post type disabled (greyed out) at Settings > Writing?**
+
+If you're seeing something greyed out, it means the `ramp_for_gutenberg_load_gutenberg()` function is already in your theme functions.php. If you want to use the wp-admin UI, remove the conflicting function from your functions.php file. 
+
+**Some post types are not showing up on the settings screen**
+
+Post types that are not compatible with Gutenberg will not show up. If you think you have found a false negative (posts in that post type DO work with Gutenberg, when Ramp plugin is deactivated) please report it as an issue on [GitHub here.](https://github.com/Automattic/ramp-for-gutenberg)
+
+**The changes I'm making in functions.php are not showing up**
+
+The parameter supplied in the function is persisted in a site option. Therefore, when the parameters are changed in code, _one page load is necessary_ to update the site option before the editor can use the new setting.
