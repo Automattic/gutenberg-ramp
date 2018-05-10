@@ -3,9 +3,17 @@
 class Ramp_For_Gutenberg {
 
 	private static $instance;
+
+	/**
+	 * Criteria is temporarily stored on class instance before it can be validated and updated
+	 * @var array $criteria
+	 */
+	private static $criteria;
+
 	private $option_name = 'ramp_for_gutenberg_load_critera';
 	public $active      = false;
 	public $load_gutenberg = null;
+
 
 	public static function get_instance() {
 		if ( ! self::$instance ) {
@@ -16,6 +24,14 @@ class Ramp_For_Gutenberg {
 
 	private function __construct() {
 		$this->option_name = apply_filters( 'ramp_for_gutenberg_option_name', $this->option_name );
+
+		/**
+		 * Store the criteria on admin_init
+		 *
+		 * $priority = 5 to ensure that the UI class has fresh data available
+		 * To do that, we need this to run before `ramp_for_gutenberg_initialize_admin_ui()`
+		 */
+		add_action( 'admin_init', [ $this, 'store_criteria' ], 5, 0 );
 	}
 	
 	public function get_option_name() {
@@ -45,8 +61,12 @@ class Ramp_For_Gutenberg {
 	}
 
 	public function save_criteria( $criteria ) {
-		if ( $this->validate_criteria( $criteria ) ) {
-			return update_option( $this->get_option_name(), $criteria );
+		self::$criteria = $criteria;
+	}
+
+	public function store_criteria() {
+		if ( $this->validate_criteria( self::$criteria ) ) {
+			return update_option( $this->get_option_name(), self::$criteria );
 		}
 		return false;
 	}
