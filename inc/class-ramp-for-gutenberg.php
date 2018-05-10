@@ -3,7 +3,7 @@
 class Ramp_For_Gutenberg {
 
 	private static $instance;
-	public $option_name = 'ramp_for_gutenberg_load_critera';
+	private $option_name = 'ramp_for_gutenberg_load_critera';
 	public $active      = false;
 	public $load_gutenberg = null;
 
@@ -17,6 +17,10 @@ class Ramp_For_Gutenberg {
 	private function __construct() {
 		$this->option_name = apply_filters( 'ramp_for_gutenberg_option_name', $this->option_name );
 	}
+	
+	public function get_option_name() {
+		return $this->option_name;
+	}
 
 	/**
 	 * Get the desired criteria
@@ -26,7 +30,7 @@ class Ramp_For_Gutenberg {
 	 */
 	public function get_criteria( $criteria_name = '' ) {
 
-		$options = get_option( $this->option_name );
+		$options = get_option( $this->get_option_name() );
 
 		if ( '' === $criteria_name ) {
 			return $options;
@@ -42,7 +46,7 @@ class Ramp_For_Gutenberg {
 
 	public function save_criteria( $criteria ) {
 		if ( $this->validate_criteria( $criteria ) ) {
-			return update_option( $this->option_name, $criteria );
+			return update_option( $this->get_option_name(), $criteria );
 		}
 		return false;
 	}
@@ -293,7 +297,7 @@ class Ramp_For_Gutenberg {
 		}
 		// if the theme did not call its function, then remove the option containing criteria, which will prevent all loading
 		if ( ! $this->active ) {
-			delete_option( $this->option_name );
+			delete_option( $this->get_option_name() );
 		}
 	}
 
