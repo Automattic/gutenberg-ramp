@@ -52,7 +52,7 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 	public function sanitize_post_types_callback( $post_types ) {
 
 		$post_types           = array_unique( (array) $post_types );
-		$supported_post_types = array_keys( $this->get_supported_post_types() );
+		$supported_post_types = array_keys( $this->ramp_for_gutenberg->get_supported_post_types() );
 
 		/**
 		 * Validate & Sanitize
@@ -87,7 +87,7 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 	 */
 	function render_settings_section() {
 
-		$post_types                = $this->get_supported_post_types();
+		$post_types                = $this->ramp_for_gutenberg->get_supported_post_types();
 		$helper_enabled_post_types = (array) $this->ramp_for_gutenberg->get_criteria( 'post_types' );
 		$enabled_post_types        = $this->ramp_for_gutenberg->get_enabled_post_types();
 		?>
@@ -152,45 +152,5 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 		<?php
 	}
 
-	/**
-	 * Get post types that can be supported by Gutenberg.
-	 *
-	 * This will get all registered post types and remove post types:
-	 *        * that aren't shown in the admin menu
-	 *        * like attachment, revision, etc.
-	 *        * that don't support native editor UI
-	 *
-	 *
-	 * Also removes post types that don't support `show_in_rest`
-	 *
-	 * @link https://github.com/WordPress/gutenberg/issues/3066
-	 *
-	 * @return array of formatted post types as [ 'slug' => 'label' ]
-	 */
-	public function get_supported_post_types() {
-
-		if ( 0 === did_action( 'init' ) && ! doing_action( 'init' ) ) {
-			_doing_it_wrong( 'Ramp_For_Gutenberg_Post_Type_Settings_UI::get_supported_post_types', "get_supported_post_types() was called before the init hook. Some post types might not be registered yet.", '1.0.0' );
-		}
-
-		$post_types = get_post_types(
-			[
-				'show_ui'      => true,
-				'show_in_rest' => true,
-			],
-			'object'
-		);
-
-		$available_post_types = array();
-
-		// Remove post types that don't want an editor
-		foreach ( $post_types as $name => $post_type_object ) {
-			if ( post_type_supports( $name, 'editor' ) && ! empty( $post_type_object->label ) ) {
-				$available_post_types[ $name ] = $post_type_object->label;
-			}
-		}
-
-		return $available_post_types;
-	}
 
 }

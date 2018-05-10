@@ -156,6 +156,46 @@ class Ramp_For_Gutenberg {
 	}
 
 	/**
+	 * Get post types that can be supported by Gutenberg.
+	 *
+	 * This will get all registered post types and remove post types:
+	 *        * that aren't shown in the admin menu
+	 *        * like attachment, revision, etc.
+	 *        * that don't support native editor UI
+	 *
+	 *
+	 * Also removes post types that don't support `show_in_rest`:
+	 * @link https://github.com/WordPress/gutenberg/issues/3066
+	 *
+	 * @return array of formatted post types as [ 'slug' => 'label' ]
+	 */
+	public function get_supported_post_types() {
+
+		if ( 0 === did_action( 'init' ) && ! doing_action( 'init' ) ) {
+			_doing_it_wrong( 'Ramp_For_Gutenberg::get_supported_post_types', "get_supported_post_types() was called before the init hook. Some post types might not be registered yet.", '1.0.0' );
+		}
+
+		$post_types = get_post_types(
+			[
+				'show_ui'      => true,
+				'show_in_rest' => true,
+			],
+			'object'
+		);
+
+		$available_post_types = array();
+
+		// Remove post types that don't want an editor
+		foreach ( $post_types as $name => $post_type_object ) {
+			if ( post_type_supports( $name, 'editor' ) && ! empty( $post_type_object->label ) ) {
+				$available_post_types[ $name ] = $post_type_object->label;
+			}
+		}
+
+		return $available_post_types;
+	}
+
+	/**
 	 * Get all post types with Gutenberg enabled
 	 *
 	 * @return array
