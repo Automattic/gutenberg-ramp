@@ -22,7 +22,7 @@ class Ramp_For_Gutenberg {
 
 	/**
 	 * Get the desired criteria
-	 * @param string $criteria_name - post_types, post_ids, terms, load
+	 * @param string $criteria_name - post_types, post_ids, load
 	 *
 	 * @return mixed
 	 */
@@ -55,7 +55,7 @@ class Ramp_For_Gutenberg {
 			return false;
 		}
 
-		$criteria_whitelist = [ 'post_ids', 'post_types', 'terms', 'load' ];
+		$criteria_whitelist = [ 'post_ids', 'post_types', 'load' ];
 		foreach ( $criteria as $key => $value ) {
 			if ( ! in_array( $key, $criteria_whitelist, true ) ) {
 				return false;
@@ -71,13 +71,6 @@ class Ramp_For_Gutenberg {
 				case 'post_types':
 					foreach ( $value as $post_type ) {
 						if ( sanitize_title( $post_type ) !== $post_type ) {
-							return false;
-						}
-					}
-					break;
-				case 'terms':
-					foreach ( $value as $term ) {
-						if ( ! is_array( $term ) || count( $term ) !== 2 ) {
 							return false;
 						}
 					}
@@ -153,15 +146,11 @@ class Ramp_For_Gutenberg {
 
 		// grab the criteria
 		$ramp_for_gutenberg_post_ids   = ( isset( $criteria['post_ids'] ) ) ? $criteria['post_ids'] : [];
-		$ramp_for_gutenberg_terms      = ( isset( $criteria['terms'] ) ) ? $criteria['terms'] : [];
 
 		// check post_ids
 		if ( in_array( $ramp_for_gutenberg_post_id, $ramp_for_gutenberg_post_ids, true ) ) {
 			return true;
 		}
-
-		// check if the post has one of the terms
-		// @todo
 	}
 
 	/**
