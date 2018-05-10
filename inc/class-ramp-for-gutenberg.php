@@ -91,8 +91,15 @@ class Ramp_For_Gutenberg {
 					}
 					break;
 				case 'post_types':
+
+					$supported_post_types = array_keys( $this->get_supported_post_types() );
+
 					foreach ( $value as $post_type ) {
 						if ( sanitize_title( $post_type ) !== $post_type ) {
+							return false;
+						}
+						if ( ! in_array( $post_type, $supported_post_types, true ) ) {
+							_doing_it_wrong( 'ramp_for_gutenberg_load_gutenberg', "Cannot enable Gutenberg support for post type \"{$post_type}\"", null );
 							return false;
 						}
 					}
