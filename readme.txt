@@ -1,5 +1,5 @@
 === Gutenberg Ramp ===
-Contributors: automattic
+Contributors: automattic, mattoperry, justnorris, enigmaweb
 Tags: gutenberg, ramp, classic editor, legacy editor, gutenberg ramp
 Requires at least: 2.7
 Tested up to: 5.0
