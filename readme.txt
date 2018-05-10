@@ -2,8 +2,8 @@
 Contributors: automattic, mattoperry, justnorris, enigmaweb
 Tags: gutenberg, ramp, classic editor, legacy editor, gutenberg ramp
 Requires at least: 2.7
-Tested up to: 5.0
-Requires PHP: 5.4
+Tested up to: 4.9.5
+Requires PHP: 5.5
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -29,7 +29,7 @@ Loading behaviour is controlled by the `ramp_for_gutenberg_load_gutenberg()` fun
 == Code Examples ==
 
 ```
-if ( function_exists( 'wpcom_vip_load_gutenberg' ) ) {
+if ( function_exists( 'ramp_for_gutenberg_load_gutenberg' ) ) {
 	ramp_for_gutenberg_load_gutenberg();
 }
 ```
