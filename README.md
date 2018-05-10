@@ -33,7 +33,7 @@ Loading behavior is controlled by the `ramp_for_gutenberg_load_gutenberg()` func
 ### Examples
 
 ```
-if ( function_exists( 'wpcom_vip_load_gutenberg' ) ) {
+if ( function_exists( 'ramp_for_gutenberg_load_gutenberg' ) ) {
 	ramp_for_gutenberg_load_gutenberg();
 }
 ```
