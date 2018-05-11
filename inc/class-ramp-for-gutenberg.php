@@ -31,7 +31,7 @@ class Ramp_For_Gutenberg {
 		 * $priority = 5 to ensure that the UI class has fresh data available
 		 * To do that, we need this to run before `ramp_for_gutenberg_initialize_admin_ui()`
 		 */
-		add_action( 'admin_init', [ $this, 'store_criteria' ], 5, 0 );
+		add_action( 'admin_init', [ $this, 'save_criteria' ], 5, 0 );
 	}
 	
 	public function get_option_name() {
@@ -64,7 +64,7 @@ class Ramp_For_Gutenberg {
 		self::$criteria = $criteria;
 	}
 
-	public function store_criteria() {
+	public function save_criteria() {
 		if ( $this->validate_criteria( self::$criteria ) ) {
 			return update_option( $this->get_option_name(), self::$criteria );
 		}
