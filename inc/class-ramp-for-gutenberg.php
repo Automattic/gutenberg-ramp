@@ -7,9 +7,9 @@ class Ramp_For_Gutenberg {
 	/**
 	 * Criteria is temporarily stored on class instance before it can be validated and updated
 	 * Do not trust raw data stored in $criteria!
-	 * @var array $criteria
+	 * @var mixed null|array
 	 */
-	private static $criteria;
+	private static $criteria = null;
 
 	private $option_name = 'ramp_for_gutenberg_load_critera';
 	public $active      = false;
@@ -83,7 +83,8 @@ class Ramp_For_Gutenberg {
 	 */
 	public function save_criteria() {
 
-		if ( $this->validate_criteria( self::$criteria ) ) {
+
+		if ( null !== self::$criteria && $this->validate_criteria( self::$criteria ) ) {
 			update_option( $this->get_option_name(), self::$criteria );
 		}
 
