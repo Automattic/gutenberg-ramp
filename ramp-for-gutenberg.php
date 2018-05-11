@@ -43,7 +43,7 @@ function ramp_for_gutenberg_load_gutenberg( $criteria = false ) {
 	$stored_criteria = $RFG->get_criteria();
 	if ( $criteria !== $stored_criteria ) {
 		// the criteria specified in code have changed -- update them
-		$criteria = $RFG->save_criteria( $criteria );
+		$criteria = $RFG->set_criteria( $criteria );
 	}
 	// indicate that we've loaded the plugin. 
 	$RFG->active = true;

@@ -60,7 +60,7 @@ class Ramp_For_Gutenberg {
 
 	}
 
-	public function save_criteria( $criteria ) {
+	public function set_criteria( $criteria ) {
 		self::$criteria = $criteria;
 	}
 
