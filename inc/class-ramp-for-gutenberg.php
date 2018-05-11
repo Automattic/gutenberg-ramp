@@ -6,6 +6,7 @@ class Ramp_For_Gutenberg {
 
 	/**
 	 * Criteria is temporarily stored on class instance before it can be validated and updated
+	 * Do not trust raw data stored in $criteria!
 	 * @var array $criteria
 	 */
 	private static $criteria;
