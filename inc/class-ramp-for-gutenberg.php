@@ -41,8 +41,8 @@ class Ramp_For_Gutenberg {
 
 	/**
 	 * Get the desired criteria
-	 * @param string $criteria_name - post_types, post_ids, load
 	 *
+	 * @param string $criteria_name - post_types, post_ids, load
 	 * @return mixed
 	 */
 	public function get_criteria( $criteria_name = '' ) {
@@ -61,18 +61,75 @@ class Ramp_For_Gutenberg {
 
 	}
 
+	/**
+	 * Set the private class variable $criteria
+	 * self::$criteria going to be used to update the option when `$this->save_criteria()` is run
+	 *
+	 * @param $criteria
+	 * @return bool
+	 */
 	public function set_criteria( $criteria ) {
-		self::$criteria = $criteria;
-	}
 
-	public function save_criteria() {
-		if ( $this->validate_criteria( self::$criteria ) ) {
-			return update_option( $this->get_option_name(), self::$criteria );
+		if ( $this->sanitize_criteria( $criteria ) ) {
+			self::$criteria = $criteria;
+			return true;
 		}
+
 		return false;
 	}
 
+	/**
+	 * Save criteria in WordPres options if it's valid
+	 */
+	public function save_criteria() {
+
+		if ( $this->validate_criteria( self::$criteria ) ) {
+			update_option( $this->get_option_name(), self::$criteria );
+		}
+
+	}
+
+	/**
+	 * Make sure that the passed $post_types exist and can support Gutenberg
+	 *
+	 * @param array $post_types
+	 * @return bool
+	 */
+	public function validate_post_types( $post_types ) {
+
+		$supported_post_types = array_keys( $this->get_supported_post_types() );
+		foreach ( (array) $post_types as $post_type ) {
+			if ( ! in_array( $post_type, $supported_post_types, true ) ) {
+				_doing_it_wrong( 'ramp_for_gutenberg_load_gutenberg', "Cannot enable Gutenberg support for post type \"{$post_type}\"", null );
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Validate $criteria
+	 *
+	 * @param $criteria
+	 * @return bool
+	 */
 	public function validate_criteria( $criteria ) {
+
+		if ( ! empty( $criteria['post_types'] ) && ! $this->validate_post_types( $criteria['post_types'] ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Sanitize $criteria by making sure it's formatted properly
+	 *
+	 * @param $criteria
+	 * @return bool
+	 */
+	public function sanitize_criteria( $criteria ) {
 
 		if ( ! is_array( $criteria ) || ! $criteria ) {
 			return false;
@@ -92,15 +149,8 @@ class Ramp_For_Gutenberg {
 					}
 					break;
 				case 'post_types':
-
-					$supported_post_types = array_keys( $this->get_supported_post_types() );
-
 					foreach ( $value as $post_type ) {
 						if ( sanitize_title( $post_type ) !== $post_type ) {
-							return false;
-						}
-						if ( ! in_array( $post_type, $supported_post_types, true ) ) {
-							_doing_it_wrong( 'ramp_for_gutenberg_load_gutenberg', "Cannot enable Gutenberg support for post type \"{$post_type}\"", null );
 							return false;
 						}
 					}
