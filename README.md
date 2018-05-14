@@ -61,7 +61,7 @@ The typical use case is as shown above, the parameters do not change except when
 
 If making more dynamic changes, note that the parameter supplied is persisted in a site option; when the parameters are changed in code, one page load is necessary to update the site option before the editor can use the new setting.
 
-###FAQs
+### FAQs
 
 **Why is a post type disabled (greyed out) at Settings > Writing?**
 
