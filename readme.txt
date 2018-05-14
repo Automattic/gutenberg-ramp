@@ -8,11 +8,11 @@ Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Restores legacy editor by default, with controls to enable Gutenberg selectively by post types or post ID.
+Restores legacy editor or enables Gutenberg selectively by post types or post ID.
 
 == Description ==
 
-Activating Gutenberg Ramp plugin will restore legacy editor by default, and adds a settings screen where you can enable Gutenberg selectively (for specific post types or specific posts). Ramp works with both the plugin version of Gutenberg, and the core version, providing a seamless transition.
+Activating Gutenberg Ramp plugin adds a settings screen where you can enable Gutenberg selectively (for specific post types). For even greater control, you can specify Gutenberg loading behavior in code. Ramp works with both the plugin version of Gutenberg, and the core version, providing a seamless transition.
 
 Visit Settings -> Writing to enable Gutenberg by post type. [Screenshots here](https://wordpress.org/plugins/ramp-for-gutenberg/#screenshots)
 
