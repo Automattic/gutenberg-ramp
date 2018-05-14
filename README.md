@@ -65,12 +65,17 @@ If making more dynamic changes, note that the parameter supplied is persisted in
 
 **Why is a post type disabled (greyed out) at Settings > Writing?**
 
-If you're seeing something greyed out, it means the ramp_for_gutenberg_load_gutenberg() function is already in your theme functions.php. If you want to use the wp-admin UI, remove the conflicting function from your functions.php file.
+If you're seeing something greyed out, it means the `ramp_for_gutenberg_load_gutenberg()` function is already in your theme functions.php. If you want to use the wp-admin UI, remove the conflicting function from your functions.php file.
 
 **Why are some post types are not showing up on the settings screen?**
 
-Post types that are not compatible with Gutenberg will not show up. If you think you have found a false negative (posts in that post type DO work with Gutenberg, when Ramp plugin is deactivated) please report it as an issue on GitHub here.
+Post types that are not compatible with Gutenberg will not show up. If you think you have found a false negative (posts in that post type DO work with Gutenberg, when Ramp plugin is deactivated) please report it as an issue on [GitHub here.](https://github.com/Automattic/ramp-for-gutenberg)
+
 
 **Why are the changes I'm making in functions.php are not showing up on the next pageload?**
 
-The parameter supplied in the function is persisted in a site option. Therefore, when the parameters are changed in code, one page load is necessary to update the site option before the editor can use the new setting.
+The parameter supplied in the function is persisted in a site option. Therefore, when the parameters are changed in code, _one page load is necessary_ to update the site option before the editor can use the new setting.
+
+**Can I contribute to this plugin?**
+
+Absolutely! Please create issues and pull requests on [GitHub here.](https://github.com/Automattic/ramp-for-gutenberg)
