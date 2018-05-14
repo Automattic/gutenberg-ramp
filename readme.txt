@@ -88,10 +88,10 @@ Absolutely! Please create issues and pull requests on [GitHub here.](https://git
 
 == Changelog ==
 
-= 1.0 =
-* Initial release
+= 0.1 =
+* initial test release
 
 == Upgrade Notice ==
 
-= 1.0 =
-* Initial release
+= 0.1 =
+* intial test release
