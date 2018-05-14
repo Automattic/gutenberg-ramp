@@ -11,18 +11,16 @@ Gutenberg Ramp is a plugin that manages the state of Gutenberg in the post-edit 
 Gutenberg Ramp assumes one of the following states:
 
 - WordPress 4.9 and the Gutenberg plugin (either activated or not)
-- WordPress 5.0 and the Classic Editor plugin 
-
-If it detects neither of these conditions, it will do nothing.
+- WordPress 5.0 and a fallback editor 
 
 Gutenberg Ramp makes a decision early in the WordPress load sequence (`plugins_loaded`) about whether to take action.  It will take action if the following are true:
 
-- the `wp-admin/post.php` is going to load AND
-- according to code-configured criteria either: Gutenberg should load for the current post and will not OR Gutenberg shouldn't load for the current post and will.
+- either the post edit or new post screens are going to load AND
+- according its user-supplied criteria either: Gutenberg should load for the current post and will not OR Gutenberg shouldn't load for the current post and will.
 
-The currently supported criteria are post ID (load for only specified posts) and post type (load only for specified post types).  You can also instruct Gutenberg to never or always load.
+Loading criteria are supplied either in code (in a theme or plugin) or via UI. Gutenberg can be instructed to always or never load, or to load for just particular post_id or post_types.
 
-### Theme code
+### Specifying Loading Criteria
 
 Criteria are stored in an option and specified by calling a function any time after `plugins_loaded`, typically in theme code or on a hook such as `init`.
 
@@ -32,7 +30,7 @@ Loading behavior is controlled by the `ramp_for_gutenberg_load_gutenberg()` func
 - `posts` (Array of post_ids): loads Gutenberg for the specified post_ids
 -  `post_types` (Array of post_types): loads Gutenberg for the specified post types.
 
-### Examples
+### Code Examples
 
 ```
 if ( function_exists( 'wpcom_vip_load_gutenberg' ) ) {
@@ -44,18 +42,37 @@ Load Gutenberg for all posts.
 
 `ramp_for_gutenberg_load_gutenberg( [ 'load' => 0 ] );`
 
-Do not load Gutenberg for any posts.
+Never load Gutenberg.
 
 `ramp_for_gutenberg_load_gutenberg( [ 'post_ids' => [ 12, 13, 122 ] ] );`
 
-Load Gutenberg for posts with ids 12, 13 and 122.
+Load Gutenberg only for posts with ids 12, 13 and 122.
 
 `ramp_for_gutenberg_load_gutenberg( [ 'post_types' => [ 'test', 'scratch' ], 'post_ids' => [ 12 ] ] );`
 
 Load Gutenberg for post_id 12 and all posts of type `test` and `scratch`
+
+### UI
+
+Ramp for Gutenberg adds a section to the Settings -> Writing menu that allows post_type control of Gutenberg loading.  This can be used in place of specifying criteria in code.
+
 
 ### Advanced	
 
 The typical use case is as shown above, the parameters do not change except when theme code is updated.	
 
 If making more dynamic changes, note that the parameter supplied is persisted in a site option; when the parameters are changed in code, one page load is necessary to update the site option before the editor can use the new setting.
+
+###FAQs
+
+**Why is a post type disabled (greyed out) at Settings > Writing?**
+
+If you're seeing something greyed out, it means the ramp_for_gutenberg_load_gutenberg() function is already in your theme functions.php. If you want to use the wp-admin UI, remove the conflicting function from your functions.php file.
+
+**Why are some post types are not showing up on the settings screen?**
+
+Post types that are not compatible with Gutenberg will not show up. If you think you have found a false negative (posts in that post type DO work with Gutenberg, when Ramp plugin is deactivated) please report it as an issue on GitHub here.
+
+**Why are the changes I'm making in functions.php are not showing up on the next pageload?**
+
+The parameter supplied in the function is persisted in a site option. Therefore, when the parameters are changed in code, one page load is necessary to update the site option before the editor can use the new setting.
