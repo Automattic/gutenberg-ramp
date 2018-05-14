@@ -52,7 +52,7 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 	public function sanitize_post_types_callback( $post_types ) {
 
 		$post_types           = array_unique( (array) $post_types );
-		$supported_post_types = array_keys( $this->get_supported_post_types() );
+		$supported_post_types = array_keys( $this->ramp_for_gutenberg->get_supported_post_types() );
 
 		/**
 		 * Validate & Sanitize
@@ -87,7 +87,7 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 	 */
 	function render_settings_section() {
 
-		$post_types                = $this->get_supported_post_types();
+		$post_types                = $this->ramp_for_gutenberg->get_supported_post_types();
 		$helper_enabled_post_types = (array) $this->ramp_for_gutenberg->get_criteria( 'post_types' );
 		$enabled_post_types        = $this->ramp_for_gutenberg->get_enabled_post_types();
 		?>
@@ -128,8 +128,7 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 							</label>
 							<?php if ( $is_helper_enabled_post_type ): ?>
 								<small style="margin-left: 1rem;">
-									<?php // @TODO: Insert URL Here ?>
-									<a href="#"><?php esc_html_e( 'Why is this disabled?', 'ramp-for-gutenberg' ); ?></a>
+									<a href="https://github.com/Automattic/ramp-for-gutenberg#faqs"><?php esc_html_e( 'Why is this disabled?', 'ramp-for-gutenberg' ); ?></a>
 								</small>
 							<?php endif; ?>
 							<br>
@@ -147,52 +146,11 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 					esc_html__( 'For more granular control you can use the %s function.', 'ramp-for-gutenberg' ),
 					'<code>ramp_for_gutenberg_load_gutenberg()</code>'
 				); ?>
-				<?php // @TODO: Insert URL Here ?>
-				<a href="#" target="_blank"><?php esc_html_e( 'Learn more', 'ramp-for-gutenberg' ); ?></a>
+				<a href="https://github.com/Automattic/ramp-for-gutenberg#faqs" target="_blank"><?php esc_html_e( 'Learn more', 'ramp-for-gutenberg' ); ?></a>
 			</p>
 		</div>
 		<?php
 	}
 
-	/**
-	 * Get post types that can be supported by Gutenberg.
-	 *
-	 * This will get all registered post types and remove post types:
-	 *        * that aren't shown in the admin menu
-	 *        * like attachment, revision, etc.
-	 *        * that don't support native editor UI
-	 *
-	 *
-	 * Also removes post types that don't support `show_in_rest`
-	 *
-	 * @link https://github.com/WordPress/gutenberg/issues/3066
-	 *
-	 * @return array of formatted post types as [ 'slug' => 'label' ]
-	 */
-	public function get_supported_post_types() {
-
-		if ( 0 === did_action( 'init' ) && ! doing_action( 'init' ) ) {
-			trigger_error( "get_supported_post_types() was called before the init hook. Some post types might not be registered yet.", E_USER_WARNING );
-		}
-
-		$post_types = get_post_types(
-			[
-				'show_ui'      => true,
-				'show_in_rest' => true,
-			],
-			'object'
-		);
-
-		$available_post_types = array();
-
-		// Remove post types that don't want an editor
-		foreach ( $post_types as $name => $post_type_object ) {
-			if ( post_type_supports( $name, 'editor' ) && ! empty( $post_type_object->label ) ) {
-				$available_post_types[ $name ] = $post_type_object->label;
-			}
-		}
-
-		return $available_post_types;
-	}
 
 }

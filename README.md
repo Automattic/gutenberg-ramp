@@ -1,7 +1,5 @@
 # Gutenberg Ramp
 
-_Experimental: not ready for production environments, but testing and contributions are welcome_
-
 ### Overview
 
 Gutenberg Ramp is a plugin that manages the state of Gutenberg in the post-edit context.  It loads or unloads Gutenberg in post-edit according to criteria specified in theme code.  It is agnostic about whether Gutenberg is loading from core or via the plugin.
@@ -33,7 +31,7 @@ Loading behavior is controlled by the `ramp_for_gutenberg_load_gutenberg()` func
 ### Code Examples
 
 ```
-if ( function_exists( 'wpcom_vip_load_gutenberg' ) ) {
+if ( function_exists( 'ramp_for_gutenberg_load_gutenberg' ) ) {
 	ramp_for_gutenberg_load_gutenberg();
 }
 ```

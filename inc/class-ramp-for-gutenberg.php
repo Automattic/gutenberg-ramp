@@ -3,9 +3,18 @@
 class Ramp_For_Gutenberg {
 
 	private static $instance;
+
+	/**
+	 * Criteria is temporarily stored on class instance before it can be validated and updated
+	 * Do not trust raw data stored in $criteria!
+	 * @var mixed null|array
+	 */
+	private static $criteria = null;
+
 	private $option_name = 'ramp_for_gutenberg_load_critera';
 	public $active      = false;
 	public $load_gutenberg = null;
+
 
 	public static function get_instance() {
 		if ( ! self::$instance ) {
@@ -16,6 +25,14 @@ class Ramp_For_Gutenberg {
 
 	private function __construct() {
 		$this->option_name = apply_filters( 'ramp_for_gutenberg_option_name', $this->option_name );
+
+		/**
+		 * Store the criteria on admin_init
+		 *
+		 * $priority = 5 to ensure that the UI class has fresh data available
+		 * To do that, we need this to run before `ramp_for_gutenberg_initialize_admin_ui()`
+		 */
+		add_action( 'admin_init', [ $this, 'save_criteria' ], 5, 0 );
 	}
 	
 	public function get_option_name() {
@@ -24,8 +41,8 @@ class Ramp_For_Gutenberg {
 
 	/**
 	 * Get the desired criteria
-	 * @param string $criteria_name - post_types, post_ids, terms, load
 	 *
+	 * @param string $criteria_name - post_types, post_ids, load
 	 * @return mixed
 	 */
 	public function get_criteria( $criteria_name = '' ) {
@@ -44,20 +61,82 @@ class Ramp_For_Gutenberg {
 
 	}
 
-	public function save_criteria( $criteria ) {
-		if ( $this->validate_criteria( $criteria ) ) {
-			return update_option( $this->get_option_name(), $criteria );
+	/**
+	 * Set the private class variable $criteria
+	 * self::$criteria going to be used to update the option when `$this->save_criteria()` is run
+	 *
+	 * @param $criteria
+	 * @return bool
+	 */
+	public function set_criteria( $criteria ) {
+
+		if ( $this->sanitize_criteria( $criteria ) ) {
+			self::$criteria = $criteria;
+			return true;
 		}
+
 		return false;
 	}
 
+	/**
+	 * Save criteria in WordPres options if it's valid
+	 */
+	public function save_criteria() {
+
+
+		if ( null !== self::$criteria && $this->validate_criteria( self::$criteria ) ) {
+			update_option( $this->get_option_name(), self::$criteria );
+		}
+
+	}
+
+	/**
+	 * Make sure that the passed $post_types exist and can support Gutenberg
+	 *
+	 * @param array $post_types
+	 * @return bool
+	 */
+	public function validate_post_types( $post_types ) {
+
+		$supported_post_types = array_keys( $this->get_supported_post_types() );
+		foreach ( (array) $post_types as $post_type ) {
+			if ( ! in_array( $post_type, $supported_post_types, true ) ) {
+				_doing_it_wrong( 'ramp_for_gutenberg_load_gutenberg', "Cannot enable Gutenberg support for post type \"{$post_type}\"", null );
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Validate $criteria
+	 *
+	 * @param $criteria
+	 * @return bool
+	 */
 	public function validate_criteria( $criteria ) {
+
+		if ( ! empty( $criteria['post_types'] ) && ! $this->validate_post_types( $criteria['post_types'] ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Sanitize $criteria by making sure it's formatted properly
+	 *
+	 * @param $criteria
+	 * @return bool
+	 */
+	public function sanitize_criteria( $criteria ) {
 
 		if ( ! is_array( $criteria ) || ! $criteria ) {
 			return false;
 		}
 
-		$criteria_whitelist = [ 'post_ids', 'post_types', 'terms', 'load' ];
+		$criteria_whitelist = [ 'post_ids', 'post_types', 'load' ];
 		foreach ( $criteria as $key => $value ) {
 			if ( ! in_array( $key, $criteria_whitelist, true ) ) {
 				return false;
@@ -73,13 +152,6 @@ class Ramp_For_Gutenberg {
 				case 'post_types':
 					foreach ( $value as $post_type ) {
 						if ( sanitize_title( $post_type ) !== $post_type ) {
-							return false;
-						}
-					}
-					break;
-				case 'terms':
-					foreach ( $value as $term ) {
-						if ( ! is_array( $term ) || count( $term ) !== 2 ) {
 							return false;
 						}
 					}
@@ -155,15 +227,51 @@ class Ramp_For_Gutenberg {
 
 		// grab the criteria
 		$ramp_for_gutenberg_post_ids   = ( isset( $criteria['post_ids'] ) ) ? $criteria['post_ids'] : [];
-		$ramp_for_gutenberg_terms      = ( isset( $criteria['terms'] ) ) ? $criteria['terms'] : [];
 
 		// check post_ids
 		if ( in_array( $ramp_for_gutenberg_post_id, $ramp_for_gutenberg_post_ids, true ) ) {
 			return true;
 		}
+	}
 
-		// check if the post has one of the terms
-		// @todo
+	/**
+	 * Get post types that can be supported by Gutenberg.
+	 *
+	 * This will get all registered post types and remove post types:
+	 *        * that aren't shown in the admin menu
+	 *        * like attachment, revision, etc.
+	 *        * that don't support native editor UI
+	 *
+	 *
+	 * Also removes post types that don't support `show_in_rest`:
+	 * @link https://github.com/WordPress/gutenberg/issues/3066
+	 *
+	 * @return array of formatted post types as [ 'slug' => 'label' ]
+	 */
+	public function get_supported_post_types() {
+
+		if ( 0 === did_action( 'init' ) && ! doing_action( 'init' ) ) {
+			_doing_it_wrong( 'Ramp_For_Gutenberg::get_supported_post_types', "get_supported_post_types() was called before the init hook. Some post types might not be registered yet.", '1.0.0' );
+		}
+
+		$post_types = get_post_types(
+			[
+				'show_ui'      => true,
+				'show_in_rest' => true,
+			],
+			'object'
+		);
+
+		$available_post_types = array();
+
+		// Remove post types that don't want an editor
+		foreach ( $post_types as $name => $post_type_object ) {
+			if ( post_type_supports( $name, 'editor' ) && ! empty( $post_type_object->label ) ) {
+				$available_post_types[ $name ] = $post_type_object->label;
+			}
+		}
+
+		return $available_post_types;
 	}
 
 	/**
