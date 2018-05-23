@@ -33,13 +33,20 @@ include __DIR__ . '/inc/admin/class-ramp-for-gutenberg-post-type-settings-ui.php
 * `ramp_for_gutenberg_load_gutenberg` must be called in the theme before `admin_init`, normally from functions.php or the like
 *
 */
-function ramp_for_gutenberg_load_gutenberg( $criteria = false ) {
+function ramp_for_gutenberg_load_gutenberg( $criteria = true ) {
 	// prevent the front-end from interacting with this plugin at all
 	if ( !is_admin() ) {
 		return;
 	}
 	$RFG = Ramp_For_Gutenberg::get_instance();
-	$criteria = ( !$criteria ) ? [ 'load' => 1 ] : $criteria;
+
+	// Accept bool as $criteria or as $criteria['load']
+	if ( false === $criteria || ( is_array( $criteria ) && isset( $criteria['load'] ) && false === $criteria['load'] ) ) {
+		$criteria = [ 'load' => 0 ];
+	} elseif ( true === $criteria || ( is_array( $criteria ) && isset( $criteria['load'] ) && true === $criteria['load'] ) ) {
+		$criteria = [ 'load' => 1 ];
+	}
+
 	$stored_criteria = $RFG->get_criteria();
 	if ( $criteria !== $stored_criteria ) {
 		// the criteria specified in code have changed -- update them
