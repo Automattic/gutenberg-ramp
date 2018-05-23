@@ -25,28 +25,47 @@ include __DIR__ . '/inc/class-ramp-for-gutenberg.php';
 include __DIR__ . '/inc/admin/class-ramp-for-gutenberg-post-type-settings-ui.php';
 
 /**
-*
-* This function allows themes to specify Gutenberg loading critera.
-* In and of itself it doesn't cause any change to Gutenberg's loading behavior.
-* However, it governs the option which stores the criteria under which Gutenberg will load 
-*
-* `ramp_for_gutenberg_load_gutenberg` must be called in the theme before `admin_init`, normally from functions.php or the like
-*
-*/
-function ramp_for_gutenberg_load_gutenberg( $criteria = false ) {
+ *
+ * This function allows themes to specify Gutenberg loading critera.
+ * In and of itself it doesn't cause any change to Gutenberg's loading behavior.
+ * However, it governs the option which stores the criteria under which Gutenberg will load.
+ *
+ * `ramp_for_gutenberg_load_gutenberg` must be called in the theme before `admin_init`, normally from functions.php or the like.
+ *
+ * @param bool|Array $criteria The criteria used to determine whether Gutenberg should be loaded
+ */
+function ramp_for_gutenberg_load_gutenberg( $criteria = true ) {
+
 	// prevent the front-end from interacting with this plugin at all
-	if ( !is_admin() ) {
+	if ( ! is_admin() ) {
 		return;
 	}
+
 	$RFG = Ramp_For_Gutenberg::get_instance();
-	$criteria = ( !$criteria ) ? [ 'load' => 1 ] : $criteria;
+
+	// Accept bool as $criteria or as $criteria['load']
+	if ( false === $criteria || ( is_array( $criteria ) && isset( $criteria['load'] ) && false === $criteria['load'] ) ) {
+
+		$criteria = [ 'load' => 0 ];
+
+	} elseif ( true === $criteria || ( is_array( $criteria ) && isset( $criteria['load'] ) && true === $criteria['load'] ) ) {
+
+		$criteria = [ 'load' => 1 ];
+
+	}
+
 	$stored_criteria = $RFG->get_criteria();
+
 	if ( $criteria !== $stored_criteria ) {
+
 		// the criteria specified in code have changed -- update them
 		$criteria = $RFG->set_criteria( $criteria );
+
 	}
-	// indicate that we've loaded the plugin. 
+
+	// indicate that we've loaded the plugin.
 	$RFG->active = true;
+
 }
 
 /** grab the plugin **/
