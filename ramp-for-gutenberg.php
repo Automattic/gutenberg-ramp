@@ -30,7 +30,7 @@ include __DIR__ . '/inc/admin/class-ramp-for-gutenberg-post-type-settings-ui.php
 * In and of itself it doesn't cause any change to Gutenberg's loading behavior.
 * However, it governs the option which stores the criteria under which Gutenberg will load 
 *
-* `ramp_for_gutenberg_load_gutenberg` must be called in the theme before `admin_init`, normally from functions.php or the like
+* `ramp_for_gutenberg_load_gutenberg` must be called before `admin_init`, normally from functions.php or the like
 *
 * @param array $criteria The criteria that should be use to determine whether or not Gutenberg should be loaded
 */
