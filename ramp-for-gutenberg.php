@@ -39,12 +39,11 @@ function ramp_for_gutenberg_load_gutenberg( $criteria = false ) {
 		return;
 	}
 	$RFG = Ramp_For_Gutenberg::get_instance();
+
 	$criteria = ( !$criteria ) ? [ 'load' => 1 ] : $criteria;
-	$stored_criteria = $RFG->get_criteria();
-	if ( $criteria !== $stored_criteria ) {
-		// the criteria specified in code have changed -- update them
-		$criteria = $RFG->set_criteria( $criteria );
-	}
+
+	$criteria = $RFG->set_criteria( $criteria );
+
 	// indicate that we've loaded the plugin. 
 	$RFG->active = true;
 }
