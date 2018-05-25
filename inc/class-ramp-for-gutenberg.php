@@ -82,7 +82,7 @@ class Ramp_For_Gutenberg {
 		/**
 		 * For the current setup of criteria, we can only merge 'post_ids' and 'post_types'.
 		 * The 'load' parameter only accepts a single value, so nothing to merge and the _last_ value it's passed will be the one used.
-		 */ 
+		 */
 		if ( is_array( $existing_criteria ) ) {
 			foreach ( $existing_criteria as $key => $value ) {
 				if ( isset( $new_criteria[ $key ] ) && is_array( $value ) ) {

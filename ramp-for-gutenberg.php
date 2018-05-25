@@ -25,28 +25,31 @@ include __DIR__ . '/inc/class-ramp-for-gutenberg.php';
 include __DIR__ . '/inc/admin/class-ramp-for-gutenberg-post-type-settings-ui.php';
 
 /**
-*
-* This function allows themes to specify Gutenberg loading critera.
-* In and of itself it doesn't cause any change to Gutenberg's loading behavior.
-* However, it governs the option which stores the criteria under which Gutenberg will load 
-*
-* `ramp_for_gutenberg_load_gutenberg` must be called before `admin_init`, normally from functions.php or the like
-*
-* @param array $criteria The criteria that should be use to determine whether or not Gutenberg should be loaded
-*/
+ *
+ * This function allows themes to specify Gutenberg loading critera.
+ * In and of itself it doesn't cause any change to Gutenberg's loading behavior.
+ * However, it governs the option which stores the criteria under which Gutenberg will load.
+ *
+ * `ramp_for_gutenberg_load_gutenberg` must be called before `admin_init`, normally from functions.php or the like.
+ *
+ * @param array $criteria The criteria that should be use to determine whether or not Gutenberg should be loaded
+ */
 function ramp_for_gutenberg_load_gutenberg( $criteria = false ) {
+
 	// prevent the front-end from interacting with this plugin at all
-	if ( !is_admin() ) {
+	if ( ! is_admin() ) {
 		return;
 	}
+
 	$RFG = Ramp_For_Gutenberg::get_instance();
 
-	$criteria = ( !$criteria ) ? [ 'load' => 1 ] : $criteria;
+	$criteria = ( ! $criteria ) ? [ 'load' => 1 ] : $criteria;
 
 	$criteria = $RFG->set_criteria( $criteria );
 
-	// indicate that we've loaded the plugin. 
+	// indicate that we've loaded the plugin.
 	$RFG->active = true;
+
 }
 
 /** grab the plugin **/
