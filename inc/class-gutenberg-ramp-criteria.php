@@ -66,12 +66,67 @@ class Gutenberg_Ramp_Criteria {
 	public function set( $criteria ) {
 
 		if ( $this->is_sanitized( $criteria ) ) {
+			$existing_criteria = self::$criteria;
+
+			if ( ! is_null( $existing_criteria ) ) {
+				$criteria = $this->merge( $criteria );
+			}
+
 			self::$criteria = $criteria;
 
 			return true;
 		}
 
 		return false;
+	}
+
+	/**
+	 * Merge all criteria from all calls to ramp_for_gutenberg_load_gutenberg()
+	 *
+	 * @param array $criteria The new criteria to be merged with existing criteria.
+	 * @return array The merged criteria.
+	 */
+	public function merge( $criteria = [] ) {
+
+		// Get our existing criteria
+		$existing_criteria = self::$criteria;
+
+		// If this hasn't been set to active yet, there's nothing to merge - theoretically this should never be triggered.
+		$ramp = Gutenberg_Ramp::get_instance();
+		if ( ! $ramp->active ) {
+			return $criteria;
+		}
+
+		$merged_criteria = [];
+
+		/**
+		 * For the current setup of criteria, we can only merge 'post_ids' and 'post_types'.
+		 * The 'load' parameter only accepts a single value, so nothing to merge and the _last_ value it's passed will be the one used.
+		 */ 
+		if ( is_array( $existing_criteria ) ) {
+			foreach ( $existing_criteria as $key => $value ) {
+				if ( isset( $criteria[ $key ] ) && is_array( $value ) ) {
+					$merged_criteria[ $key ] = array_merge( $value, $criteria[ $key ] );
+					unset( $criteria[ $key ] );
+				} elseif ( isset( $criteria[ $key ] ) ) {
+					$merged_criteria[ $key ] = $criteria[ $key ];
+				} else {
+					$merged_criteria[ $key ] = $value;
+				}
+			}
+		}
+
+		// This catches any array keys _not_ yet set in our merged criteria.
+		$merged_criteria = array_merge( $merged_criteria, $criteria );
+
+		// Clear out duplicate values.
+		foreach ( $merged_criteria as $key => $value ) {
+			if ( is_array( $value ) ) {
+				$merged_criteria[ $key ] = array_unique( $value );
+			}
+		}
+
+		return $merged_criteria;
 	}
 
 	/**
