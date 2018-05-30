@@ -27,14 +27,14 @@ class Gutenberg_Ramp_Post_Type_Settings_UI {
 
 		register_setting(
 			'writing',
-			'ramp_for_gutenberg_post_types',
+			'gutenberg_ramp_post_types',
 			[
 				'sanitize_callback' => [ $this, 'sanitize_post_types_callback' ],
 			]
 		);
 
 		add_settings_section(
-			'ramp_for_gutenberg_post_types',
+			'gutenberg_ramp_post_types',
 			esc_html__( 'Ramp for Gutenberg', 'ramp-for-gutenberg' ),
 			[ $this, 'render_settings_section' ],
 			'writing'
@@ -63,8 +63,8 @@ class Gutenberg_Ramp_Post_Type_Settings_UI {
 				$validated_post_types[] = $post_type;
 			} else {
 				add_settings_error(
-					'ramp_for_gutenberg_post_types',
-					'ramp_for_gutenberg_post_types',
+					'gutenberg_ramp_post_types',
+					'gutenberg_ramp_post_types',
 					sprintf( esc_html__( "Can't enable Gutenberg for post type \"%s\"" ), sanitize_title( $post_type ) )
 				);
 			}
@@ -110,7 +110,7 @@ class Gutenberg_Ramp_Post_Type_Settings_UI {
 
 							<label for="rfg-post-type-<?php echo esc_attr( $slug ) ?>">
 
-								<input name="ramp_for_gutenberg_post_types[]"
+								<input name="gutenberg_ramp_post_types[]"
 									   type="checkbox"
 									   id="rfg-post-type-<?php echo esc_attr( $slug ) ?>"
 										<?php
@@ -144,7 +144,7 @@ class Gutenberg_Ramp_Post_Type_Settings_UI {
 			<p>
 				<?php printf(
 					esc_html__( 'For more granular control you can use the %s function.', 'ramp-for-gutenberg' ),
-					'<code>ramp_for_gutenberg_load_gutenberg()</code>'
+					'<code>gutenberg_ramp_load_gutenberg()</code>'
 				); ?>
 				<a href="https://github.com/Automattic/ramp-for-gutenberg#faqs" target="_blank"><?php esc_html_e( 'Learn more', 'ramp-for-gutenberg' ); ?></a>
 			</p>
