@@ -35,7 +35,7 @@ class Gutenberg_Ramp_Post_Type_Settings_UI {
 
 		add_settings_section(
 			'gutenberg_ramp_post_types',
-			esc_html__( 'Ramp for Gutenberg', 'ramp-for-gutenberg' ),
+			esc_html__( 'Ramp for Gutenberg', 'gutenberg-ramp' ),
 			[ $this, 'render_settings_section' ],
 			'writing'
 		);
@@ -93,17 +93,17 @@ class Gutenberg_Ramp_Post_Type_Settings_UI {
 		?>
 		<div class="ramp-for-gutenberg-description">
 			<p>
-				<?php esc_html_e( 'Use these settings to enable Gutenberg for specific post types.', 'ramp-for-gutenberg' ); ?>
+				<?php esc_html_e( 'Use these settings to enable Gutenberg for specific post types.', 'gutenberg-ramp' ); ?>
 			</p>
 		</div>
 
 		<table class="form-table">
 			<tbody>
-			<tr class="ramp-for-gutenberg-post-types">
-				<th scope="row"><?php esc_html_e( 'Enable Gutenberg on', 'ramp-for-gutenberg' ); ?></th>
+			<tr class="gutenberg-ramp-post-types">
+				<th scope="row"><?php esc_html_e( 'Enable Gutenberg on', 'gutenberg-ramp' ); ?></th>
 				<td>
 					<fieldset>
-						<legend class="screen-reader-text"><span><?php esc_html_e( 'Enable Gutenberg on', 'ramp-for-gutenberg' ); ?> </span></legend>
+						<legend class="screen-reader-text"><span><?php esc_html_e( 'Enable Gutenberg on', 'gutenberg-ramp' ); ?> </span></legend>
 
 						<?php foreach ( $post_types as $slug => $label ) : ?>
 							<?php $is_helper_enabled_post_type = in_array( $slug, $helper_enabled_post_types, true ); ?>
@@ -128,7 +128,7 @@ class Gutenberg_Ramp_Post_Type_Settings_UI {
 							</label>
 							<?php if ( $is_helper_enabled_post_type ): ?>
 								<small style="margin-left: 1rem;">
-									<a href="https://github.com/Automattic/ramp-for-gutenberg#faqs"><?php esc_html_e( 'Why is this disabled?', 'ramp-for-gutenberg' ); ?></a>
+									<a href="https://github.com/Automattic/gutenberg-ramp#faqs"><?php esc_html_e( 'Why is this disabled?', 'gutenberg-ramp' ); ?></a>
 								</small>
 							<?php endif; ?>
 							<br>
@@ -140,13 +140,13 @@ class Gutenberg_Ramp_Post_Type_Settings_UI {
 			</tbody>
 		</table>
 
-		<div class="ramp-for-gutenberg-description">
+		<div class="gutenberg-ramp-description">
 			<p>
 				<?php printf(
-					esc_html__( 'For more granular control you can use the %s function.', 'ramp-for-gutenberg' ),
+					esc_html__( 'For more granular control you can use the %s function.', 'gutenberg-ramp' ),
 					'<code>gutenberg_ramp_load_gutenberg()</code>'
 				); ?>
-				<a href="https://github.com/Automattic/ramp-for-gutenberg#faqs" target="_blank"><?php esc_html_e( 'Learn more', 'ramp-for-gutenberg' ); ?></a>
+				<a href="https://github.com/Automattic/gutenberg-ramp#faqs" target="_blank"><?php esc_html_e( 'Learn more', 'gutenberg-ramp' ); ?></a>
 			</p>
 		</div>
 		<?php
