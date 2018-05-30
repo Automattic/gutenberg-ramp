@@ -91,7 +91,7 @@ class Gutenberg_Ramp_Post_Type_Settings_UI {
 		$helper_enabled_post_types = (array) $this->ramp_for_gutenberg->get_criteria( 'post_types' );
 		$enabled_post_types        = $this->ramp_for_gutenberg->get_enabled_post_types();
 		?>
-		<div class="ramp-for-gutenberg-description">
+		<div class="gutenberg-ramp-description">
 			<p>
 				<?php esc_html_e( 'Use these settings to enable Gutenberg for specific post types.', 'gutenberg-ramp' ); ?>
 			</p>
