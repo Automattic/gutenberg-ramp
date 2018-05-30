@@ -1,6 +1,6 @@
 <?php
 
-class Ramp_For_Gutenberg {
+class Gutenberg_Ramp {
 
 	private static $instance;
 
@@ -18,7 +18,7 @@ class Ramp_For_Gutenberg {
 
 	public static function get_instance() {
 		if ( ! self::$instance ) {
-			 self::$instance = new Ramp_For_Gutenberg();
+			 self::$instance = new Gutenberg_Ramp();
 		}
 		return self::$instance;
 	}
@@ -251,7 +251,7 @@ class Ramp_For_Gutenberg {
 	public function get_supported_post_types() {
 
 		if ( 0 === did_action( 'init' ) && ! doing_action( 'init' ) ) {
-			_doing_it_wrong( 'Ramp_For_Gutenberg::get_supported_post_types', "get_supported_post_types() was called before the init hook. Some post types might not be registered yet.", '1.0.0' );
+			_doing_it_wrong( 'Gutenberg_Ramp::get_supported_post_types', "get_supported_post_types() was called before the init hook. Some post types might not be registered yet.", '1.0.0' );
 		}
 
 		$post_types = get_post_types(

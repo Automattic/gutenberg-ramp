@@ -38,7 +38,7 @@ function ramp_for_gutenberg_load_gutenberg( $criteria = false ) {
 	if ( !is_admin() ) {
 		return;
 	}
-	$RFG = Ramp_For_Gutenberg::get_instance();
+	$RFG = Gutenberg_Ramp::get_instance();
 	$criteria = ( !$criteria ) ? [ 'load' => 1 ] : $criteria;
 	$stored_criteria = $RFG->get_criteria();
 	if ( $criteria !== $stored_criteria ) {
@@ -50,7 +50,7 @@ function ramp_for_gutenberg_load_gutenberg( $criteria = false ) {
 }
 
 /** grab the plugin **/
-$RFG = Ramp_For_Gutenberg::get_instance();
+$RFG = Gutenberg_Ramp::get_instance();
 
 /** off to the races **/
 add_action( 'plugins_loaded', [ $RFG, 'load_decision' ], 20, 0 );

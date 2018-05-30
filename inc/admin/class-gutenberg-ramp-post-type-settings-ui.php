@@ -3,7 +3,7 @@
 class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 
 	/**
-	 * @var Ramp_For_Gutenberg instance
+	 * @var Gutenberg_Ramp instance
 	 */
 	protected $ramp_for_gutenberg;
 
@@ -16,7 +16,7 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 			return;
 		}
 
-		$this->ramp_for_gutenberg = Ramp_For_Gutenberg::get_instance();
+		$this->ramp_for_gutenberg = Gutenberg_Ramp::get_instance();
 		$this->add_writing_settings_section();
 	}
 
