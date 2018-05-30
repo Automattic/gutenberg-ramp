@@ -1,6 +1,6 @@
 <?php
 
-class Ramp_For_Gutenberg_Post_Type_Settings_UI {
+class Gutenberg_Ramp_Post_Type_Settings_UI {
 
 	/**
 	 * @var Gutenberg_Ramp instance
@@ -8,7 +8,7 @@ class Ramp_For_Gutenberg_Post_Type_Settings_UI {
 	protected $ramp_for_gutenberg;
 
 	/**
-	 * Ramp_For_Gutenberg_Post_Type_Settings_UI constructor.
+	 * Gutenberg_Ramp_Post_Type_Settings_UI constructor.
 	 */
 	public function __construct() {
 

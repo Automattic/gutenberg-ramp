@@ -82,6 +82,6 @@ add_action( 'plugins_loaded', function() {
  * Initialize Admin UI
  */
 function ramp_for_gutenberg_initialize_admin_ui() {
-	new Ramp_For_Gutenberg_Post_Type_Settings_UI();
+	new Gutenberg_Ramp_Post_Type_Settings_UI();
 }
 add_action( 'admin_init', 'ramp_for_gutenberg_initialize_admin_ui' );
