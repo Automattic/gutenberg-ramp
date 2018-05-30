@@ -56,7 +56,7 @@ If making more dynamic changes, note that the parameter supplied is persisted in
 
 == Contributions ==
 
-Contributions are welcome via our [GitHub repo.](https://github.com/Automattic/gutenberg-ramp)
+Contributions are welcome via our [GitHub repo.](https://github.com/Automattic/ramp-for-gutenberg)
 
 == Installation ==
 
@@ -72,7 +72,7 @@ If you're seeing something greyed out, it means the `gutenberg_ramp_load_gutenbe
 
 = Some post types are not showing up on the settings screen =
 
-Post types that are not compatible with Gutenberg will not show up. If you think you have found a false negative (posts in that post type DO work with Gutenberg, when Ramp plugin is deactivated) please report it as an issue on [GitHub here.](https://github.com/Automattic/gutenberg-ramp)
+Post types that are not compatible with Gutenberg will not show up. If you think you have found a false negative (posts in that post type DO work with Gutenberg, when Ramp plugin is deactivated) please report it as an issue on [GitHub here.](https://github.com/Automattic/ramp-for-gutenberg)
 
 = The changes I'm making in functions.php are not showing up =
 
@@ -80,7 +80,7 @@ The parameter supplied in the function is persisted in a site option. Therefore,
 
 = Can I contribute to this plugin? =
 
-Absolutely! Please create issues and pull requests on [GitHub here.](https://github.com/Automattic/gutenberg-ramp)
+Absolutely! Please create issues and pull requests on [GitHub here.](https://github.com/Automattic/ramp-for-gutenberg)
 
 == Screenshots ==
 
