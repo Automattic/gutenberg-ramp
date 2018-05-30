@@ -5,7 +5,7 @@ class Gutenberg_Ramp_Post_Type_Settings_UI {
 	/**
 	 * @var Gutenberg_Ramp instance
 	 */
-	protected $ramp_for_gutenberg;
+	protected $gutenberg_ramp;
 
 	/**
 	 * Gutenberg_Ramp_Post_Type_Settings_UI constructor.
@@ -16,7 +16,7 @@ class Gutenberg_Ramp_Post_Type_Settings_UI {
 			return;
 		}
 
-		$this->ramp_for_gutenberg = Gutenberg_Ramp::get_instance();
+		$this->gutenberg_ramp = Gutenberg_Ramp::get_instance();
 		$this->add_writing_settings_section();
 	}
 
@@ -52,7 +52,7 @@ class Gutenberg_Ramp_Post_Type_Settings_UI {
 	public function sanitize_post_types_callback( $post_types ) {
 
 		$post_types           = array_unique( (array) $post_types );
-		$supported_post_types = array_keys( $this->ramp_for_gutenberg->get_supported_post_types() );
+		$supported_post_types = array_keys( $this->gutenberg_ramp->get_supported_post_types() );
 
 		/**
 		 * Validate & Sanitize
@@ -76,7 +76,7 @@ class Gutenberg_Ramp_Post_Type_Settings_UI {
 		 * Even though `disabled` attribute prevents data from being submitted to server
 		 * This is just going to make sure it accidentally doesn't fall through
 		 */
-		$helper_enabled_post_types = (array) $this->ramp_for_gutenberg->get_criteria( 'post_types' );
+		$helper_enabled_post_types = (array) $this->gutenberg_ramp->get_criteria( 'post_types' );
 		$validated_post_types      = array_diff( $validated_post_types, $helper_enabled_post_types );
 
 		return $validated_post_types;
@@ -87,9 +87,9 @@ class Gutenberg_Ramp_Post_Type_Settings_UI {
 	 */
 	function render_settings_section() {
 
-		$post_types                = $this->ramp_for_gutenberg->get_supported_post_types();
-		$helper_enabled_post_types = (array) $this->ramp_for_gutenberg->get_criteria( 'post_types' );
-		$enabled_post_types        = $this->ramp_for_gutenberg->get_enabled_post_types();
+		$post_types                = $this->gutenberg_ramp->get_supported_post_types();
+		$helper_enabled_post_types = (array) $this->gutenberg_ramp->get_criteria( 'post_types' );
+		$enabled_post_types        = $this->gutenberg_ramp->get_enabled_post_types();
 		?>
 		<div class="gutenberg-ramp-description">
 			<p>
