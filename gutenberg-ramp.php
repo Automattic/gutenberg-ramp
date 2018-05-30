@@ -85,3 +85,16 @@ function gutenberg_ramp_initialize_admin_ui() {
 	new Gutenberg_Ramp_Post_Type_Settings_UI();
 }
 add_action( 'admin_init', 'gutenberg_ramp_initialize_admin_ui' );
+
+/**
+ * Fallback function for people who tried Gutenberg Ramp before version 0.3
+ *
+ * @param bool $criteria
+ *
+ * @deprecated  0.3.0
+ */
+function ramp_for_gutenberg_load_gutenberg( $criteria = false ) {
+
+	_deprecated_function( 'ramp_for_gutenberg_load_gutenberg', '0.3', 'gutenberg_ramp_load_gutenberg' );
+	gutenberg_ramp_load_gutenberg( $criteria );
+}
