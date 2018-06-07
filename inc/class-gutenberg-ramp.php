@@ -1,6 +1,6 @@
 <?php
 
-class Ramp_For_Gutenberg {
+class Gutenberg_Ramp {
 
 	private static $instance;
 
@@ -11,26 +11,26 @@ class Ramp_For_Gutenberg {
 	 */
 	private static $criteria = null;
 
-	private $option_name = 'ramp_for_gutenberg_load_critera';
+	private $option_name = 'gutenberg_ramp_load_critera';
 	public $active      = false;
 	public $load_gutenberg = null;
 
 
 	public static function get_instance() {
 		if ( ! self::$instance ) {
-			 self::$instance = new Ramp_For_Gutenberg();
+			 self::$instance = new Gutenberg_Ramp();
 		}
 		return self::$instance;
 	}
 
 	private function __construct() {
-		$this->option_name = apply_filters( 'ramp_for_gutenberg_option_name', $this->option_name );
+		$this->option_name = apply_filters( 'gutenberg_ramp_option_name', $this->option_name );
 
 		/**
 		 * Store the criteria on admin_init
 		 *
 		 * $priority = 5 to ensure that the UI class has fresh data available
-		 * To do that, we need this to run before `ramp_for_gutenberg_initialize_admin_ui()`
+		 * To do that, we need this to run before `gutenberg_ramp_initialize_admin_ui()`
 		 */
 		add_action( 'admin_init', [ $this, 'save_criteria' ], 5, 0 );
 	}
@@ -101,7 +101,7 @@ class Ramp_For_Gutenberg {
 		$supported_post_types = array_keys( $this->get_supported_post_types() );
 		foreach ( (array) $post_types as $post_type ) {
 			if ( ! in_array( $post_type, $supported_post_types, true ) ) {
-				_doing_it_wrong( 'ramp_for_gutenberg_load_gutenberg', "Cannot enable Gutenberg support for post type \"{$post_type}\"", null );
+				_doing_it_wrong( 'gutenberg_ramp_load_gutenberg', "Cannot enable Gutenberg support for post type \"{$post_type}\"", null );
 				return false;
 			}
 		}
@@ -214,22 +214,22 @@ class Ramp_For_Gutenberg {
 		// in order load Gutnberg because of other criteria, we will need to check that a few things are true:
 		// 1. we are attempting to load post.php ... there's an available post_id
 		// 2. there's an available post_id in the URL to check
-		$ramp_for_gutenberg_post_id = $this->get_current_post_id();
+		$gutenberg_ramp_post_id = $this->get_current_post_id();
 
 		// check post_types
-		if ( $this->is_allowed_post_type( $ramp_for_gutenberg_post_id ) ) {
+		if ( $this->is_allowed_post_type( $gutenberg_ramp_post_id ) ) {
 			return true;
 		}
 
-		if ( ! $ramp_for_gutenberg_post_id ) {
+		if ( ! $gutenberg_ramp_post_id ) {
 			return false;
 		}
 
 		// grab the criteria
-		$ramp_for_gutenberg_post_ids   = ( isset( $criteria['post_ids'] ) ) ? $criteria['post_ids'] : [];
+		$gutenberg_ramp_post_ids   = ( isset( $criteria['post_ids'] ) ) ? $criteria['post_ids'] : [];
 
 		// check post_ids
-		if ( in_array( $ramp_for_gutenberg_post_id, $ramp_for_gutenberg_post_ids, true ) ) {
+		if ( in_array( $gutenberg_ramp_post_id, $gutenberg_ramp_post_ids, true ) ) {
 			return true;
 		}
 	}
@@ -251,7 +251,7 @@ class Ramp_For_Gutenberg {
 	public function get_supported_post_types() {
 
 		if ( 0 === did_action( 'init' ) && ! doing_action( 'init' ) ) {
-			_doing_it_wrong( 'Ramp_For_Gutenberg::get_supported_post_types', "get_supported_post_types() was called before the init hook. Some post types might not be registered yet.", '1.0.0' );
+			_doing_it_wrong( 'Gutenberg_Ramp::get_supported_post_types', "get_supported_post_types() was called before the init hook. Some post types might not be registered yet.", '1.0.0' );
 		}
 
 		$post_types = get_post_types(
@@ -281,7 +281,7 @@ class Ramp_For_Gutenberg {
 	 */
 	public function get_enabled_post_types() {
 
-		$ui_enabled_post_types     = (array) get_option( 'ramp_for_gutenberg_post_types', array() );
+		$ui_enabled_post_types     = (array) get_option( 'gutenberg_ramp_post_types', array() );
 		$helper_enabled_post_types = (array) $this->get_criteria( 'post_types' );
 
 		return array_unique( array_merge( $ui_enabled_post_types, $helper_enabled_post_types ) );
@@ -354,8 +354,8 @@ class Ramp_For_Gutenberg {
 	// load gutenberg from the plugin
 	public function gutenberg_load() {
 		// perform any actions required before loading gutenberg
-		do_action( 'ramp_for_gutenberg_before_load_gutenberg' );
-		$gutenberg_include = apply_filters( 'ramp_for_gutenberg_gutenberg_load_path', WP_PLUGIN_DIR . '/gutenberg/gutenberg.php' );
+		do_action( 'gutenberg_ramp_before_load_gutenberg' );
+		$gutenberg_include = apply_filters( 'gutenberg_ramp_gutenberg_load_path', WP_PLUGIN_DIR . '/gutenberg/gutenberg.php' );
 		if ( validate_file( $gutenberg_include ) !== 0 ) {
 			return false;
 		}

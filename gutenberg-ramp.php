@@ -8,7 +8,7 @@
  * Author:      Automattic, Inc.
  * License:     GPL-2.0+
  * License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
- * Text Domain: ramp-for-gutenberg
+ * Text Domain: gutenberg-ramp
  */
 
  /*
@@ -21,8 +21,8 @@
  *
  */
 
-include __DIR__ . '/inc/class-ramp-for-gutenberg.php';
-include __DIR__ . '/inc/admin/class-ramp-for-gutenberg-post-type-settings-ui.php';
+include __DIR__ . '/inc/class-gutenberg-ramp.php';
+include __DIR__ . '/inc/admin/class-gutenberg-ramp-post-type-settings-ui.php';
 
 /**
 *
@@ -30,15 +30,15 @@ include __DIR__ . '/inc/admin/class-ramp-for-gutenberg-post-type-settings-ui.php
 * In and of itself it doesn't cause any change to Gutenberg's loading behavior.
 * However, it governs the option which stores the criteria under which Gutenberg will load 
 *
-* `ramp_for_gutenberg_load_gutenberg` must be called in the theme before `admin_init`, normally from functions.php or the like
+* `gutenberg_ramp_load_gutenberg` must be called in the theme before `admin_init`, normally from functions.php or the like
 *
 */
-function ramp_for_gutenberg_load_gutenberg( $criteria = false ) {
+function gutenberg_ramp_load_gutenberg( $criteria = false ) {
 	// prevent the front-end from interacting with this plugin at all
 	if ( !is_admin() ) {
 		return;
 	}
-	$RFG = Ramp_For_Gutenberg::get_instance();
+	$RFG = Gutenberg_Ramp::get_instance();
 	$criteria = ( !$criteria ) ? [ 'load' => 1 ] : $criteria;
 	$stored_criteria = $RFG->get_criteria();
 	if ( $criteria !== $stored_criteria ) {
@@ -50,11 +50,11 @@ function ramp_for_gutenberg_load_gutenberg( $criteria = false ) {
 }
 
 /** grab the plugin **/
-$RFG = Ramp_For_Gutenberg::get_instance();
+$RFG = Gutenberg_Ramp::get_instance();
 
 /** off to the races **/
 add_action( 'plugins_loaded', [ $RFG, 'load_decision' ], 20, 0 );
-// if ramp_for_gutenberg_load_gutenberg() has not been called, perform cleanup
+// if gutenberg_ramp_load_gutenberg() has not been called, perform cleanup
 // unfortunately this must be done on every admin pageload to detect the case where
 // criteria were previously being set in a theme, but now are not (due to a code change)
 add_action( 'admin_init' , [ $RFG, 'cleanup_option' ], 10, 0 );
@@ -81,7 +81,20 @@ add_action( 'plugins_loaded', function() {
 /**
  * Initialize Admin UI
  */
-function ramp_for_gutenberg_initialize_admin_ui() {
-	new Ramp_For_Gutenberg_Post_Type_Settings_UI();
+function gutenberg_ramp_initialize_admin_ui() {
+	new Gutenberg_Ramp_Post_Type_Settings_UI();
 }
-add_action( 'admin_init', 'ramp_for_gutenberg_initialize_admin_ui' );
+add_action( 'admin_init', 'gutenberg_ramp_initialize_admin_ui' );
+
+/**
+ * Fallback function for people who tried Gutenberg Ramp before version 0.3
+ *
+ * @param bool $criteria
+ *
+ * @deprecated  0.3.0
+ */
+function ramp_for_gutenberg_load_gutenberg( $criteria = false ) {
+
+	_deprecated_function( 'ramp_for_gutenberg_load_gutenberg', '0.3', 'gutenberg_ramp_load_gutenberg' );
+	gutenberg_ramp_load_gutenberg( $criteria );
+}
