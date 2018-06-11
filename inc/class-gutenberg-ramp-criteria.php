@@ -171,8 +171,10 @@ class Gutenberg_Ramp_Criteria {
 		return true;
 	}
 
-
-	public function purge() {
+	/**
+	 * Delete the criteria data from options
+	 */
+	public function delete() {
 		delete_option( $this->get_option_name() );
 	}
 
