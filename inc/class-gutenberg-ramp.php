@@ -107,7 +107,7 @@ class Gutenberg_Ramp {
 		 * Return false early -
 		 * If criteria is empty and there are no post types enabled from the Ramp UI
 		 */
-		if ( ! $criteria && empty( $this->get_enabled_post_types() ) ) {
+		if ( ! $criteria && empty( $this->criteria->get_enabled_post_types() ) ) {
 			return false;
 		}
 
