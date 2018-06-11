@@ -11,19 +11,21 @@ class Gutenberg_Ramp {
 	 */
 	private static $criteria = null;
 
-	private $option_name = 'gutenberg_ramp_load_critera';
-	public $active      = false;
-	public $load_gutenberg = null;
-
+	private $option_name    = 'gutenberg_ramp_load_critera';
+	public  $active         = false;
+	public  $load_gutenberg = null;
 
 	public static function get_instance() {
+
 		if ( ! self::$instance ) {
-			 self::$instance = new Gutenberg_Ramp();
+			self::$instance = new Gutenberg_Ramp();
 		}
+
 		return self::$instance;
 	}
 
 	private function __construct() {
+
 		$this->option_name = apply_filters( 'gutenberg_ramp_option_name', $this->option_name );
 
 		/**
@@ -34,8 +36,9 @@ class Gutenberg_Ramp {
 		 */
 		add_action( 'admin_init', [ $this, 'save_criteria' ], 5, 0 );
 	}
-	
+
 	public function get_option_name() {
+
 		return $this->option_name;
 	}
 
@@ -43,6 +46,7 @@ class Gutenberg_Ramp {
 	 * Get the desired criteria
 	 *
 	 * @param string $criteria_name - post_types, post_ids, load
+	 *
 	 * @return mixed
 	 */
 	public function get_criteria( $criteria_name = '' ) {
@@ -66,12 +70,14 @@ class Gutenberg_Ramp {
 	 * self::$criteria going to be used to update the option when `$this->save_criteria()` is run
 	 *
 	 * @param $criteria
+	 *
 	 * @return bool
 	 */
 	public function set_criteria( $criteria ) {
 
 		if ( $this->sanitize_criteria( $criteria ) ) {
 			self::$criteria = $criteria;
+
 			return true;
 		}
 
@@ -83,7 +89,6 @@ class Gutenberg_Ramp {
 	 */
 	public function save_criteria() {
 
-
 		if ( null !== self::$criteria && $this->validate_criteria( self::$criteria ) ) {
 			update_option( $this->get_option_name(), self::$criteria );
 		}
@@ -94,6 +99,7 @@ class Gutenberg_Ramp {
 	 * Make sure that the passed $post_types exist and can support Gutenberg
 	 *
 	 * @param array $post_types
+	 *
 	 * @return bool
 	 */
 	public function validate_post_types( $post_types ) {
@@ -102,6 +108,7 @@ class Gutenberg_Ramp {
 		foreach ( (array) $post_types as $post_type ) {
 			if ( ! in_array( $post_type, $supported_post_types, true ) ) {
 				_doing_it_wrong( 'gutenberg_ramp_load_gutenberg', "Cannot enable Gutenberg support for post type \"{$post_type}\"", null );
+
 				return false;
 			}
 		}
@@ -113,6 +120,7 @@ class Gutenberg_Ramp {
 	 * Validate $criteria
 	 *
 	 * @param $criteria
+	 *
 	 * @return bool
 	 */
 	public function validate_criteria( $criteria ) {
@@ -128,6 +136,7 @@ class Gutenberg_Ramp {
 	 * Sanitize $criteria by making sure it's formatted properly
 	 *
 	 * @param $criteria
+	 *
 	 * @return bool
 	 */
 	public function sanitize_criteria( $criteria ) {
@@ -157,7 +166,7 @@ class Gutenberg_Ramp {
 					}
 					break;
 				case 'load':
-					if ( !in_array( $value, [ 0, 1 ], true ) ) {
+					if ( ! in_array( $value, [ 0, 1 ], true ) ) {
 						return false;
 					}
 					break;
@@ -165,10 +174,12 @@ class Gutenberg_Ramp {
 					break;
 			}
 		}
+
 		return true;
 	}
 
 	public function load_decision() {
+
 		// we need to correct the situation when one of two conditions apply:
 		// case 1: gutenberg should load according to our criteria but it will not currently do so
 		// case 2:  gutenberg should not load according to our criteria, but it will currently do so
@@ -184,9 +195,9 @@ class Gutenberg_Ramp {
 
 	// this happens very early -- on plugins_loaded.  We'll probably have to do some ghetto stuff here
 	public function gutenberg_should_load() {
-		
+
 		// always load Gutenberg on the front-end -- this allows blocks to render correctly etc
-		if ( !is_admin() ) {
+		if ( ! is_admin() ) {
 			return true;
 		}
 
@@ -226,7 +237,7 @@ class Gutenberg_Ramp {
 		}
 
 		// grab the criteria
-		$gutenberg_ramp_post_ids   = ( isset( $criteria['post_ids'] ) ) ? $criteria['post_ids'] : [];
+		$gutenberg_ramp_post_ids = ( isset( $criteria['post_ids'] ) ) ? $criteria['post_ids'] : [];
 
 		// check post_ids
 		if ( in_array( $gutenberg_ramp_post_id, $gutenberg_ramp_post_ids, true ) ) {
@@ -262,7 +273,7 @@ class Gutenberg_Ramp {
 			'object'
 		);
 
-		$available_post_types = array();
+		$available_post_types = [];
 
 		// Remove post types that don't want an editor
 		foreach ( $post_types as $name => $post_type_object ) {
@@ -281,7 +292,7 @@ class Gutenberg_Ramp {
 	 */
 	public function get_enabled_post_types() {
 
-		$ui_enabled_post_types     = (array) get_option( 'gutenberg_ramp_post_types', array() );
+		$ui_enabled_post_types     = (array) get_option( 'gutenberg_ramp_post_types', [] );
 		$helper_enabled_post_types = (array) $this->get_criteria( 'post_types' );
 
 		return array_unique( array_merge( $ui_enabled_post_types, $helper_enabled_post_types ) );
@@ -310,9 +321,7 @@ class Gutenberg_Ramp {
 
 			if ( isset( $_GET['post_type'] ) ) {
 				$current_post_type = sanitize_title( $_GET['post_type'] );
-			}
-
-			// Regular posts are plain `post-new.php` with no `post_type` parameter defined.
+			} // Regular posts are plain `post-new.php` with no `post_type` parameter defined.
 			elseif ( $this->is_eligible_admin_url( [ 'post-new.php' ] ) ) {
 				$current_post_type = 'post';
 			}
@@ -331,6 +340,7 @@ class Gutenberg_Ramp {
 	}
 
 	public function gutenberg_will_load() {
+
 		// for WordPress version > 5, Gutenberg will load
 		global $wp_version;
 		$version_arr     = explode( '.', $wp_version );
@@ -348,11 +358,13 @@ class Gutenberg_Ramp {
 		) {
 			return true;
 		}
+
 		return false;
 	}
 
 	// load gutenberg from the plugin
 	public function gutenberg_load() {
+
 		// perform any actions required before loading gutenberg
 		do_action( 'gutenberg_ramp_before_load_gutenberg' );
 		$gutenberg_include = apply_filters( 'gutenberg_ramp_gutenberg_load_path', WP_PLUGIN_DIR . '/gutenberg/gutenberg.php' );
@@ -368,6 +380,7 @@ class Gutenberg_Ramp {
 
 	// @todo
 	public function gutenberg_unload() {
+
 		// flag this for the filter
 		$this->load_gutenberg = false;
 		// @todo load the Classic editor if it's configured
@@ -375,6 +388,7 @@ class Gutenberg_Ramp {
 
 	// utility functions
 	public function get_current_post_id() {
+
 		if ( isset( $_GET['post'] ) && is_numeric( $_GET['post'] ) && ( (int) $_GET['post'] > 0 ) ) {
 			return absint( $_GET['post'] );
 		}
@@ -382,7 +396,7 @@ class Gutenberg_Ramp {
 		return 0;
 	}
 
-	public function is_eligible_admin_url( $supported_filenames = ['post.php', 'post-new.php'] ) {
+	public function is_eligible_admin_url( $supported_filenames = [ 'post.php', 'post-new.php' ] ) {
 
 		$path          = sanitize_text_field( wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ) );
 		$path          = trim( $path );
@@ -399,6 +413,7 @@ class Gutenberg_Ramp {
 	}
 
 	public function cleanup_option() {
+
 		// if the criteria are already such that Gutenberg will never load, no change is needed
 		if ( $this->get_criteria() === [ 'load' => 0 ] ) {
 			return;

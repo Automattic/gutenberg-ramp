@@ -11,48 +11,48 @@
  * Text Domain: gutenberg-ramp
  */
 
- /*
- * This program is free software; you can redistribute it and/or modify it under the terms of the GNU
- * General Public License version 2, as published by the Free Software Foundation.  You may NOT assume
- * that you can use any other version of the GPL.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *
- */
+/*
+* This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+* General Public License version 2, as published by the Free Software Foundation.  You may NOT assume
+* that you can use any other version of the GPL.
+*
+* This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+* even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+*
+*/
 
 include __DIR__ . '/inc/class-gutenberg-ramp.php';
 include __DIR__ . '/inc/admin/class-gutenberg-ramp-post-type-settings-ui.php';
 
 /**
-*
-* This function allows themes to specify Gutenberg loading critera.
-* In and of itself it doesn't cause any change to Gutenberg's loading behavior.
-* However, it governs the option which stores the criteria under which Gutenberg will load 
-*
-* `gutenberg_ramp_load_gutenberg` must be called in the theme before `admin_init`, normally from functions.php or the like
-*
-*  @param bool|Array $criteria The criteria used to determine whether Gutenberg should be loaded
-*/
+ * This function allows themes to specify Gutenberg loading critera.
+ * In and of itself it doesn't cause any change to Gutenberg's loading behavior.
+ * However, it governs the option which stores the criteria under which Gutenberg will load
+ *
+ * `gutenberg_ramp_load_gutenberg` must be called in the theme before `admin_init`, normally from functions.php or the like
+ *
+ * @param bool|array $criteria The criteria used to determine whether Gutenberg should be loaded
+ */
 function gutenberg_ramp_load_gutenberg( $criteria = true ) {
+
 	// only admin requests should refresh loading behavior
 	if ( ! is_admin() ) {
 		return;
 	}
 	$RFG = Gutenberg_Ramp::get_instance();
-	
+
 	// Accept bool as $criteria or as $criteria['load']
 	if ( false === $criteria || ( is_array( $criteria ) && isset( $criteria['load'] ) && false === $criteria['load'] ) ) {
-		
+
 		$criteria = [ 'load' => 0 ];
-	
+
 	} elseif ( true === $criteria || ( is_array( $criteria ) && isset( $criteria['load'] ) && true === $criteria['load'] ) ) {
-		
+
 		$criteria = [ 'load' => 1 ];
 	}
-	
+
 	$stored_criteria = $RFG->get_criteria();
-	
+
 	if ( $criteria !== $stored_criteria ) {
 		// the criteria specified in code have changed -- update them
 		$criteria = $RFG->set_criteria( $criteria );
@@ -69,33 +69,36 @@ add_action( 'plugins_loaded', [ $RFG, 'load_decision' ], 20, 0 );
 // if gutenberg_ramp_load_gutenberg() has not been called, perform cleanup
 // unfortunately this must be done on every admin pageload to detect the case where
 // criteria were previously being set in a theme, but now are not (due to a code change)
-add_action( 'admin_init' , [ $RFG, 'cleanup_option' ], 10, 0 );
+add_action( 'admin_init', [ $RFG, 'cleanup_option' ], 10, 0 );
 
 /**
  * tell Gutenberg when not to load
- * 
+ *
  * Gutenberg only calls this filter when checking the primary post
  * @TODO duplicate this for WP5.0 core with the new filter name, it's expected to change
  */
 add_filter( 'gutenberg_can_edit_post_type', [ $RFG, 'maybe_allow_gutenberg_to_load' ], 20, 2 );
 
 /**
-* remove split new post links and Gutenberg menu h/t Ozz 
-* see https://github.com/azaozz/classic-editor/blob/master/classic-editor.php#L108
-*/
-add_action( 'plugins_loaded', function() {
+ * remove split new post links and Gutenberg menu h/t Ozz
+ * see https://github.com/azaozz/classic-editor/blob/master/classic-editor.php#L108
+ */
+add_action( 'plugins_loaded', function () {
+
 	remove_action( 'admin_menu', 'gutenberg_menu' );
 	remove_filter( 'admin_url', 'gutenberg_modify_add_new_button_url' );
 	remove_action( 'admin_print_scripts-edit.php', 'gutenberg_replace_default_add_new_button' );
-});
 
+} );
 
 /**
  * Initialize Admin UI
  */
 function gutenberg_ramp_initialize_admin_ui() {
+
 	new Gutenberg_Ramp_Post_Type_Settings_UI();
 }
+
 add_action( 'admin_init', 'gutenberg_ramp_initialize_admin_ui' );
 
 /**
