@@ -109,7 +109,6 @@ class Gutenberg_Ramp_Criteria {
 	}
 
 	/**
-	 * Validate $criteria
 	 * This will make sure that the passed $criteria can actually support Gutenberg
 	 *
 	 * @param $criteria
@@ -126,7 +125,7 @@ class Gutenberg_Ramp_Criteria {
 	}
 
 	/**
-	 * Sanitize $criteria by making sure it's formatted properly
+	 * Check whether $criteria is sanitized or not
 	 *
 	 * @param $criteria
 	 *
