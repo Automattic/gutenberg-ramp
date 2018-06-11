@@ -15,6 +15,11 @@ class Gutenberg_Ramp {
 	public  $active         = false;
 	public  $load_gutenberg = null;
 
+	/**
+	 * Get the Gutenberg Ramp singleton instance
+	 *
+	 * @return Gutenberg_Ramp
+	 */
 	public static function get_instance() {
 
 		if ( ! self::$instance ) {
@@ -24,6 +29,9 @@ class Gutenberg_Ramp {
 		return self::$instance;
 	}
 
+	/**
+	 * Gutenberg_Ramp constructor.
+	 */
 	private function __construct() {
 
 		$this->option_name = apply_filters( 'gutenberg_ramp_option_name', $this->option_name );
@@ -37,6 +45,11 @@ class Gutenberg_Ramp {
 		add_action( 'admin_init', [ $this, 'save_criteria' ], 5, 0 );
 	}
 
+	/**
+	 * Get the option name
+	 *
+	 * @return string
+	 */
 	public function get_option_name() {
 
 		return $this->option_name;
@@ -178,36 +191,50 @@ class Gutenberg_Ramp {
 		return true;
 	}
 
+	/**
+	 * This is where Ramp will make the decision to load/unload/ignore Gutenberg
+	 */
 	public function load_decision() {
 
-		// we need to correct the situation when one of two conditions apply:
-		// case 1: gutenberg should load according to our criteria but it will not currently do so
-		// case 2:  gutenberg should not load according to our criteria, but it will currently do so
+		/**
+		 * We need to correct the situation when one of two conditions apply:
+		 *      * case 1: gutenberg should load according to our criteria but it will not currently do so
+		 *      * case 2: gutenberg should not load according to our criteria, but it will currently do so
+		 */
 		if ( $this->gutenberg_should_load() && ! $this->gutenberg_will_load() ) {
 			// this is case 1 ... force gutenberg to load if possible
 			$this->gutenberg_load();
 		} elseif ( ! $this->gutenberg_should_load() && $this->gutenberg_will_load() ) {
 			// this is case 2 ... force gutenberg to bail if possible
-			// @todo define this behavior -- will probably leverage the classic editor plugin or some version thereof
+			// @TODO: define this behavior -- will probably leverage the classic editor plugin or some version thereof
 			$this->gutenberg_unload();
 		}
 	}
 
-	// this happens very early -- on plugins_loaded.  We'll probably have to do some ghetto stuff here
+	/**
+	 * Figure out whether or not Gutenberg should be loaded
+	 * This method is run during `plugins_loaded` so not
+	 *
+	 * @return bool
+	 */
 	public function gutenberg_should_load() {
 
-		// always load Gutenberg on the front-end -- this allows blocks to render correctly etc
+		// Always load Gutenberg on the front-end -- this allows blocks to render correctly, etc.
 		if ( ! is_admin() ) {
 			return true;
 		}
 
-		// we only conditionally load Gutenberg on the edit screen.
+		// Only load Ramp in edit screens
 		if ( ! $this->is_eligible_admin_url() ) {
 			return false;
 		}
 
 		$criteria = $this->get_criteria();
-		// if criteria is empty, we never load gutenberg
+
+		/**
+		 * Return false early -
+		 * If criteria is empty and there are no post types enabled from the Ramp UI
+		 */
 		if ( ! $criteria && empty( $this->get_enabled_post_types() ) ) {
 			return false;
 		}
@@ -339,15 +366,22 @@ class Gutenberg_Ramp {
 
 	}
 
+	/**
+	 * Check whether Gutenberg is already being loaded
+	 *
+	 * @return bool
+	 */
 	public function gutenberg_will_load() {
 
-		// for WordPress version > 5, Gutenberg will load
+		// for WordPress version >= 5, Gutenberg will load
 		global $wp_version;
 		$version_arr     = explode( '.', $wp_version );
 		$wp_version_main = (int) $version_arr[0];
 		if ( $wp_version_main >= 5 ) {
 			return true;
 		}
+
+
 		// also, the gutenberg plugin might be the source of an attempted load
 		if (
 			has_filter( 'replace_editor', 'gutenberg_init' )
@@ -362,7 +396,11 @@ class Gutenberg_Ramp {
 		return false;
 	}
 
-	// load gutenberg from the plugin
+	/**
+	 * Activate Gutenberg plugin
+	 *
+	 * @return bool
+	 */
 	public function gutenberg_load() {
 
 		// perform any actions required before loading gutenberg
@@ -375,18 +413,40 @@ class Gutenberg_Ramp {
 		$this->load_gutenberg = true;
 		if ( file_exists( $gutenberg_include ) ) {
 			include_once $gutenberg_include;
+			return true;
 		}
+
+		return false;
 	}
 
-	// @todo
+	/**
+	 * This will disable Gutenberg and enable Legacy Editor instead
+	 */
 	public function gutenberg_unload() {
 
-		// flag this for the filter
+		/**
+		 * Keep track of whether Gutenberg should be deactivated.
+		 * This variable is used by `maybe_allow_gutenberg_to_load` to modify the `gutenberg_can_edit_post_type` filter
+		 */
 		$this->load_gutenberg = false;
-		// @todo load the Classic editor if it's configured
+
+		/**
+		 * @TODO: Make sure the Classic editor is loaded in WordPress 5.0+
+		 */
 	}
 
-	// utility functions
+
+	//
+	//
+	// ----- Utility functions -----
+	//
+	//
+
+	/**
+	 * A way to get the current post_id during the `plugins_loaded` action because the query may not exist yet
+	 *
+	 * @return int
+	 */
 	public function get_current_post_id() {
 
 		if ( isset( $_GET['post'] ) && is_numeric( $_GET['post'] ) && ( (int) $_GET['post'] > 0 ) ) {
@@ -396,6 +456,12 @@ class Gutenberg_Ramp {
 		return 0;
 	}
 
+	/**
+	 * Check if the current URL is elegible for Gutenberg
+	 *
+	 * @param array $supported_filenames - which /wp-admin/ pages to check for. Defaults to `post.php` and `post-new.php`
+	 * @return bool
+	 */
 	public function is_eligible_admin_url( $supported_filenames = [ 'post.php', 'post-new.php' ] ) {
 
 		$path          = sanitize_text_field( wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ) );
@@ -412,6 +478,9 @@ class Gutenberg_Ramp {
 		return false;
 	}
 
+	/**
+	 * Remove the stored Gutenberg Ramp settings if `gutenberg_ramp()` isn't used
+	 */
 	public function cleanup_option() {
 
 		// if the criteria are already such that Gutenberg will never load, no change is needed
