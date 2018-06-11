@@ -41,14 +41,14 @@ function gutenberg_ramp_load_gutenberg( $criteria = true ) {
 	}
 	$gutenberg_ramp = Gutenberg_Ramp::get_instance();
 
-	// Accept bool as $criteria or as $criteria['load']
-	if ( false === $criteria || ( is_array( $criteria ) && isset( $criteria['load'] ) && false === $criteria['load'] ) ) {
-
-		$criteria = [ 'load' => 0 ];
-
-	} elseif ( true === $criteria || ( is_array( $criteria ) && isset( $criteria['load'] ) && true === $criteria['load'] ) ) {
-
-		$criteria = [ 'load' => 1 ];
+	/**
+	 * Transform `load` values from booleans to integers
+	 * because they're stored as integers eventually
+	 */
+	if ( is_bool( $criteria ) ) {
+		$criteria = [ 'load' => (int) $criteria ];
+	} else if ( isset( $criteria['load'] ) && is_bool( $criteria['load'] ) ) {
+		$criteria['load'] = (int) $criteria['load'];
 	}
 
 	$stored_criteria = $gutenberg_ramp->get_criteria();
