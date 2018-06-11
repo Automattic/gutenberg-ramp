@@ -51,11 +51,11 @@ function gutenberg_ramp_load_gutenberg( $criteria = true ) {
 		$criteria['load'] = (int) $criteria['load'];
 	}
 
-	$stored_criteria = $gutenberg_ramp->get_criteria();
+	$stored_criteria = $gutenberg_ramp->criteria->get();
 
 	if ( $criteria !== $stored_criteria ) {
 		// the criteria specified in code have changed -- update them
-		$gutenberg_ramp->set_criteria( $criteria );
+		$gutenberg_ramp->criteria->set( $criteria );
 	}
 	// indicate that we've loaded the plugin. 
 	$gutenberg_ramp->active = true;
