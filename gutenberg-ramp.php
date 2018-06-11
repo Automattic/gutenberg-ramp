@@ -39,7 +39,7 @@ function gutenberg_ramp_load_gutenberg( $criteria = true ) {
 	if ( ! is_admin() ) {
 		return;
 	}
-	$RFG = Gutenberg_Ramp::get_instance();
+	$gutenberg_ramp = Gutenberg_Ramp::get_instance();
 
 	// Accept bool as $criteria or as $criteria['load']
 	if ( false === $criteria || ( is_array( $criteria ) && isset( $criteria['load'] ) && false === $criteria['load'] ) ) {
@@ -51,25 +51,25 @@ function gutenberg_ramp_load_gutenberg( $criteria = true ) {
 		$criteria = [ 'load' => 1 ];
 	}
 
-	$stored_criteria = $RFG->get_criteria();
+	$stored_criteria = $gutenberg_ramp->get_criteria();
 
 	if ( $criteria !== $stored_criteria ) {
 		// the criteria specified in code have changed -- update them
-		$criteria = $RFG->set_criteria( $criteria );
+		$criteria = $gutenberg_ramp->set_criteria( $criteria );
 	}
 	// indicate that we've loaded the plugin. 
-	$RFG->active = true;
+	$gutenberg_ramp->active = true;
 }
 
 /** grab the plugin **/
-$RFG = Gutenberg_Ramp::get_instance();
+$gutenberg_ramp = Gutenberg_Ramp::get_instance();
 
 /** off to the races **/
-add_action( 'plugins_loaded', [ $RFG, 'load_decision' ], 20, 0 );
+add_action( 'plugins_loaded', [ $gutenberg_ramp, 'load_decision' ], 20, 0 );
 // if gutenberg_ramp_load_gutenberg() has not been called, perform cleanup
 // unfortunately this must be done on every admin pageload to detect the case where
 // criteria were previously being set in a theme, but now are not (due to a code change)
-add_action( 'admin_init', [ $RFG, 'cleanup_option' ], 10, 0 );
+add_action( 'admin_init', [ $gutenberg_ramp, 'cleanup_option' ], 10, 0 );
 
 /**
  * tell Gutenberg when not to load
@@ -77,10 +77,10 @@ add_action( 'admin_init', [ $RFG, 'cleanup_option' ], 10, 0 );
  * Gutenberg only calls this filter when checking the primary post
  * @TODO duplicate this for WP5.0 core with the new filter name, it's expected to change
  */
-add_filter( 'gutenberg_can_edit_post_type', [ $RFG, 'maybe_allow_gutenberg_to_load' ], 20, 2 );
+add_filter( 'gutenberg_can_edit_post_type', [ $gutenberg_ramp, 'maybe_allow_gutenberg_to_load' ], 20, 2 );
 
 /**
- * remove split new post links and Gutenberg menu h/t Ozz
+ * Remove split new post links and Gutenberg menu h/t Ozz
  * see https://github.com/azaozz/classic-editor/blob/master/classic-editor.php#L108
  */
 add_action( 'plugins_loaded', function () {
