@@ -36,6 +36,17 @@ class Gutenberg_Ramp {
 
 		$this->option_name = apply_filters( 'gutenberg_ramp_option_name', $this->option_name );
 
+		// Load/Unload/Ignore Gutenberg:
+		add_action( 'plugins_loaded', [ $this, 'load_decision' ], 20, 0 );
+
+
+		/**
+		 * If gutenberg_ramp_load_gutenberg() has not been called, perform cleanup
+		 * unfortunately this must be done on every admin pageload to detect the case where
+		 * criteria were previously being set in a theme, but now are not (due to a code change)
+		 */
+		add_action( 'admin_init', [ $this, 'cleanup_option' ], 10, 0 );
+
 		/**
 		 * Store the criteria on admin_init
 		 *
@@ -43,6 +54,14 @@ class Gutenberg_Ramp {
 		 * To do that, we need this to run before `gutenberg_ramp_initialize_admin_ui()`
 		 */
 		add_action( 'admin_init', [ $this, 'save_criteria' ], 5, 0 );
+
+		/**
+		 * Tell Gutenberg when not to load
+		 *
+		 * Gutenberg only calls this filter when checking the primary post
+		 * @TODO duplicate this for WP5.0 core with the new filter name, it's expected to change
+		 */
+		add_filter( 'gutenberg_can_edit_post_type', [ $this, 'maybe_allow_gutenberg_to_load' ], 20, 2 );
 	}
 
 	/**

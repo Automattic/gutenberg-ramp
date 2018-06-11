@@ -61,24 +61,6 @@ function gutenberg_ramp_load_gutenberg( $criteria = true ) {
 	$gutenberg_ramp->active = true;
 }
 
-/** grab the plugin **/
-$gutenberg_ramp = Gutenberg_Ramp::get_instance();
-
-/** off to the races **/
-add_action( 'plugins_loaded', [ $gutenberg_ramp, 'load_decision' ], 20, 0 );
-// if gutenberg_ramp_load_gutenberg() has not been called, perform cleanup
-// unfortunately this must be done on every admin pageload to detect the case where
-// criteria were previously being set in a theme, but now are not (due to a code change)
-add_action( 'admin_init', [ $gutenberg_ramp, 'cleanup_option' ], 10, 0 );
-
-/**
- * tell Gutenberg when not to load
- *
- * Gutenberg only calls this filter when checking the primary post
- * @TODO duplicate this for WP5.0 core with the new filter name, it's expected to change
- */
-add_filter( 'gutenberg_can_edit_post_type', [ $gutenberg_ramp, 'maybe_allow_gutenberg_to_load' ], 20, 2 );
-
 /**
  * Remove split new post links and Gutenberg menu h/t Ozz
  * see https://github.com/azaozz/classic-editor/blob/master/classic-editor.php#L108
@@ -113,3 +95,9 @@ function ramp_for_gutenberg_load_gutenberg( $criteria = false ) {
 	_deprecated_function( 'ramp_for_gutenberg_load_gutenberg', '0.3', 'gutenberg_ramp_load_gutenberg' );
 	gutenberg_ramp_load_gutenberg( $criteria );
 }
+
+
+/**
+ * Initialize Gutenberg Ramp instantly
+ */
+Gutenberg_Ramp::get_instance();
