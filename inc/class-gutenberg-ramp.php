@@ -309,7 +309,7 @@ class Gutenberg_Ramp {
 		}
 		// if the theme did not call its function, then remove the option containing criteria, which will prevent all loading
 		if ( ! $this->active ) {
-			$this->criteria->purge();
+			$this->criteria->delete();
 		}
 	}
 
