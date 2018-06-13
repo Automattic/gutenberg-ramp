@@ -30,40 +30,40 @@ Loading behaviour is controlled by the `gutenberg_ramp_load_gutenberg()` functio
 
 Load Gutenberg for all posts:
 
-<code>
+<pre>
 if ( function_exists( 'gutenberg_ramp_load_gutenberg' ) ) {
 	gutenberg_ramp_load_gutenberg();
 }
-</code>
+</pre>
 
 
 Never load Gutenberg:
 
-<code>
+<pre>
 gutenberg_ramp_load_gutenberg( false );
 
 // Alternatively, you can use the load key to always disable Gutenberg:
 gutenberg_ramp_load_gutenberg( [ 'load' => 0 ] );
-</code>
+</pre>
 
 
 Load Gutenberg only for posts with ids 12, 13 and 122:
 
-<code>
+<pre>
 gutenberg_ramp_load_gutenberg( [ 'post_ids' => [ 12, 13, 122 ] ] );
-</code>
+</pre>
 
 
 Load Gutenberg for `post_id: 12` and all posts of type `test` and `scratch`:
 
-<code>
+<pre>
 gutenberg_ramp_load_gutenberg(
 	[
 		'post_types' => [ 'test', 'scratch' ],
 		'post_ids'   => [ 12 ],
 	]
 );
-</code>
+</pre>
 
 == Advanced ==
 
