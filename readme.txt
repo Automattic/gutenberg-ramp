@@ -28,25 +28,37 @@ Loading behaviour is controlled by the `gutenberg_ramp_load_gutenberg()` functio
 
 == Code Examples ==
 
+Load Gutenberg for all posts:
 ```
 if ( function_exists( 'gutenberg_ramp_load_gutenberg' ) ) {
 	gutenberg_ramp_load_gutenberg();
 }
 ```
 
-Load Gutenberg for all posts.
 
-`gutenberg_ramp_load_gutenberg( [ 'load' => 0 ] );`
+Never load Gutenberg:
+```
+gutenberg_ramp_load_gutenberg( false );
 
-Do not load Gutenberg for any posts.
+// Alternatively, you can use the `load` key to always disable Gutenberg:
+gutenberg_ramp_load_gutenberg( [ 'load' => 0 ] );
+```
 
-`gutenberg_ramp_load_gutenberg( [ 'post_ids' => [ 12, 13, 122 ] ] );`
+Load Gutenberg only for posts with ids 12, 13 and 122:
+```
+gutenberg_ramp_load_gutenberg( [ 'post_ids' => [ 12, 13, 122 ] ] );
+```
 
-Load Gutenberg for posts with ids 12, 13 and 122.
 
-`gutenberg_ramp_load_gutenberg( [ 'post_types' => [ 'test', 'scratch' ], 'post_ids' => [ 12 ] ] );`
-
-Load Gutenberg for post_id 12 and all posts of type test and scratch
+Load Gutenberg for `post_id: 12` and all posts of type `test` and `scratch`:
+```php
+gutenberg_ramp_load_gutenberg(
+	[
+		'post_types' => [ 'test', 'scratch' ],
+		'post_ids'   => [ 12 ],
+	]
+);
+```
 
 == Advanced ==
 
