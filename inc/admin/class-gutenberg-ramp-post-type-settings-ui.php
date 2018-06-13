@@ -128,7 +128,7 @@ class Gutenberg_Ramp_Post_Type_Settings_UI {
 							</label>
 							<?php if ( $is_helper_enabled_post_type ): ?>
 								<small style="margin-left: 1rem;">
-									<a href="https://github.com/Automattic/ramp-for-gutenberg#faqs"><?php esc_html_e( 'Why is this disabled?', 'gutenberg-ramp' ); ?></a>
+									<a href="https://github.com/Automattic/gutenberg-ramp#faqs"><?php esc_html_e( 'Why is this disabled?', 'gutenberg-ramp' ); ?></a>
 								</small>
 							<?php endif; ?>
 							<br>
@@ -146,7 +146,7 @@ class Gutenberg_Ramp_Post_Type_Settings_UI {
 					esc_html__( 'For more granular control you can use the %s function.', 'gutenberg-ramp' ),
 					'<code>gutenberg_ramp_load_gutenberg()</code>'
 				); ?>
-				<a href="https://github.com/Automattic/ramp-for-gutenberg#faqs" target="_blank"><?php esc_html_e( 'Learn more', 'gutenberg-ramp' ); ?></a>
+				<a href="https://github.com/Automattic/gutenberg-ramp#faqs" target="_blank"><?php esc_html_e( 'Learn more', 'gutenberg-ramp' ); ?></a>
 			</p>
 		</div>
 		<?php
