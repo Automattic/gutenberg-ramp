@@ -66,7 +66,7 @@ gutenberg_ramp_load_gutenberg(
 
 ### UI
 
-Ramp for Gutenberg adds a section to the Settings -> Writing menu that allows post_type control of Gutenberg loading.  This can be used in place of specifying criteria in code.
+Gutenberg Ramp adds a section to the Settings -> Writing menu that allows post_type control of Gutenberg loading.  This can be used in place of specifying criteria in code.
 
 
 ### Advanced	
