@@ -1,8 +1,8 @@
 === Gutenberg Ramp ===
 Contributors: automattic, mattoperry, justnorris, enigmaweb
 Tags: gutenberg, ramp, classic editor, legacy editor, gutenberg ramp
-Requires at least: 2.7
-Tested up to: 4.9.5
+Requires at least: 4.9.6
+Tested up to: 4.9.6
 Requires PHP: 5.5
 Stable tag: trunk
 License: GPLv2 or later
@@ -28,25 +28,37 @@ Loading behaviour is controlled by the `gutenberg_ramp_load_gutenberg()` functio
 
 == Code Examples ==
 
+Load Gutenberg for all posts:
 ```
 if ( function_exists( 'gutenberg_ramp_load_gutenberg' ) ) {
 	gutenberg_ramp_load_gutenberg();
 }
 ```
 
-Load Gutenberg for all posts.
 
-`gutenberg_ramp_load_gutenberg( [ 'load' => 0 ] );`
+Never load Gutenberg:
+```
+gutenberg_ramp_load_gutenberg( false );
 
-Do not load Gutenberg for any posts.
+// Alternatively, you can use the `load` key to always disable Gutenberg:
+gutenberg_ramp_load_gutenberg( [ 'load' => 0 ] );
+```
 
-`gutenberg_ramp_load_gutenberg( [ 'post_ids' => [ 12, 13, 122 ] ] );`
+Load Gutenberg only for posts with ids 12, 13 and 122:
+```
+gutenberg_ramp_load_gutenberg( [ 'post_ids' => [ 12, 13, 122 ] ] );
+```
 
-Load Gutenberg for posts with ids 12, 13 and 122.
 
-`gutenberg_ramp_load_gutenberg( [ 'post_types' => [ 'test', 'scratch' ], 'post_ids' => [ 12 ] ] );`
-
-Load Gutenberg for post_id 12 and all posts of type test and scratch
+Load Gutenberg for `post_id: 12` and all posts of type `test` and `scratch`:
+```php
+gutenberg_ramp_load_gutenberg(
+	[
+		'post_types' => [ 'test', 'scratch' ],
+		'post_ids'   => [ 12 ],
+	]
+);
+```
 
 == Advanced ==
 
@@ -56,7 +68,7 @@ If making more dynamic changes, note that the parameter supplied is persisted in
 
 == Contributions ==
 
-Contributions are welcome via our [GitHub repo.](https://github.com/Automattic/ramp-for-gutenberg)
+Contributions are welcome via our [GitHub repo.](https://github.com/Automattic/gutenberg-ramp)
 
 == Installation ==
 
@@ -72,7 +84,7 @@ If you're seeing something greyed out, it means the `gutenberg_ramp_load_gutenbe
 
 = Some post types are not showing up on the settings screen =
 
-Post types that are not compatible with Gutenberg will not show up. If you think you have found a false negative (posts in that post type DO work with Gutenberg, when Ramp plugin is deactivated) please report it as an issue on [GitHub here.](https://github.com/Automattic/ramp-for-gutenberg)
+Post types that are not compatible with Gutenberg will not show up. If you think you have found a false negative (posts in that post type DO work with Gutenberg, when Ramp plugin is deactivated) please report it as an issue on [GitHub here.](https://github.com/Automattic/gutenberg-ramp)
 
 = The changes I'm making in functions.php are not showing up =
 
@@ -80,7 +92,7 @@ The parameter supplied in the function is persisted in a site option. Therefore,
 
 = Can I contribute to this plugin? =
 
-Absolutely! Please create issues and pull requests on [GitHub here.](https://github.com/Automattic/ramp-for-gutenberg)
+Absolutely! Please create issues and pull requests on [GitHub here.](https://github.com/Automattic/gutenberg-ramp)
 
 == Screenshots ==
 

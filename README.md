@@ -92,4 +92,4 @@ The parameter supplied in the function is persisted in a site option. Therefore,
 
 **Can I contribute to this plugin?**
 
-Absolutely! Please create issues and pull requests on [GitHub here.](https://github.com/Automattic/ramp-for-gutenberg)
+Absolutely! Please create issues and pull requests on [GitHub here.](https://github.com/Automattic/gutenberg-ramp)
