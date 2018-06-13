@@ -100,10 +100,10 @@ Absolutely! Please create issues and pull requests on [GitHub here.](https://git
 
 == Changelog ==
 
-= 0.1 =
-* initial test release
+= 1.0.0 =
+* initial release
 
 == Upgrade Notice ==
 
-= 0.1 =
-* intial test release
+= 1.0.0 =
+* intial release
