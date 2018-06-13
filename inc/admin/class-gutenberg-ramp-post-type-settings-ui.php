@@ -21,7 +21,7 @@ class Gutenberg_Ramp_Post_Type_Settings_UI {
 	}
 
 	/**
-	 * This method will add a "Ramp for Gutenberg" section to "Settings -> Writing"
+	 * This method will add a "Gutenberg Ramp" section to "Settings -> Writing"
 	 */
 	public function add_writing_settings_section() {
 
@@ -35,7 +35,7 @@ class Gutenberg_Ramp_Post_Type_Settings_UI {
 
 		add_settings_section(
 			'gutenberg_ramp_post_types',
-			esc_html__( 'Ramp for Gutenberg', 'gutenberg-ramp' ),
+			esc_html__( 'Gutenberg Ramp', 'gutenberg-ramp' ),
 			[ $this, 'render_settings_section' ],
 			'writing'
 		);
@@ -83,7 +83,7 @@ class Gutenberg_Ramp_Post_Type_Settings_UI {
 	}
 
 	/**
-	 * Render the "Ramp for Gutenberg" section in the dashboard
+	 * Render the "Gutenberg Ramp" section in the dashboard
 	 */
 	function render_settings_section() {
 
