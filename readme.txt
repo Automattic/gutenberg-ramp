@@ -1,8 +1,8 @@
 === Gutenberg Ramp ===
 Contributors: automattic, mattoperry, justnorris, enigmaweb
 Tags: gutenberg, ramp, classic editor, legacy editor, gutenberg ramp
-Requires at least: 2.7
-Tested up to: 4.9.5
+Requires at least: 4.9.6
+Tested up to: 4.9.6
 Requires PHP: 5.5
 Stable tag: trunk
 License: GPLv2 or later
