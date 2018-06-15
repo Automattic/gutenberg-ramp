@@ -21,7 +21,7 @@ class Gutenberg_Ramp_Post_Type_Settings_UI {
 	}
 
 	/**
-	 * This method will add a "Ramp for Gutenberg" section to "Settings -> Writing"
+	 * This method will add a "Gutenberg Ramp" section to "Settings -> Writing"
 	 */
 	public function add_writing_settings_section() {
 
@@ -35,7 +35,7 @@ class Gutenberg_Ramp_Post_Type_Settings_UI {
 
 		add_settings_section(
 			'gutenberg_ramp_post_types',
-			esc_html__( 'Ramp for Gutenberg', 'gutenberg-ramp' ),
+			esc_html__( 'Gutenberg Ramp', 'gutenberg-ramp' ),
 			[ $this, 'render_settings_section' ],
 			'writing'
 		);
@@ -83,7 +83,7 @@ class Gutenberg_Ramp_Post_Type_Settings_UI {
 	}
 
 	/**
-	 * Render the "Ramp for Gutenberg" section in the dashboard
+	 * Render the "Gutenberg Ramp" section in the dashboard
 	 */
 	function render_settings_section() {
 
@@ -128,7 +128,7 @@ class Gutenberg_Ramp_Post_Type_Settings_UI {
 							</label>
 							<?php if ( $is_helper_enabled_post_type ): ?>
 								<small style="margin-left: 1rem;">
-									<a href="https://github.com/Automattic/ramp-for-gutenberg#faqs"><?php esc_html_e( 'Why is this disabled?', 'gutenberg-ramp' ); ?></a>
+									<a href="https://github.com/Automattic/gutenberg-ramp#faqs"><?php esc_html_e( 'Why is this disabled?', 'gutenberg-ramp' ); ?></a>
 								</small>
 							<?php endif; ?>
 							<br>
@@ -146,7 +146,7 @@ class Gutenberg_Ramp_Post_Type_Settings_UI {
 					esc_html__( 'For more granular control you can use the %s function.', 'gutenberg-ramp' ),
 					'<code>gutenberg_ramp_load_gutenberg()</code>'
 				); ?>
-				<a href="https://github.com/Automattic/ramp-for-gutenberg#faqs" target="_blank"><?php esc_html_e( 'Learn more', 'gutenberg-ramp' ); ?></a>
+				<a href="https://github.com/Automattic/gutenberg-ramp#faqs" target="_blank"><?php esc_html_e( 'Learn more', 'gutenberg-ramp' ); ?></a>
 			</p>
 		</div>
 		<?php

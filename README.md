@@ -30,29 +30,43 @@ Loading behavior is controlled by the `gutenberg_ramp_load_gutenberg()` function
 
 ### Code Examples
 
-```
+Load Gutenberg for all posts:
+```php
 if ( function_exists( 'gutenberg_ramp_load_gutenberg' ) ) {
 	gutenberg_ramp_load_gutenberg();
 }
 ```
 
-Load Gutenberg for all posts.
 
-`gutenberg_ramp_load_gutenberg( [ 'load' => 0 ] );`
+Never load Gutenberg:
+```php
+gutenberg_ramp_load_gutenberg( false );
 
-Never load Gutenberg.
+// Alternatively, you can use the `load` key to always disable Gutenberg:
+gutenberg_ramp_load_gutenberg( [ 'load' => 0 ] );
+```
 
-`gutenberg_ramp_load_gutenberg( [ 'post_ids' => [ 12, 13, 122 ] ] );`
+Load Gutenberg only for posts with ids 12, 13 and 122:
+```php
+gutenberg_ramp_load_gutenberg( [ 'post_ids' => [ 12, 13, 122 ] ] );
+```
 
-Load Gutenberg only for posts with ids 12, 13 and 122.
 
-`gutenberg_ramp_load_gutenberg( [ 'post_types' => [ 'test', 'scratch' ], 'post_ids' => [ 12 ] ] );`
+Load Gutenberg for `post_id: 12` and all posts of type `test` and `scratch`:
 
-Load Gutenberg for post_id 12 and all posts of type `test` and `scratch`
+```php
+gutenberg_ramp_load_gutenberg(
+	[
+		'post_types' => [ 'test', 'scratch' ],
+		'post_ids'   => [ 12 ],
+	]
+);
+```
+
 
 ### UI
 
-Ramp for Gutenberg adds a section to the Settings -> Writing menu that allows post_type control of Gutenberg loading.  This can be used in place of specifying criteria in code.
+Gutenberg Ramp adds a section to the Settings -> Writing menu that allows post_type control of Gutenberg loading.  This can be used in place of specifying criteria in code.
 
 
 ### Advanced	
@@ -78,4 +92,4 @@ The parameter supplied in the function is persisted in a site option. Therefore,
 
 **Can I contribute to this plugin?**
 
-Absolutely! Please create issues and pull requests on [GitHub here.](https://github.com/Automattic/ramp-for-gutenberg)
+Absolutely! Please create issues and pull requests on [GitHub here.](https://github.com/Automattic/gutenberg-ramp)
