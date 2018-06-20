@@ -76,7 +76,7 @@ class Gutenberg_Ramp_Post_Type_Settings_UI {
 		 * Even though `disabled` attribute prevents data from being submitted to server
 		 * This is just going to make sure it accidentally doesn't fall through
 		 */
-		$helper_enabled_post_types = (array) $this->gutenberg_ramp->get_criteria( 'post_types' );
+		$helper_enabled_post_types = (array) $this->gutenberg_ramp->criteria->get( 'post_types' );
 		$validated_post_types      = array_diff( $validated_post_types, $helper_enabled_post_types );
 
 		return $validated_post_types;
@@ -88,8 +88,8 @@ class Gutenberg_Ramp_Post_Type_Settings_UI {
 	function render_settings_section() {
 
 		$post_types                = $this->gutenberg_ramp->get_supported_post_types();
-		$helper_enabled_post_types = (array) $this->gutenberg_ramp->get_criteria( 'post_types' );
-		$enabled_post_types        = $this->gutenberg_ramp->get_enabled_post_types();
+		$helper_enabled_post_types = (array) $this->gutenberg_ramp->criteria->get( 'post_types' );
+		$enabled_post_types        = $this->gutenberg_ramp->criteria->get_enabled_post_types();
 		?>
 		<div class="gutenberg-ramp-description">
 			<p>
@@ -151,6 +151,8 @@ class Gutenberg_Ramp_Post_Type_Settings_UI {
 		</div>
 		<?php
 	}
+
+
 
 
 }
