@@ -385,4 +385,26 @@ class Gutenberg_Ramp {
 	}
 
 
+	/**
+	 * Get a list of unsupported post types post types
+	 * @return array
+	 */
+	public function get_unsupported_post_types() {
+
+		if ( 0 === did_action( 'init' ) && ! doing_action( 'init' ) ) {
+			_doing_it_wrong( 'Gutenberg_Ramp::get_supported_post_types', "get_supported_post_types() was called before the init hook. Some post types might not be registered yet.", '1.0.0' );
+		}
+
+		$post_types       = array_keys( get_post_types( [
+				'public'   => true,  // Remove any internal/hidden post types
+				'_builtin' => false, // Remove builtin post types like attachment, revision, etc.
+			]
+		) );
+		
+		$supported_post_types = array_keys( $this->get_supported_post_types() );
+
+		return array_diff( $post_types, $supported_post_types );
+	}
+
+
 }
