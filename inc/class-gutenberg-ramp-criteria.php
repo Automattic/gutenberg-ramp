@@ -69,7 +69,7 @@ class Gutenberg_Ramp_Criteria {
 			$existing_criteria = self::$criteria;
 
 			if ( ! is_null( $existing_criteria ) ) {
-				$criteria = $this->merge( $criteria );
+				$criteria = $this->merge( $criteria, $existing_criteria );
 			}
 
 			self::$criteria = $criteria;
@@ -84,46 +84,36 @@ class Gutenberg_Ramp_Criteria {
 	 * Merge all criteria from all calls to ramp_for_gutenberg_load_gutenberg()
 	 *
 	 * @param array $criteria The new criteria to be merged with existing criteria.
+	 * @param array $existing_criteria Any existing criteria to be merged.
 	 * @return array The merged criteria.
 	 */
-	public function merge( $criteria = [] ) {
+	public function merge( $criteria = [], $existing_criteria = [] ) {
 
-		// Get our existing criteria
-		$existing_criteria = self::$criteria;
-
-		// If this hasn't been set to active yet, there's nothing to merge - theoretically this should never be triggered.
-		$ramp = Gutenberg_Ramp::get_instance();
-		if ( ! $ramp->active ) {
+		// If no existing criteria to merge, return the new criteria
+		if ( ! is_array( $existing_criteria ) || empty( $existing_criteria ) ) {
 			return $criteria;
+		}
+
+		// If no new criteria to merge, return the existing criteria
+		if ( ! is_array( $criteria ) || empty( $criteria ) ) {
+			return $existing_criteria;
 		}
 
 		$merged_criteria = [];
 
-		/**
-		 * For the current setup of criteria, we can only merge 'post_ids' and 'post_types'.
-		 * The 'load' parameter only accepts a single value, so nothing to merge and the _last_ value it's passed will be the one used.
-		 */ 
-		if ( is_array( $existing_criteria ) ) {
-			foreach ( $existing_criteria as $key => $value ) {
-				if ( isset( $criteria[ $key ] ) && is_array( $value ) ) {
-					$merged_criteria[ $key ] = array_merge( $value, $criteria[ $key ] );
-					unset( $criteria[ $key ] );
-				} elseif ( isset( $criteria[ $key ] ) ) {
-					$merged_criteria[ $key ] = $criteria[ $key ];
-				} else {
-					$merged_criteria[ $key ] = $value;
-				}
-			}
-		}
-
-		// This catches any array keys _not_ yet set in our merged criteria.
-		$merged_criteria = array_merge( $merged_criteria, $criteria );
+		// This kind of works - If 'load' is set, it gets transformed into an array when it should just be an integer
+		$merged_criteria = array_merge_recursive( $criteria, $existing_criteria );
 
 		// Clear out duplicate values.
 		foreach ( $merged_criteria as $key => $value ) {
 			if ( is_array( $value ) ) {
 				$merged_criteria[ $key ] = array_unique( $value );
 			}
+		}
+
+		// If 'load' is set, transform it back into an integer (whatever the most recent passed value for 'load')
+		if ( isset( $merged_criteria['load'] ) && is_array( $merged_criteria['load'] ) && ! empty( $merged_criteria['load'] ) ) {
+			$merged_criteria['load'] = $merged_criteria['load'][0];
 		}
 
 		return $merged_criteria;
