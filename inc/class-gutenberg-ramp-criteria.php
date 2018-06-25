@@ -82,6 +82,7 @@ class Gutenberg_Ramp_Criteria {
 
 	/**
 	 * Merge all criteria from all calls to ramp_for_gutenberg_load_gutenberg()
+	 * New criteria takes precedence over existing criteria.
 	 *
 	 * @param array $criteria The new criteria to be merged with existing criteria.
 	 * @param array $existing_criteria Any existing criteria to be merged.
