@@ -100,8 +100,6 @@ class Gutenberg_Ramp_Criteria {
 			return $existing_criteria;
 		}
 
-		$merged_criteria = [];
-
 		// Remove any previous value for `load`. It should only ever be an integer, and does not need to be merged with existing values for `load`.
 		if( isset( $criteria['load'] && isset( $existing_criteria['load'] ) ) ) {
 			unset( $existing_criteria['load'] );
