@@ -101,7 +101,12 @@ class Gutenberg_Ramp_Criteria {
 
 		$merged_criteria = [];
 
-		// This kind of works - If 'load' is set, it gets transformed into an array when it should just be an integer
+		// Remove any previous value for `load`. It should only ever be an integer, and does not need to be merged with existing values for `load`.
+		if( isset( $criteria['load'] && isset( $existing_criteria['load'] ) ) ) {
+			unset( $existing_criteria['load'] );
+		}
+
+		// Merge the new criteria with the existing criteria.
 		$merged_criteria = array_merge_recursive( $criteria, $existing_criteria );
 
 		// Clear out duplicate values.
@@ -109,11 +114,6 @@ class Gutenberg_Ramp_Criteria {
 			if ( is_array( $value ) ) {
 				$merged_criteria[ $key ] = array_unique( $value );
 			}
-		}
-
-		// If 'load' is set, transform it back into an integer (whatever the most recent passed value for 'load')
-		if ( isset( $merged_criteria['load'] ) && is_array( $merged_criteria['load'] ) && ! empty( $merged_criteria['load'] ) ) {
-			$merged_criteria['load'] = $merged_criteria['load'][0];
 		}
 
 		return $merged_criteria;
