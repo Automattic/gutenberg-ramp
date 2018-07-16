@@ -41,6 +41,12 @@ class Gutenberg_Ramp_Criteria {
 	 */
 	public function get( $criteria_name = '' ) {
 
+		global $pagenow;
+
+		if ( 'posts-new.php' !== $pagenow || 'edit.php' !== $pagenow ) {
+			return;
+		}
+		
 		$options = get_option( $this->get_option_name() );
 
 		if ( '' === $criteria_name ) {
