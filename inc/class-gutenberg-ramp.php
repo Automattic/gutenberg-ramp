@@ -35,7 +35,7 @@ class Gutenberg_Ramp {
 		$this->criteria = new Gutenberg_Ramp_Criteria();
 
 		// Load/Unload/Ignore Gutenberg:
-		add_action( 'plugins_loaded', [ $this, 'load_decision' ], 20, 0 );
+		add_action( 'plugins_loaded', [ $this, 'load_decision' ], 5, 0 );
 
 
 		/**
