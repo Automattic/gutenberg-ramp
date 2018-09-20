@@ -90,6 +90,7 @@ class Gutenberg_Ramp_Post_Type_Settings_UI {
 		$post_types                = $this->gutenberg_ramp->get_supported_post_types();
 		$helper_enabled_post_types = (array) $this->gutenberg_ramp->criteria->get( 'post_types' );
 		$enabled_post_types        = $this->gutenberg_ramp->criteria->get_enabled_post_types();
+		$unsupported_post_types    = $this->gutenberg_ramp->get_unsupported_post_types();
 		?>
 		<div class="gutenberg-ramp-description">
 			<p>
@@ -139,6 +140,20 @@ class Gutenberg_Ramp_Post_Type_Settings_UI {
 			</tr>
 			</tbody>
 		</table>
+
+		<?php if ( ! empty( $unsupported_post_types ) ): ?>
+			<div class="gutenberg-ramp-unsupported-post-types" style="padding: .44rem 1.22rem; background-color: rgba(255, 255, 255, .5); max-width: 720px; border-left: solid 4px #0073aa;">
+				<p>
+					<?php esc_html_e( "The following post types were found, but are not be compatible with Gutenberg:", 'gutenberg-ramp' )?>
+					<code>
+						<?php echo esc_html( implode( ', ', $unsupported_post_types ) ) ?>
+					</code>
+				</p>
+				<p>
+					<a href="https://github.com/Automattic/gutenberg-ramp#faqs" target="_blank"><?php esc_html_e( 'Learn More', 'gutenberg-ramp' )  ?></a>
+				</p>
+			</div>
+		<?php endif; ?>
 
 		<div class="gutenberg-ramp-description">
 			<p>
