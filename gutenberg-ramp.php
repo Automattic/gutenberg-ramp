@@ -71,8 +71,18 @@ function gutenberg_ramp_load_gutenberg( $criteria = true ) {
 function gutenberg_ramp_remove_dashboard_links() {
 
 	remove_action( 'admin_menu', 'gutenberg_menu' );
-	remove_filter( 'admin_url', 'gutenberg_modify_add_new_button_url' );
 	remove_action( 'admin_print_scripts-edit.php', 'gutenberg_replace_default_add_new_button' );
+
+	/**
+	 * Safe to remove when Gutenberg is merged
+	 * `gutenberg_modify_add_new_button_url` was removed from Gutenberg a while ago
+	 *
+	 * Keeping this here for now only just in case someone hasn't updated Gutenberg in a long time.
+	 *
+	 * @todo: Remove when WordPress 5.0 is released
+	 * @link https://github.com/WordPress/gutenberg/pull/4690
+	 */
+	remove_filter( 'admin_url', 'gutenberg_modify_add_new_button_url' );
 
 }
 
