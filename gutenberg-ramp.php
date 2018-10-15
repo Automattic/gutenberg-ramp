@@ -33,6 +33,8 @@ include __DIR__ . '/inc/admin/class-gutenberg-ramp-post-type-settings-ui.php';
  * `gutenberg_ramp_load_gutenberg` must be called in the theme before `admin_init`, normally from functions.php or the like
  *
  * @param bool|array $criteria The criteria used to determine whether Gutenberg should be loaded
+ *                             
+ * @link https://github.com/Automattic/gutenberg-ramp#code-examples
  */
 function gutenberg_ramp_load_gutenberg( $criteria = true ) {
 
