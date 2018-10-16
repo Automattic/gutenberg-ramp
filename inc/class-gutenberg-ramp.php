@@ -82,22 +82,22 @@ class Gutenberg_Ramp {
 		// in order load Gutnberg because of other criteria, we will need to check that a few things are true:
 		// 1. we are attempting to load post.php ... there's an available post_id
 		// 2. there's an available post_id in the URL to check
-		$gutenberg_ramp_post_id = $this->get_current_post_id();
+		$current_post_id = $this->get_current_post_id();
 
 		// check post_types
-		if ( $this->is_allowed_post_type( $gutenberg_ramp_post_id ) ) {
+		if ( $this->is_allowed_post_type( $current_post_id ) ) {
 			return true;
 		}
 
-		if ( ! $gutenberg_ramp_post_id ) {
+		if ( ! $current_post_id ) {
 			return false;
 		}
 
 		// grab the criteria
-		$gutenberg_ramp_post_ids = ( isset( $criteria['post_ids'] ) ) ? $criteria['post_ids'] : [];
+		$ramp_post_ids = ( isset( $criteria['post_ids'] ) ) ? $criteria['post_ids'] : [];
 
 		// check post_ids
-		if ( in_array( $gutenberg_ramp_post_id, $gutenberg_ramp_post_ids, true ) ) {
+		if ( in_array( $current_post_id, $ramp_post_ids, true ) ) {
 			return true;
 		}
 	}
