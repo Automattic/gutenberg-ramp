@@ -111,6 +111,39 @@ function ramp_for_gutenberg_load_gutenberg( $criteria = false ) {
 	gutenberg_ramp_load_gutenberg( $criteria );
 }
 
+/**
+ * Ramp expects Gutenberg to be active
+ * This function is going to load Gutenberg plugin if it's not already active
+ *
+ * @return bool
+ */
+function gutenberg_ramp_require_gutenberg() {
+
+	if ( function_exists( 'gutenberg_init' ) ) {
+		return false;
+	}
+
+	// perform any actions required before loading gutenberg
+	do_action( 'gutenberg_ramp_before_load_gutenberg' );
+	$gutenberg_include = apply_filters( 'gutenberg_ramp_gutenberg_load_path', WP_PLUGIN_DIR . '/gutenberg/gutenberg.php' );
+
+	if ( validate_file( $gutenberg_include ) !== 0 ) {
+		return false;
+	}
+	// flag this for the filter
+	if ( file_exists( $gutenberg_include ) ) {
+		include_once $gutenberg_include;
+		return true;
+	}
+
+	return false;
+
+}
+
+/**
+ * Rquire Gutenberg
+ */
+gutenberg_ramp_require_gutenberg();
 
 /**
  * Initialize Gutenberg Ramp instantly

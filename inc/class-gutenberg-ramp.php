@@ -3,10 +3,7 @@
 class Gutenberg_Ramp {
 
 	private static $instance;
-
-
 	public    $active         = false;
-	public    $load_gutenberg = null;
 
 	/**
 	 * @var Gutenberg_Ramp_Criteria
@@ -34,10 +31,6 @@ class Gutenberg_Ramp {
 
 		$this->criteria = new Gutenberg_Ramp_Criteria();
 
-		// Load/Unload/Ignore Gutenberg:
-		add_action( 'plugins_loaded', [ $this, 'load_decision' ], 20, 0 );
-
-
 		/**
 		 * If gutenberg_ramp_load_gutenberg() has not been called, perform cleanup
 		 * unfortunately this must be done on every admin pageload to detect the case where
@@ -59,29 +52,9 @@ class Gutenberg_Ramp {
 		 * Gutenberg only calls this filter when checking the primary post
 		 * @TODO duplicate this for WP5.0 core with the new filter name, it's expected to change
 		 */
-		add_filter( 'gutenberg_can_edit_post_type', [ $this, 'maybe_allow_gutenberg_to_load' ], 20, 2 );
+		add_filter( 'gutenberg_can_edit_post', [ $this, 'gutenberg_should_load' ], 20, 2 );
 	}
 
-
-	/**
-	 * This is where Ramp will make the decision to load/unload/ignore Gutenberg
-	 */
-	public function load_decision() {
-
-		/**
-		 * We need to correct the situation when one of two conditions apply:
-		 *      * case 1: gutenberg should load according to our criteria but it will not currently do so
-		 *      * case 2: gutenberg should not load according to our criteria, but it will currently do so
-		 */
-		if ( $this->gutenberg_should_load() && ! $this->gutenberg_will_load() ) {
-			// this is case 1 ... force gutenberg to load if possible
-			$this->gutenberg_load();
-		} elseif ( ! $this->gutenberg_should_load() && $this->gutenberg_will_load() ) {
-			// this is case 2 ... force gutenberg to bail if possible
-			// @TODO: define this behavior -- will probably leverage the classic editor plugin or some version thereof
-			$this->gutenberg_unload();
-		}
-	}
 
 	/**
 	 * Figure out whether or not Gutenberg should be loaded
@@ -216,46 +189,6 @@ class Gutenberg_Ramp {
 		return false;
 	}
 
-	/**
-	 * Activate Gutenberg plugin
-	 *
-	 * @return bool
-	 */
-	public function gutenberg_load() {
-
-		// perform any actions required before loading gutenberg
-		do_action( 'gutenberg_ramp_before_load_gutenberg' );
-		$gutenberg_include = apply_filters( 'gutenberg_ramp_gutenberg_load_path', WP_PLUGIN_DIR . '/gutenberg/gutenberg.php' );
-		if ( validate_file( $gutenberg_include ) !== 0 ) {
-			return false;
-		}
-		// flag this for the filter
-		$this->load_gutenberg = true;
-		if ( file_exists( $gutenberg_include ) ) {
-			include_once $gutenberg_include;
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * This will disable Gutenberg and enable Legacy Editor instead
-	 */
-	public function gutenberg_unload() {
-
-		/**
-		 * Keep track of whether Gutenberg should be deactivated.
-		 * This variable is used by `maybe_allow_gutenberg_to_load` to modify the `gutenberg_can_edit_post_type` filter
-		 */
-		$this->load_gutenberg = false;
-
-		/**
-		 * @TODO: Make sure the Classic editor is loaded in WordPress 5.0+
-		 */
-	}
-
-
 	//
 	//
 	// ----- Utility functions -----
@@ -311,37 +244,6 @@ class Gutenberg_Ramp {
 		if ( ! $this->active ) {
 			$this->criteria->delete();
 		}
-	}
-
-	/**
-	 * Disable Gutenberg if the load decidion has been made to unload it
-	 *
-	 * This is a slight hack since there's no filter (yet) in Gutenberg on the
-	 * post id, just the post type, but because it's (currently) only used to check the
-	 * primary post id when loading the editor, it can be leveraged.
-	 *
-	 * The instance variable load_gutenberg might be set during the load
-	 * decision code above. If it's explicitly false, then the filter returns false,
-	 * else it returns the original value.
-	 *
-	 * @param boolean $can_edit  - whether Gutenberg should edit this post type
-	 * @param string  $post_type - the post type
-	 *
-	 * @return boolean - whether Gutenberg should edit this post
-	 */
-	public function maybe_allow_gutenberg_to_load( $can_edit, $post_type ) {
-
-		// Don't enable Gutenberg in post types that don't support Gutenberg.
-		if ( false === $can_edit ) {
-			return false;
-		}
-
-		// Return the decision, if a decision has been made.
-		if ( null !== $this->load_gutenberg ) {
-			return (bool) $this->load_gutenberg;
-		}
-
-		return $can_edit;
 	}
 
 	/**
