@@ -32,14 +32,6 @@ class Gutenberg_Ramp {
 		$this->criteria = new Gutenberg_Ramp_Criteria();
 
 		/**
-		 * If gutenberg_ramp_load_gutenberg() has not been called, perform cleanup
-		 * unfortunately this must be done on every admin pageload to detect the case where
-		 * criteria were previously being set in a theme, but now are not (due to a code change)
-		 */
-		add_action( 'admin_init', [ $this, 'cleanup_option' ], 10, 0 );
-
-
-		/**
 		 * Tell Gutenberg when not to load
 		 *
 		 * Gutenberg only calls this filter when checking the primary post
@@ -192,21 +184,6 @@ class Gutenberg_Ramp {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Remove the stored Gutenberg Ramp settings if `gutenberg_ramp()` isn't used
-	 */
-	public function cleanup_option() {
-
-		// if the criteria are already such that Gutenberg will never load, no change is needed
-		if ( $this->criteria->get() === [ 'load' => 0 ] ) {
-			return;
-		}
-		// if the theme did not call its function, then remove the option containing criteria, which will prevent all loading
-		if ( ! $this->active ) {
-			$this->criteria->delete();
-		}
 	}
 
 	/**
