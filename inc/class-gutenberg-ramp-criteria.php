@@ -9,28 +9,6 @@ class Gutenberg_Ramp_Criteria {
 	 */
 	private static $criteria = null;
 
-	/**
-	 * Where the Gutenberg Ramp criteria is stored in opitons
-	 * @var string
-	 */
-	private $option_name    = 'gutenberg_ramp_load_critera';
-
-	/**
-	 * Gutenberg_Ramp_Criteria constructor.
-	 */
-	public function __construct() {
-		$this->option_name = apply_filters( 'gutenberg_ramp_option_name', $this->option_name );
-	}
-
-	/**
-	 * Get the option name
-	 *
-	 * @return string
-	 */
-	public function get_option_name() {
-
-		return $this->option_name;
-	}
 
 	/**
 	 * Get the desired criteria
@@ -41,7 +19,7 @@ class Gutenberg_Ramp_Criteria {
 	 */
 	public function get( $criteria_name = '' ) {
 
-		$options = get_option( $this->get_option_name() );
+		$options = self::$criteria;
 
 		if ( '' === $criteria_name ) {
 			return $options;
@@ -57,7 +35,6 @@ class Gutenberg_Ramp_Criteria {
 
 	/**
 	 * Set the private class variable $criteria
-	 * self::$criteria going to be used to update the option when `$this->save_criteria()` is run
 	 *
 	 * @param $criteria
 	 *
@@ -72,17 +49,6 @@ class Gutenberg_Ramp_Criteria {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Save criteria in WordPres options if it's valid
-	 */
-	public function save() {
-
-		if ( null !== self::$criteria && $this->is_valid( self::$criteria ) ) {
-			update_option( $this->get_option_name(), self::$criteria );
-		}
-
 	}
 
 	/**
@@ -170,12 +136,6 @@ class Gutenberg_Ramp_Criteria {
 		return true;
 	}
 
-	/**
-	 * Delete the criteria data from options
-	 */
-	public function delete() {
-		delete_option( $this->get_option_name() );
-	}
 
 	/**
 	 * Get all post types with Gutenberg enabled

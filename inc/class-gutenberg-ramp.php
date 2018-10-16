@@ -38,13 +38,6 @@ class Gutenberg_Ramp {
 		 */
 		add_action( 'admin_init', [ $this, 'cleanup_option' ], 10, 0 );
 
-		/**
-		 * Store the criteria on admin_init
-		 *
-		 * $priority = 5 to ensure that the UI class has fresh data available
-		 * To do that, we need this to run before `gutenberg_ramp_initialize_admin_ui()`
-		 */
-		add_action( 'admin_init', [ $this->criteria, 'save' ], 5, 0 );
 
 		/**
 		 * Tell Gutenberg when not to load
