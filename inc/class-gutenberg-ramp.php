@@ -159,36 +159,6 @@ class Gutenberg_Ramp {
 
 	}
 
-	/**
-	 * Check whether Gutenberg is already being loaded
-	 *
-	 * @return bool
-	 */
-	public function gutenberg_will_load() {
-
-		// for WordPress version >= 5, Gutenberg will load
-		global $wp_version;
-		$version_arr     = explode( '.', $wp_version );
-		$wp_version_main = (int) $version_arr[0];
-		if ( $wp_version_main >= 5 ) {
-			return true;
-		}
-
-
-		// also, the gutenberg plugin might be the source of an attempted load
-		if (
-			has_filter( 'replace_editor', 'gutenberg_init' )
-			||
-			has_filter( 'load-post.php', 'gutenberg_intercept_edit_post' )
-			||
-			has_filter( 'load-post-new.php', 'gutenberg_intercept_post_new' )
-		) {
-			return true;
-		}
-
-		return false;
-	}
-
 	//
 	//
 	// ----- Utility functions -----
