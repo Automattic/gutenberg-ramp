@@ -43,23 +43,21 @@ class Gutenberg_Ramp {
 
 	/**
 	 * Figure out whether or not Gutenberg should be loaded
-	 * This method is run during `plugins_loaded` so not
+	 *
+	 * Ramp has everything disabled by default, so the default answer  for `gutenberg_should_load` is false
+	 * The conditions in the functions are attempts to change that to true
 	 *
 	 * @return bool
+	 *
 	 */
-	public function gutenberg_should_load() {
+	public function gutenberg_should_load( $can_edit, $post ) {
 
-		// Always load Gutenberg on the front-end -- this allows blocks to render correctly, etc.
-		if ( ! is_admin() ) {
-			return true;
-		}
-
-		// Only load Ramp in edit screens
-		if ( ! $this->is_eligible_admin_url() ) {
+		// Don't load the Gutenberg, if the Gutenberg doesn't want to be loaded
+		if( false === $can_edit ) {
 			return false;
 		}
 
-		$criteria = $this->criteria->get();
+ 		$criteria = $this->criteria->get();
 
 		/**
 		 * Return false early -
@@ -78,28 +76,21 @@ class Gutenberg_Ramp {
 			}
 		}
 
-		// CRITERIA
-		// in order load Gutnberg because of other criteria, we will need to check that a few things are true:
-		// 1. we are attempting to load post.php ... there's an available post_id
-		// 2. there's an available post_id in the URL to check
-		$current_post_id = $this->get_current_post_id();
-
-		// check post_types
-		if ( $this->is_allowed_post_type( $current_post_id ) ) {
-			return true;
-		}
-
-		if ( ! $current_post_id ) {
+		if ( ! isset( $post->ID ) ) {
 			return false;
 		}
 
-		// grab the criteria
-		$ramp_post_ids = ( isset( $criteria['post_ids'] ) ) ? $criteria['post_ids'] : [];
-
-		// check post_ids
-		if ( in_array( $current_post_id, $ramp_post_ids, true ) ) {
+		if ( $this->is_allowed_post_type( $post->ID ) ) {
 			return true;
 		}
+
+
+		$ramp_post_ids = ( isset( $criteria['post_ids'] ) ) ? $criteria['post_ids'] : [];
+		if ( in_array( $post->ID, $ramp_post_ids, true ) ) {
+			return true;
+		}
+
+		return false;
 	}
 
 
@@ -149,20 +140,6 @@ class Gutenberg_Ramp {
 	// ----- Utility functions -----
 	//
 	//
-
-	/**
-	 * A way to get the current post_id during the `plugins_loaded` action because the query may not exist yet
-	 *
-	 * @return int
-	 */
-	public function get_current_post_id() {
-
-		if ( isset( $_GET['post'] ) && is_numeric( $_GET['post'] ) && ( (int) $_GET['post'] > 0 ) ) {
-			return absint( $_GET['post'] );
-		}
-
-		return 0;
-	}
 
 	/**
 	 * Check if the current URL is elegible for Gutenberg
