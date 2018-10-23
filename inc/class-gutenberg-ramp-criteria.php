@@ -29,12 +29,11 @@ class Gutenberg_Ramp_Criteria {
 			return $options;
 		}
 
-		if ( empty( $options[ $criteria_name ] ) ) {
-			return false;
+		if ( isset( $options[ $criteria_name ] ) ) {
+			return $options[ $criteria_name ];
 		}
 
-		return $options[ $criteria_name ];
-
+		return false;
 	}
 
 	/**
