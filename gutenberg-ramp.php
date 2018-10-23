@@ -119,6 +119,9 @@ function ramp_for_gutenberg_load_gutenberg( $criteria = false ) {
  */
 function gutenberg_ramp_require_gutenberg() {
 
+	// @TODO: Check for a function like `use_block_editor_for_post` to determine if is 5.0+
+	// ( make sure to use a function that always exists in 5.0+, even out of Admin area )
+
 	if ( function_exists( 'gutenberg_init' ) ) {
 		return false;
 	}
