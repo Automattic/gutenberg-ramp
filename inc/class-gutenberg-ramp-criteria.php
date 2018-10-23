@@ -136,7 +136,6 @@ class Gutenberg_Ramp_Criteria {
 		return true;
 	}
 
-
 	/**
 	 * Get all post types with Gutenberg enabled
 	 *
@@ -145,10 +144,13 @@ class Gutenberg_Ramp_Criteria {
 	public function get_enabled_post_types() {
 
 		$ui_enabled_post_types     = (array) get_option( 'gutenberg_ramp_post_types', [] );
-		$helper_enabled_post_types = (array) $this->get( 'post_types' );
+		$helper_enabled_post_types = $this->get( 'post_types' );
+
+		if ( false === $helper_enabled_post_types || ! is_array( $helper_enabled_post_types ) ) {
+			return $ui_enabled_post_types;
+		}
 
 		return array_unique( array_merge( $ui_enabled_post_types, $helper_enabled_post_types ) );
-
 	}
 }
 
