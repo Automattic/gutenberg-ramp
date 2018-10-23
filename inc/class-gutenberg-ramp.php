@@ -54,7 +54,7 @@ class Gutenberg_Ramp {
 		}
 
 		// check if we should always or never load
-		if ( false !== $criteria && array_key_exists( 'load', $criteria ) ) {
+		if ( false !== $this->criteria->get( 'load' ) ) {
 			if ( $criteria['load'] === 1 ) {
 				return true;
 			} elseif ( $criteria['load'] === 0 ) {
