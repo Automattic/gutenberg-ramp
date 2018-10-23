@@ -15,11 +15,15 @@ class Gutenberg_Ramp_Criteria {
 	 *
 	 * @param string $criteria_name - post_types, post_ids, load
 	 *
-	 * @return mixed
+	 * @return mixed Return the values on success, false on failure
 	 */
 	public function get( $criteria_name = '' ) {
 
 		$options = self::$criteria;
+
+		if ( null === $options ) {
+			return false;
+		}
 
 		if ( '' === $criteria_name ) {
 			return $options;
