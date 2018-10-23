@@ -130,7 +130,7 @@ function gutenberg_ramp_require_gutenberg() {
 	do_action( 'gutenberg_ramp_before_load_gutenberg' );
 	$gutenberg_include = apply_filters( 'gutenberg_ramp_gutenberg_load_path', WP_PLUGIN_DIR . '/gutenberg/gutenberg.php' );
 
-	if ( validate_file( $gutenberg_include ) !== 0 ) {
+	if ( false === $gutenberg_include || 0 !== validate_file( $gutenberg_include ) ) {
 		return false;
 	}
 	// flag this for the filter
