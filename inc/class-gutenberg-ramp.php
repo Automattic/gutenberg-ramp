@@ -37,30 +37,24 @@ class Gutenberg_Ramp {
 		 * Gutenberg only calls this filter when checking the primary post
 		 */
 		// Gutenberg < 4.1
-		add_filter( 'gutenberg_can_edit_post', [ $this, 'gutenberg_should_load' ], 20, 2 );
+		add_filter( 'gutenberg_can_edit_post', [ $this, 'maybe_load_gutenberg' ], 20, 2 );
 
 		// WordPress > 5.0
-		add_filter( 'use_block_editor_for_post', [ $this, 'gutenberg_should_load' ], 20, 2 );
+		add_filter( 'use_block_editor_for_post', [ $this, 'maybe_load_gutenberg' ], 20, 2 );
 	}
 
-
 	/**
-	 * Figure out whether or not Gutenberg should be loaded
+	 * Figure out whether or not Gutenberg should be loaded for the given post
 	 *
-	 * Ramp has everything disabled by default, so the default answer  for `gutenberg_should_load` is false
+	 * Ramp has everything disabled by default, so the default answer for `gutenberg_should_load` is false
 	 * The conditions in the functions are attempts to change that to true
 	 *
 	 * @return bool
 	 *
 	 */
-	public function gutenberg_should_load( $can_edit, $post ) {
+	public function gutenberg_should_load( $post ) {
 
-		// Don't load the Gutenberg, if the Gutenberg doesn't want to be loaded
-		if( false === $can_edit ) {
-			return false;
-		}
-
- 		$criteria = $this->criteria->get();
+		$criteria = $this->criteria->get();
 
 		/**
 		 * Return false early -
@@ -87,7 +81,6 @@ class Gutenberg_Ramp {
 			return true;
 		}
 
-
 		$ramp_post_ids = ( isset( $criteria['post_ids'] ) ) ? $criteria['post_ids'] : [];
 		if ( in_array( $post->ID, $ramp_post_ids, true ) ) {
 			return true;
@@ -96,7 +89,16 @@ class Gutenberg_Ramp {
 		return false;
 	}
 
+	public function maybe_load_gutenberg( $can_edit, $post ) {
 
+		// Don't load the Gutenberg, if the Gutenberg doesn't want to be loaded
+		if ( false === $can_edit ) {
+			return false;
+		}
+
+		return $this->gutenberg_should_load( $post );
+
+	}
 
 	/**
 	 * Check whether current post type is defined as gutenberg-friendly
