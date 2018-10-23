@@ -141,11 +141,19 @@ function gutenberg_ramp_require_gutenberg() {
 }
 
 /**
- * Rquire Gutenberg
+ * Rquire Gutenberg Plugin
  */
 gutenberg_ramp_require_gutenberg();
 
 /**
- * Initialize Gutenberg Ramp instantly
+ * Initialize Gutenberg Ramp
  */
-Gutenberg_Ramp::get_instance();
+$gutenberg_ramp = Gutenberg_Ramp::get_instance();
+
+/**
+ * Tell Gutenberg when not to load:
+ */
+// Gutenberg >= 3.5
+add_filter( 'gutenberg_can_edit_post', [ $gutenberg_ramp, 'maybe_load_gutenberg' ], 20, 2 );
+// WordPress >= 5.0
+add_filter( 'use_block_editor_for_post', [ $gutenberg_ramp, 'maybe_load_gutenberg' ], 20, 2 );

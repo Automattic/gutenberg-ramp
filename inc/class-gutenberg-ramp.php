@@ -30,17 +30,6 @@ class Gutenberg_Ramp {
 	private function __construct() {
 
 		$this->criteria = new Gutenberg_Ramp_Criteria();
-
-		/**
-		 * Tell Gutenberg when not to load
-		 *
-		 * Gutenberg only calls this filter when checking the primary post
-		 */
-		// Gutenberg < 4.1
-		add_filter( 'gutenberg_can_edit_post', [ $this, 'maybe_load_gutenberg' ], 20, 2 );
-
-		// WordPress > 5.0
-		add_filter( 'use_block_editor_for_post', [ $this, 'maybe_load_gutenberg' ], 20, 2 );
 	}
 
 	/**
@@ -173,7 +162,6 @@ class Gutenberg_Ramp {
 		return $available_post_types;
 	}
 
-
 	/**
 	 * Get a list of unsupported post types post types
 	 * @return array
@@ -194,6 +182,5 @@ class Gutenberg_Ramp {
 
 		return array_diff( $post_types, $supported_post_types );
 	}
-
 
 }
