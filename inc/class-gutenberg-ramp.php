@@ -35,9 +35,12 @@ class Gutenberg_Ramp {
 		 * Tell Gutenberg when not to load
 		 *
 		 * Gutenberg only calls this filter when checking the primary post
-		 * @TODO duplicate this for WP5.0 core with the new filter name, it's expected to change
 		 */
+		// Gutenberg < 4.1
 		add_filter( 'gutenberg_can_edit_post', [ $this, 'gutenberg_should_load' ], 20, 2 );
+
+		// WordPress > 5.0
+		add_filter( 'use_block_editor_for_post', [ $this, 'gutenberg_should_load' ], 20, 2 );
 	}
 
 
