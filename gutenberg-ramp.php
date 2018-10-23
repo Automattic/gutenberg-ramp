@@ -119,10 +119,11 @@ function ramp_for_gutenberg_load_gutenberg( $criteria = false ) {
  */
 function gutenberg_ramp_require_gutenberg() {
 
-	// @TODO: Check for a function like `use_block_editor_for_post` to determine if is 5.0+
-	// ( make sure to use a function that always exists in 5.0+, even out of Admin area )
-
-	if ( function_exists( 'gutenberg_init' ) ) {
+	/**
+	 * `register_block_type` exists in both Gutenberg and WordPress 5.0
+	 * If the function already exists - don't manually include Gutenberg Plugin
+	 */
+	if ( function_exists( 'register_block_type' ) ) {
 		return false;
 	}
 
