@@ -114,20 +114,7 @@ class Gutenberg_Ramp {
 			return false;
 		}
 
-		// Find the current post type
-		$current_post_type = false;
-		if ( 0 === (int) $post_id ) {
-
-			if ( isset( $_GET['post_type'] ) ) {
-				$current_post_type = sanitize_title( $_GET['post_type'] );
-			} // Regular posts are plain `post-new.php` with no `post_type` parameter defined.
-			elseif ( $this->is_eligible_admin_url( [ 'post-new.php' ] ) ) {
-				$current_post_type = 'post';
-			}
-
-		} else {
-			$current_post_type = get_post_type( $post_id );
-		}
+		$current_post_type = get_post_type( $post_id );
 
 		// Exit if no current post type found
 		if ( false === $current_post_type ) {
@@ -143,28 +130,6 @@ class Gutenberg_Ramp {
 	// ----- Utility functions -----
 	//
 	//
-
-	/**
-	 * Check if the current URL is elegible for Gutenberg
-	 *
-	 * @param array $supported_filenames - which /wp-admin/ pages to check for. Defaults to `post.php` and `post-new.php`
-	 * @return bool
-	 */
-	public function is_eligible_admin_url( $supported_filenames = [ 'post.php', 'post-new.php' ] ) {
-
-		$path          = sanitize_text_field( wp_parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ) );
-		$path          = trim( $path );
-		$wp_admin_slug = trim( wp_parse_url( get_admin_url(), PHP_URL_PATH ), '/' );
-
-		foreach ( $supported_filenames as $filename ) {
-			// Require $filename not to be empty to avoid accidents like matching against a plain `/wp-admin/`
-			if ( ! empty( $filename ) && "/{$wp_admin_slug}/{$filename}" === $path ) {
-				return true;
-			}
-		}
-
-		return false;
-	}
 
 	/**
 	 * Get post types that can be supported by Gutenberg.
