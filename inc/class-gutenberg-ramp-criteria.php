@@ -9,55 +9,35 @@ class Gutenberg_Ramp_Criteria {
 	 */
 	private static $criteria = null;
 
-	/**
-	 * Where the Gutenberg Ramp criteria is stored in opitons
-	 * @var string
-	 */
-	private $option_name    = 'gutenberg_ramp_load_critera';
-
-	/**
-	 * Gutenberg_Ramp_Criteria constructor.
-	 */
-	public function __construct() {
-		$this->option_name = apply_filters( 'gutenberg_ramp_option_name', $this->option_name );
-	}
-
-	/**
-	 * Get the option name
-	 *
-	 * @return string
-	 */
-	public function get_option_name() {
-
-		return $this->option_name;
-	}
 
 	/**
 	 * Get the desired criteria
 	 *
 	 * @param string $criteria_name - post_types, post_ids, load
 	 *
-	 * @return mixed
+	 * @return mixed Return the values on success, false on failure
 	 */
 	public function get( $criteria_name = '' ) {
 
-		$options = get_option( $this->get_option_name() );
+		$options = self::$criteria;
+
+		if ( null === $options ) {
+			return false;
+		}
 
 		if ( '' === $criteria_name ) {
 			return $options;
 		}
 
-		if ( empty( $options[ $criteria_name ] ) ) {
-			return false;
+		if ( isset( $options[ $criteria_name ] ) ) {
+			return $options[ $criteria_name ];
 		}
 
-		return $options[ $criteria_name ];
-
+		return false;
 	}
 
 	/**
 	 * Set the private class variable $criteria
-	 * self::$criteria going to be used to update the option when `$this->save_criteria()` is run
 	 *
 	 * @param $criteria
 	 *
@@ -72,17 +52,6 @@ class Gutenberg_Ramp_Criteria {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Save criteria in WordPres options if it's valid
-	 */
-	public function save() {
-
-		if ( null !== self::$criteria && $this->is_valid( self::$criteria ) ) {
-			update_option( $this->get_option_name(), self::$criteria );
-		}
-
 	}
 
 	/**
@@ -171,13 +140,6 @@ class Gutenberg_Ramp_Criteria {
 	}
 
 	/**
-	 * Delete the criteria data from options
-	 */
-	public function delete() {
-		delete_option( $this->get_option_name() );
-	}
-
-	/**
 	 * Get all post types with Gutenberg enabled
 	 *
 	 * @return array
@@ -185,10 +147,13 @@ class Gutenberg_Ramp_Criteria {
 	public function get_enabled_post_types() {
 
 		$ui_enabled_post_types     = (array) get_option( 'gutenberg_ramp_post_types', [] );
-		$helper_enabled_post_types = (array) $this->get( 'post_types' );
+		$helper_enabled_post_types = $this->get( 'post_types' );
+
+		if ( false === $helper_enabled_post_types || ! is_array( $helper_enabled_post_types ) ) {
+			return $ui_enabled_post_types;
+		}
 
 		return array_unique( array_merge( $ui_enabled_post_types, $helper_enabled_post_types ) );
-
 	}
 }
 

@@ -4,7 +4,7 @@
  *
  * Plugin Name: Gutenberg Ramp
  * Description: Allows theme authors to control the circumstances under which the Gutenberg editor loads. Options include "load" (1 loads all the time, 0 loads never) "post_ids" (load for particular posts) "post_types" (load for particular posts types.)
- * Version:     1.0.0
+ * Version:     1.1.0-rc.1
  * Author:      Automattic, Inc.
  * License:     GPL-2.0+
  * License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -111,8 +111,52 @@ function ramp_for_gutenberg_load_gutenberg( $criteria = false ) {
 	gutenberg_ramp_load_gutenberg( $criteria );
 }
 
+/**
+ * Ramp expects Gutenberg to be active
+ * This function is going to load Gutenberg plugin if it's not already active
+ *
+ * @return bool
+ */
+function gutenberg_ramp_require_gutenberg() {
+
+	/**
+	 * `register_block_type` exists in both Gutenberg and WordPress 5.0
+	 * If the function already exists - don't manually include Gutenberg Plugin
+	 */
+	if ( function_exists( 'register_block_type' ) ) {
+		return false;
+	}
+
+	// perform any actions required before loading gutenberg
+	do_action( 'gutenberg_ramp_before_load_gutenberg' );
+	$gutenberg_include = apply_filters( 'gutenberg_ramp_gutenberg_load_path', WP_PLUGIN_DIR . '/gutenberg/gutenberg.php' );
+
+	if (    false === $gutenberg_include
+		||  0 !== validate_file( $gutenberg_include )
+		||  ! file_exists( $gutenberg_include )
+	) {
+		return false;
+	}
+
+	include_once $gutenberg_include;
+	return true;
+
+}
 
 /**
- * Initialize Gutenberg Ramp instantly
+ * Rquire Gutenberg Plugin
  */
-Gutenberg_Ramp::get_instance();
+gutenberg_ramp_require_gutenberg();
+
+/**
+ * Initialize Gutenberg Ramp
+ */
+$gutenberg_ramp = Gutenberg_Ramp::get_instance();
+
+/**
+ * Tell Gutenberg when not to load:
+ */
+// Gutenberg >= 3.5
+add_filter( 'gutenberg_can_edit_post', [ $gutenberg_ramp, 'maybe_load_gutenberg' ], 10, 2 );
+// WordPress >= 5.0
+add_filter( 'use_block_editor_for_post', [ $gutenberg_ramp, 'maybe_load_gutenberg' ], 10, 2 );
