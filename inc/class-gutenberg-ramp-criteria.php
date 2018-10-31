@@ -46,12 +46,56 @@ class Gutenberg_Ramp_Criteria {
 	public function set( $criteria ) {
 
 		if ( $this->is_sanitized( $criteria ) ) {
+			$existing_criteria = self::$criteria;
+
+			if ( ! is_null( $existing_criteria ) ) {
+				$criteria = $this->merge( $criteria, $existing_criteria );
+			}
+
 			self::$criteria = $criteria;
 
 			return true;
 		}
 
 		return false;
+	}
+
+	/**
+	 * Merge all criteria from all calls to gutenberg_ramp_load_gutenberg()
+	 * New criteria takes precedence over existing criteria.
+	 *
+	 * @param array $criteria The new criteria to be merged with existing criteria.
+	 * @param array $existing_criteria Any existing criteria to be merged.
+	 * @return array The merged criteria.
+	 */
+	public function merge( $criteria = [], $existing_criteria = [] ) {
+
+		// If no existing criteria to merge, return the new criteria
+		if ( ! is_array( $existing_criteria ) || empty( $existing_criteria ) ) {
+			return $criteria;
+		}
+
+		// If no new criteria to merge, return the existing criteria
+		if ( ! is_array( $criteria ) || empty( $criteria ) ) {
+			return $existing_criteria;
+		}
+
+		// Remove any previous value for `load`. It should only ever be an integer, and does not need to be merged with existing values for `load`.
+		if( isset( $criteria['load'] ) && isset( $existing_criteria['load'] ) ) {
+			unset( $existing_criteria['load'] );
+		}
+
+		// Merge the new criteria with the existing criteria.
+		$merged_criteria = array_merge_recursive( $criteria, $existing_criteria );
+
+		// Clear out duplicate values.
+		foreach ( $merged_criteria as $key => $value ) {
+			if ( is_array( $value ) ) {
+				$merged_criteria[ $key ] = array_unique( $value );
+			}
+		}
+
+		return $merged_criteria;
 	}
 
 	/**
