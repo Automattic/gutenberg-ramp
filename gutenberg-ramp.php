@@ -158,7 +158,7 @@ function gutenberg_ramp_require_gutenberg() {
 }
 
 /**
- * Rquire Gutenberg Plugin
+ * Require Gutenberg Plugin
  */
 gutenberg_ramp_require_gutenberg();
 
