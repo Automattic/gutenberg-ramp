@@ -115,7 +115,7 @@ function ramp_for_gutenberg_load_gutenberg( $criteria = false ) {
 /**
  * @return bool|string
  */
-function gutenberg_ramp_validated_gutenberg_load_path() {
+function gutenberg_ramp_get_validated_gutenberg_load_path() {
 
 	$gutenberg_plugin_path = apply_filters( 'gutenberg_ramp_gutenberg_load_path', WP_PLUGIN_DIR . '/gutenberg/gutenberg.php' );
 
@@ -148,7 +148,7 @@ function gutenberg_ramp_require_gutenberg() {
 	// perform any actions required before loading gutenberg
 	do_action( 'gutenberg_ramp_before_load_gutenberg' );
 
-	$validated_load_path = gutenberg_ramp_validated_gutenberg_load_path();
+	$validated_load_path = gutenberg_ramp_get_validated_gutenberg_load_path();
 	if ( false !== $validated_load_path ) {
 		include_once $validated_load_path;
 	}

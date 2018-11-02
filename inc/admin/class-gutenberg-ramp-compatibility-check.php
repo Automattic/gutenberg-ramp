@@ -29,7 +29,7 @@ class Gutenberg_Ramp_Compatibility_Check {
 
 	public static function get_gutenberg_version() {
 
-		$gutenberg_plugin_path = gutenberg_ramp_validated_gutenberg_load_path();
+		$gutenberg_plugin_path = gutenberg_ramp_get_validated_gutenberg_load_path();
 		if ( false === $gutenberg_plugin_path ) {
 			return false;
 		}
