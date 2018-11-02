@@ -24,6 +24,7 @@
 include __DIR__ . '/inc/class-gutenberg-ramp.php';
 include __DIR__ . '/inc/class-gutenberg-ramp-criteria.php';
 include __DIR__ . '/inc/admin/class-gutenberg-ramp-post-type-settings-ui.php';
+include __DIR__ . '/inc/admin/class-gutenberg-ramp-compatibility-check.php';
 
 /**
  * This function allows themes to specify Gutenberg loading critera.
@@ -112,6 +113,23 @@ function ramp_for_gutenberg_load_gutenberg( $criteria = false ) {
 }
 
 /**
+ * @return bool|string
+ */
+function gutenberg_ramp_get_validated_gutenberg_load_path() {
+
+	$gutenberg_plugin_path = apply_filters( 'gutenberg_ramp_gutenberg_load_path', WP_PLUGIN_DIR . '/gutenberg/gutenberg.php' );
+
+	if ( empty( $gutenberg_plugin_path )
+	     || 0 !== validate_file( $gutenberg_plugin_path )
+	     || ! file_exists( $gutenberg_plugin_path )
+	) {
+		return false;
+	}
+
+	return $gutenberg_plugin_path;
+}
+
+/**
  * Ramp expects Gutenberg to be active
  * This function is going to load Gutenberg plugin if it's not already active
  *
@@ -129,24 +147,25 @@ function gutenberg_ramp_require_gutenberg() {
 
 	// perform any actions required before loading gutenberg
 	do_action( 'gutenberg_ramp_before_load_gutenberg' );
-	$gutenberg_include = apply_filters( 'gutenberg_ramp_gutenberg_load_path', WP_PLUGIN_DIR . '/gutenberg/gutenberg.php' );
 
-	if (    false === $gutenberg_include
-		||  0 !== validate_file( $gutenberg_include )
-		||  ! file_exists( $gutenberg_include )
-	) {
-		return false;
+	$validated_load_path = gutenberg_ramp_get_validated_gutenberg_load_path();
+	if ( false !== $validated_load_path ) {
+		include_once $validated_load_path;
 	}
 
-	include_once $gutenberg_include;
 	return true;
 
 }
 
 /**
- * Rquire Gutenberg Plugin
+ * Require Gutenberg Plugin
  */
 gutenberg_ramp_require_gutenberg();
+
+if ( Gutenberg_Ramp_Compatibility_Check::should_check_compatibility() ) {
+	$ramp_compatibility = new Gutenberg_Ramp_Compatibility_Check();
+	add_action( 'admin_init', [ $ramp_compatibility, 'maybe_display_notice' ] );
+}
 
 /**
  * Initialize Gutenberg Ramp
