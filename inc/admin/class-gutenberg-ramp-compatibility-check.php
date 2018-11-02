@@ -59,11 +59,7 @@ class Gutenberg_Ramp_Compatibility_Check {
 		<div class="notice notice-error is-dismissible">
 			<p>
 				<strong> <?php esc_html_e( 'Gutenberg Ramp functionality is disabled' ); ?></strong> <br/>
-				<?php if ( current_time( 'timestamp' ) > 1542672000 ): // November 20th, 2018 ?>
-					<?php esc_html_e( 'Gutenberg Ramp is no longer controlling where Gutenberg is loaded. Please update Gutenberg to at least version 3.5 or update to WordPress 5.0 to restore Gutenberg Ramp functionality.', 'gutenberg-ramp' ) ?>
-				<?php else: ?>
-					<?php esc_html_e( 'Gutenberg Ramp is no longer controlling where Gutenberg is loaded. Please update Gutenberg to at least version 3.5 to restore Gutenberg Ramp functionality.', 'gutenberg-ramp' ) ?>
-				<?php endif; ?>
+				<?php esc_html_e( 'The version of Gutenberg you have installed is not compatible with Gutenberg Ramp. To restore Ramp functionality, please upgrade to Gutenberg 4.1 (or newer) or WordPress 5.0 (or newer).', 'gutenberg-ramp' ) ?>
 			</p>
 		</div>
 		<?php
