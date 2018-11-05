@@ -65,6 +65,7 @@ class Gutenberg_Ramp_Post_Type_Settings_UI {
 				add_settings_error(
 					'gutenberg_ramp_post_types',
 					'gutenberg_ramp_post_types',
+					/* translators: %s will be replaced with the post type that can't be enabled */
 					sprintf( esc_html__( "Can't enable Gutenberg for post type \"%s\"" ), sanitize_title( $post_type ) )
 				);
 			}
@@ -158,6 +159,7 @@ class Gutenberg_Ramp_Post_Type_Settings_UI {
 		<div class="gutenberg-ramp-description">
 			<p>
 				<?php printf(
+				/* translators: %s will be replaced with <code>gutenberg_ramp_load_gutenberg()</code> */
 					esc_html__( 'For more granular control you can use the %s function.', 'gutenberg-ramp' ),
 					'<code>gutenberg_ramp_load_gutenberg()</code>'
 				); ?>
