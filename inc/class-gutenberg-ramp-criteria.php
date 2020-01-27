@@ -13,7 +13,7 @@ class Gutenberg_Ramp_Criteria {
 	/**
 	 * Get the desired criteria
 	 *
-	 * @param string $criteria_name - post_types, post_ids, load
+	 * @param string $criteria_name - post_types, post_ids, load, over_post_id
 	 *
 	 * @return mixed Return the values on success, false on failure
 	 */
@@ -150,7 +150,7 @@ class Gutenberg_Ramp_Criteria {
 			return false;
 		}
 
-		$criteria_whitelist = [ 'post_ids', 'post_types', 'load' ];
+		$criteria_whitelist = [ 'post_ids', 'post_types', 'load', 'over_post_id' ];
 		foreach ( $criteria as $key => $value ) {
 			if ( ! in_array( $key, $criteria_whitelist, true ) ) {
 				return false;
@@ -174,6 +174,9 @@ class Gutenberg_Ramp_Criteria {
 					if ( ! in_array( $value, [ 0, 1 ], true ) ) {
 						return false;
 					}
+					break;
+				case 'over_post_id':
+					// I we could check if it's a number?
 					break;
 				default:
 					break;

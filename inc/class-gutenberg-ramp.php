@@ -66,6 +66,10 @@ class Gutenberg_Ramp {
 			return false;
 		}
 
+		if ( $post->ID >= $criteria['over_post_id'] ) {
+			return true;
+		}
+
 		if ( $this->is_allowed_post_type( $post->ID ) ) {
 			return true;
 		}

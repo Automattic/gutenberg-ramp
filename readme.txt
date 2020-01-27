@@ -25,6 +25,7 @@ Loading behaviour is controlled by the `gutenberg_ramp_load_gutenberg()` functio
 * `load` (Int): `0|1`: never or always load Gutenberg
 * `post_ids` (Array of post_ids): loads Gutenberg for the specified post_ids
 * `post_types` (Array of post_types): loads Gutenberg for the specified post types.
+* `over_post_id` (ID): loads Gutenberg for any item over this ID
 
 == Code Examples ==
 
@@ -61,6 +62,7 @@ gutenberg_ramp_load_gutenberg(
 	[
 		'post_types' => [ 'test', 'scratch' ],
 		'post_ids'   => [ 12 ],
+		'over_post_id' => 100
 	]
 );
 </code>
