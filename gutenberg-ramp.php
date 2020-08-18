@@ -39,6 +39,8 @@ include __DIR__ . '/inc/admin/class-gutenberg-ramp-compatibility-check.php';
  */
 function gutenberg_ramp_load_gutenberg( $criteria = true ) {
 
+	_deprecated_function( 'gutenberg_ramp_load_gutenberg', '0.3', ' built-in filters instead. See https://developer.wordpress.org/reference/hooks/use_block_editor_for_post/ for more information' );
+
 	// only admin requests should refresh loading behavior
 	if ( ! is_admin() ) {
 		return;
