@@ -170,6 +170,51 @@ if ( Gutenberg_Ramp_Compatibility_Check::should_check_compatibility() ) {
 }
 
 /**
+ * Display notice about plugin being obsolete.
+ */
+function gutenberg_ramp_admin_notice() {
+	/*
+	 * Only display when user can manage
+	 * options, i.e. only to admins.
+	 */
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+
+	$gutenberg_ramp = Gutenberg_Ramp::get_instance();
+
+	/*
+	 * Do not display if the plugin is
+	 * not loaded.
+	 */
+	if ( false === $gutenberg_ramp->active ) {
+		return;
+	}
+
+	?>
+	<div class="notice notice-success is-dismissible">
+		<p><?php 
+			printf(
+				esc_html__(
+					'Gutenberg Ramp is deprecated and should be replaced by filters. See %shere%s for more information.',
+					'gutenberg-ramp' 
+				),
+				sprintf(
+					'<a href="%s" target="_new">',
+					esc_url(
+						'https://developer.wordpress.org/reference/hooks/use_block_editor_for_post/'
+					)
+				),
+				'</a>'
+			); ?>
+		</p>
+	</div>
+	<?php
+}
+
+add_action( 'admin_notices', 'gutenberg_ramp_admin_notice' );
+
+/**
  * Initialize Gutenberg Ramp
  */
 $gutenberg_ramp = Gutenberg_Ramp::get_instance();
