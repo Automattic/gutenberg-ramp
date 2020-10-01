@@ -109,17 +109,19 @@ echo ""
 echo "============================================================================================"
 echo "                                        Run-time parameters:"
 echo ""
-echo "Path to helper scripts: $GDS_HELPER_SCRIPT_FOLDER_PATH"
-echo "Path to workspace directory: $GDS_WORKSPACE"
-echo "Path to log file for Pull-Requests: $GDS_PR_LOG_FILE"
 echo "GitHub Repository owner: $GDS_GH_REPO_OWNER"
 echo "GitHub Repositories: $GDS_GH_REPO_NAMES"
 echo "GitHub Access Token: Provided."
+echo ""
+echo "Path to helper scripts: $GDS_HELPER_SCRIPT_FOLDER_PATH"
+echo "Path to workspace directory: $GDS_WORKSPACE"
+echo "Path to log file for Pull-Requests: $GDS_PR_LOG_FILE"
 echo ""
 echo "Path to PHP: $GDS_PHP_PATH"
 echo "Path to git: $GDS_GIT_PATH"
 echo "Path to curl: $GDS_CURL_PATH"
 echo "Path to mktemp: $GDS_MKTEMP_PATH"
+echo ""
 echo "============================================================================================"
 
 
@@ -225,15 +227,24 @@ for GDS_REPO_NAME in $(echo "$GDS_GH_REPO_NAMES") ; do
 			GDS_GH_PR_TITLE="Deprecation of Gutenberg Ramp (branch: $GDS_CHECKOUT_BRANCH_NAME)"
 			GDS_GH_PR_BODY="This PR is needed in order to remove any invocations to Gutenberg Ramp"
 
-			GDS_GH_PR_URL=`$GDS_HELPER_SCRIPT_FOLDER_PATH/json-helper.php \
+			GDS_GH_PR_NUMBER=`$GDS_HELPER_SCRIPT_FOLDER_PATH/json-helper.php \
 				"pr-create" \
 				"https://api.github.com/repos/$GDS_GH_REPO_OWNER/$GDS_REPO_NAME/pulls" \
 				"$GDS_GH_ACCESS_TOKEN" \
 				"{\"head\":\"$GDS_NEW_BRANCH_NAME\",\"base\":\"$GDS_CHECKOUT_BRANCH_NAME\",\"title\":\"$GDS_GH_PR_TITLE\",\"body\":\"$GDS_GH_PR_BODY\"}" \
 				| tee -a $GDS_TEMP_REPO_LOG`
 
+			GDS_GH_PR_URL="https://github.com/$GDS_GH_REPO_OWNER/$GDS_REPO_NAME/pull/$GDS_GH_PR_NUMBER"
+
 			gds_log $GDS_TEMP_REPO_LOG "URL to Pull-Request: $GDS_GH_PR_URL"
 			gds_log $GDS_PR_LOG_FILE "Pull-Request for $GDS_GH_REPO_OWNER/$GDS_REPO_NAME: $GDS_GH_PR_URL"
+
+			$GDS_HELPER_SCRIPT_FOLDER_PATH/json-helper.php \
+				"pr-add-issue" \
+				"https://api.github.com/repos/$GDS_GH_REPO_OWNER/$GDS_REPO_NAME/issues/$GDS_GH_PR_NUMBER/labels" \
+				"$GDS_GH_ACCESS_TOKEN" \
+				"{\"labels\":[\"gutenberg-ramp-deprecation\"]}" \
+				| tee -a $GDS_TEMP_REPO_LOG
 		fi
 
 		popd && popd

@@ -80,13 +80,20 @@ if ( $argv[1] == "pr-create" ) {
 		$argv[3]
 	);
 
-
 	$json = json_decode(
 		$json,
 		true
 	);
 
-	echo $json["html_url"] . PHP_EOL;
+	echo $json["number"] . PHP_EOL;
+}
+
+else if ( $argv[1] == "pr-add-issue" ) {
+	$json = json_parser_post_url(
+		$argv[2],
+		json_decode( $argv[4], true ),
+		$argv[3]
+	);
 }
 
 exit( 0 );
