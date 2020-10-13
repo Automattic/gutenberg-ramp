@@ -44,6 +44,12 @@ function json_parser_post_url(
 			);
 		}
 
+		$github_postfields = str_replace(
+			"%LINEBREAK%",
+			"\n",
+			$github_postfields
+		);
+
 		curl_setopt(
 			$ch,
 			CURLOPT_POSTFIELDS,
@@ -71,6 +77,7 @@ function json_parser_post_url(
 }
 
 global $argv;
+
 
 
 if ( $argv[1] == "pr-create" ) {
