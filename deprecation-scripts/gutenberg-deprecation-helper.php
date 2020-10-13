@@ -10,32 +10,38 @@ $file = file_get_contents(
 );
 
 if ( $argv[1] == "other" ) {
-	$file = preg_replace(
-		"/ramp_for_gutenberg_load_gutenberg/",
+	$file = str_replace(
+		"ramp_for_gutenberg_load_gutenberg",
 		"gutenberg_ramp_load_gutenberg",
 		$file
 	);
 
-	$file = preg_replace(
-		"/wpcom_vip_load_gutenberg/",
+	$file = str_replace(
+		"wpcom_vip_load_gutenberg",
 		"gutenberg_ramp_load_gutenberg",
 		$file
 	);
 
-	$file = preg_replace(
-		"/gutenberg_ramp_load_gutenberg\( true \);/",
+	$file = str_replace(
+		"gutenberg_ramp_load_gutenberg( true );",
 		"add_filter( 'use_block_editor_for_post', '__return_true' );",
 		$file
 	);
 
-	$file = preg_replace(
-		"/gutenberg_ramp_load_gutenberg\( false \);/",
+	$file = str_replace(
+		"gutenberg_ramp_load_gutenberg( false );",
 		"add_filter( 'use_block_editor_for_post', '__return_false' );",
 		$file
 	);
 
-	$file = preg_replace(
-		"/gutenberg_ramp_load_gutenberg\(\);/",
+	$file = str_replace(
+		"gutenberg_ramp_load_gutenberg();",
+		"add_filter( 'use_block_editor_for_post', '__return_true' );",
+		$file
+	);
+
+	$file = str_replace(
+		"gutenberg_ramp_load_gutenberg( );",
 		"add_filter( 'use_block_editor_for_post', '__return_true' );",
 		$file
 	);
@@ -47,7 +53,19 @@ if ( $argv[1] == "other" ) {
 	);
 
 	$file = str_replace(
+		"gutenberg_ramp_load_gutenberg( array( 'load' => 1, ) );",
+		"add_filter( 'use_block_editor_for_post', '__return_true' );",
+		$file
+	);
+
+	$file = str_replace(
 		"gutenberg_ramp_load_gutenberg( [ 'load' => 1 ] );",
+		"add_filter( 'use_block_editor_for_post', '__return_true' );",
+		$file
+	);
+
+	$file = str_replace(
+		"gutenberg_ramp_load_gutenberg( array( 'load' => 1 ) );",
 		"add_filter( 'use_block_editor_for_post', '__return_true' );",
 		$file
 	);
@@ -59,7 +77,7 @@ if ( $argv[1] == "other" ) {
 	);
 
 	$file = str_replace(
-		"gutenberg_ramp_load_gutenberg( [ 'load' => true ] );",
+		"gutenberg_ramp_load_gutenberg( array( 'load' => true ) );",
 		"add_filter( 'use_block_editor_for_post', '__return_true' );",
 		$file
 	);
@@ -71,7 +89,19 @@ if ( $argv[1] == "other" ) {
 	);
 
 	$file = str_replace(
+		"gutenberg_ramp_load_gutenberg( array( 'load' => 0, ) );",
+		"add_filter( 'use_block_editor_for_post', '__return_false' );",
+		$file
+	);
+
+	$file = str_replace(
 		"gutenberg_ramp_load_gutenberg( [ 'load' => 0 ] );",
+		"add_filter( 'use_block_editor_for_post', '__return_false' );",
+		$file
+	);
+
+	$file = str_replace(
+		"gutenberg_ramp_load_gutenberg( array( 'load' => 0 ) );",
 		"add_filter( 'use_block_editor_for_post', '__return_false' );",
 		$file
 	);
@@ -83,7 +113,19 @@ if ( $argv[1] == "other" ) {
 	);
 
 	$file = str_replace(
+		"gutenberg_ramp_load_gutenberg( array( 'load' => false, ) );",
+		"add_filter( 'use_block_editor_for_post', '__return_false' );",
+		$file
+	);
+
+	$file = str_replace(
 		"gutenberg_ramp_load_gutenberg( [ 'load' => false ] );",
+		"add_filter( 'use_block_editor_for_post', '__return_false' );",
+		$file
+	);
+
+	$file = str_replace(
+		"gutenberg_ramp_load_gutenberg( array( 'load' => false ) );",
 		"add_filter( 'use_block_editor_for_post', '__return_false' );",
 		$file
 	);
