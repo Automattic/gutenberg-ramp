@@ -88,7 +88,7 @@ if ( $argv[1] == "pr-create" ) {
 	echo $json["number"] . PHP_EOL;
 }
 
-else if ( $argv[1] == "pr-add-issue" ) {
+else if ( $argv[1] == "pr-add-label" ) {
 	$json = json_parser_post_url(
 		$argv[2],
 		json_decode( $argv[4], true ),
