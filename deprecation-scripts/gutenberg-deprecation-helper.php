@@ -22,150 +22,51 @@ if ( $argv[1] == "other" ) {
 		$file
 	);
 
-	$file = str_replace(
-		"gutenberg_ramp_load_gutenberg( true );",
-		"add_filter( 'use_block_editor_for_post', '__return_true' );",
-		$file
-	);
-
-	$file = str_replace(
-		"gutenberg_ramp_load_gutenberg( false );",
+	$file = preg_replace(
+		"/gutenberg_ramp_load_gutenberg\((\s*)(false|0)(\s*)\);/im",
 		"add_filter( 'use_block_editor_for_post', '__return_false' );",
 		$file
 	);
 
-	$file = str_replace(
-		"gutenberg_ramp_load_gutenberg();",
-		"add_filter( 'use_block_editor_for_post', '__return_true' );",
-		$file
-	);
-
-	$file = str_replace(
-		"gutenberg_ramp_load_gutenberg( );",
-		"add_filter( 'use_block_editor_for_post', '__return_true' );",
-		$file
-	);
-
-	$file = str_replace(
-		"gutenberg_ramp_load_gutenberg( [ 'load' => 1, ] );",
-		"add_filter( 'use_block_editor_for_post', '__return_true' );",
-		$file
-	);
-
-	$file = str_replace(
-		"gutenberg_ramp_load_gutenberg( array( 'load' => 1, ) );",
-		"add_filter( 'use_block_editor_for_post', '__return_true' );",
-		$file
-	);
-
-	$file = str_replace(
-		"gutenberg_ramp_load_gutenberg( [ 'load' => 1 ] );",
-		"add_filter( 'use_block_editor_for_post', '__return_true' );",
-		$file
-	);
-
-	$file = str_replace(
-		"gutenberg_ramp_load_gutenberg( array( 'load' => 1 ) );",
-		"add_filter( 'use_block_editor_for_post', '__return_true' );",
-		$file
-	);
-
-	$file = str_replace(
-		"gutenberg_ramp_load_gutenberg( [ 'load' => true, ] );",
-		"add_filter( 'use_block_editor_for_post', '__return_true' );",
-		$file
-	);
-
-	$file = str_replace(
-		"gutenberg_ramp_load_gutenberg( array( 'load' => true ) );",
-		"add_filter( 'use_block_editor_for_post', '__return_true' );",
-		$file
-	);
-
-	$file = str_replace(
-		"gutenberg_ramp_load_gutenberg( [ 'load' => 0, ] );",
+	$file = preg_replace(
+		"/gutenberg_ramp_load_gutenberg\((\s*)\[(\s*)'load'(\s*)=>(\s*)(0|false),{0,1}(\s*)\](\s*)\);/im",
 		"add_filter( 'use_block_editor_for_post', '__return_false' );",
 		$file
 	);
 
-	$file = str_replace(
-		"gutenberg_ramp_load_gutenberg( array( 'load' => 0, ) );",
+	$file = preg_replace(
+		"/gutenberg_ramp_load_gutenberg\((\s*)array\((\s*)'load'(\s*)=>(\s*)(0|false),{0,1}(\s*)\)(\s*)\);/im",
 		"add_filter( 'use_block_editor_for_post', '__return_false' );",
 		$file
 	);
 
-	$file = str_replace(
-		"gutenberg_ramp_load_gutenberg( [ 'load' => 0 ] );",
-		"add_filter( 'use_block_editor_for_post', '__return_false' );",
+
+	$file = preg_replace(
+		"/gutenberg_ramp_load_gutenberg\((\s*)\);/im",
+		"add_filter( 'use_block_editor_for_post', '__return_true' );",
 		$file
 	);
 
-	$file = str_replace(
-		"gutenberg_ramp_load_gutenberg( array( 'load' => 0 ) );",
-		"add_filter( 'use_block_editor_for_post', '__return_false' );",
+	$file = preg_replace(
+		"/gutenberg_ramp_load_gutenberg\((\s*)(true|1)(\s*)\);/im",
+		"add_filter( 'use_block_editor_for_post', '__return_true' );",
 		$file
 	);
 
-	$file = str_replace(
-		"gutenberg_ramp_load_gutenberg( [ 'load' => false, ] );",
-		"add_filter( 'use_block_editor_for_post', '__return_false' );",
+	$file = preg_replace(
+		"/gutenberg_ramp_load_gutenberg\((\s*)\[(\s*)'load'(\s*)=>(\s*)(1|true),{0,1}(\s*)\](\s*)\);/im",
+		"add_filter( 'use_block_editor_for_post', '__return_true' );",
 		$file
 	);
 
-	$file = str_replace(
-		"gutenberg_ramp_load_gutenberg( array( 'load' => false, ) );",
-		"add_filter( 'use_block_editor_for_post', '__return_false' );",
-		$file
-	);
-
-	$file = str_replace(
-		"gutenberg_ramp_load_gutenberg( [ 'load' => false ] );",
-		"add_filter( 'use_block_editor_for_post', '__return_false' );",
-		$file
-	);
-
-	$file = str_replace(
-		"gutenberg_ramp_load_gutenberg( array( 'load' => false ) );",
-		"add_filter( 'use_block_editor_for_post', '__return_false' );",
+	$file = preg_replace(
+		"/gutenberg_ramp_load_gutenberg\((\s*)array\((\s*)'load'(\s*)=>(\s*)(1|true),{0,1}(\s*)\)(\s*)\);/im",
+		"add_filter( 'use_block_editor_for_post', '__return_true' );",
 		$file
 	);
 }
 
 else if ( $argv[1] == "function_exists" ) {
-	
-/*
-	$file = preg_replace(
-		"/if.\(.function_exists\(.'gutenberg_ramp_load_gutenberg'.\).\).{((.|\\r|\\n|\\t|\s+|\S+).*)}/",
-		"$1",
-		$file
-	);
-
-
-	$file = preg_replace(
-		"/if.\(.function_exists\(.'gutenberg_ramp_load_gutenberg'.\).\).{((.|\\r|\\n|\\t|\s+|\S+).*)}/m",
-		"$1",
-		$file,
-		1
-	);
-*/
-	$file = str_replace("\n", " ___LINEBRK___ ", $file);
-/*
-	$file = preg_replace(
-		"/if.\(.function_exists\(.'gutenberg_ramp_load_gutenberg'.\).\).{((.|\\r|\\n|\\t|\s+|\S+).*)}/",
-		"$1",
-		$file,
-		1
-	);
-*/
-
-	$file = preg_replace(
-		"/if.\(.function_exists\(.'gutenberg_ramp_load_gutenberg'.\).\).\{((\s*\S+\s*).*)\}/",
-		"$1",
-		$file,
-		1
-	);
-
-	$file = str_replace(" ___LINEBRK___ ", "\n", $file);
 }
 
 else {
