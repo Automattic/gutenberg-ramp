@@ -191,7 +191,6 @@ for GDS_REPO_NAME in $(echo "$GDS_GH_REPO_NAMES") ; do
 			GDS_TEMP_FILE=`$GDS_MKTEMP_PATH /tmp/gds-XXXXXXXXX.php`
 		
 			$GDS_HELPER_SCRIPT_FOLDER_PATH/gutenberg-deprecation-helper.php other < $GDS_FILE_NAME \
-			| $GDS_HELPER_SCRIPT_FOLDER_PATH/gutenberg-deprecation-helper.php function_exists \
 			> $GDS_TEMP_FILE
 
 			TEMP_NOW_MD5=`md5sum $GDS_TEMP_FILE`
