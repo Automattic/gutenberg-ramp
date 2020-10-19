@@ -138,6 +138,7 @@ echo "==========================================================================
 
 gds_continue
 
+mkdir -p $GDS_WORKSPACE
 
 for GDS_REPO_NAME in $(echo "$GDS_GH_REPO_NAMES") ; do
 
@@ -263,11 +264,20 @@ for GDS_REPO_NAME in $(echo "$GDS_GH_REPO_NAMES") ; do
 				$GDS_GIT_PATH push --set-upstream "origin" $GDS_NEW_BRANCH_NAME | tee -a $GDS_TEMP_REPO_LOG && \
 
 				GDS_GH_PR_TITLE="Deprecation of Gutenberg Ramp (branch: $GDS_CHECKOUT_BRANCH_NAME)"
-				GDS_GH_PR_BODY="This PR is needed in order to remove any invocations to Gutenberg Ramp."
+				GDS_GH_PR_BODY="This Pull-Request is needed in order to remove any invocations to Gutenberg Ramp."
 
-				GDS_CALLS_REMAINING_FILES_HTML=`echo $GDS_CALLS_REMAINING_FILES | sed 's/\.\//%LINEBREAK%\* /g'`
+				GDS_CALLS_REMAINING_FILES_HTML=""
 
-				GDS_GH_PR_BODY="$GDS_GH_PR_BODY <br><br>Note that there are a number of files that still will need to be inspected manually, as these contain references to Gutenberg Ramp: $GDS_CALLS_REMAINING_FILES_HTML"
+				for TMP_FILE_NAME in $GDS_CALLS_REMAINING_FILES; do
+					TMP_FILE_NAME=`echo $TMP_FILE_NAME | sed 's/\.\///g'`
+					GDS_CALLS_REMAINING_FILES_HTML="$GDS_CALLS_REMAINING_FILES_HTML %LINEBREAK%* <a href=\\\"https://github.com/$GDS_GH_REPO_OWNER/$GDS_REPO_NAME/blob/$GDS_CHECKOUT_BRANCH_NAME/$TMP_FILE_NAME\\\">$TMP_FILE_NAME</a>"
+					gds_log $GDS_TEMP_REPO_LOG "File needing more attention detected (branch: $GDS_CHECKOUT_BRANCH_NAME): $TMP_FILE_NAME"
+				done
+
+
+				if [ "GDS_CALLS_REMAINING_FILES_HTML" != "" ] ; then
+					GDS_GH_PR_BODY="$GDS_GH_PR_BODY<br><br>Note that there are some files that need to be inspected manually, as these still contain references to Gutenberg Ramp (look for calls to \`gutenberg_ramp_load_gutenberg()\`): %LINEBREAK%$GDS_CALLS_REMAINING_FILES_HTML"
+				fi
 
 				GDS_GH_PR_NUMBER=`$GDS_HELPER_SCRIPT_FOLDER_PATH/json-helper.php \
 					"pr-create" \
