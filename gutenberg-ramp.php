@@ -39,6 +39,7 @@ include __DIR__ . '/inc/admin/class-gutenberg-ramp-compatibility-check.php';
  */
 function gutenberg_ramp_load_gutenberg( $criteria = true ) {
 
+	// Ignore the awkward phrasing in the 3rd param; we're skipping the word "Use" because core already adds that.
 	_deprecated_function( 'gutenberg_ramp_load_gutenberg', '0.3', ' built-in filters instead. See https://developer.wordpress.org/reference/hooks/use_block_editor_for_post/ for more information' );
 
 	// only admin requests should refresh loading behavior
