@@ -223,6 +223,8 @@ for GDS_REPO_NAME in $(echo "$GDS_GH_REPO_NAMES") ; do
 
 			$GDS_GIT_PATH checkout . | tee -a $GDS_TEMP_REPO_LOG
 
+			git rm -f $GDS_VIP_GUTENBERG_CONFIG_FILE_PATH
+
 			GDS_REPOS_LEFT="$GDS_REPOS_LEFT $GDS_REPO_NAME"
 
 			popd && popd
