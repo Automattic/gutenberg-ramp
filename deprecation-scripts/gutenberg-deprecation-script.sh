@@ -179,7 +179,7 @@ for GDS_REPO_NAME in $(echo "$GDS_GH_REPO_NAMES") ; do
 		gds_log $GDS_TEMP_REPO_LOG "Checking out new branch $GDS_NEW_BRANCH_NAME"
 		gds_new_branch "$GDS_NEW_BRANCH_NAME"
 	
-		GDS_PROCESS_FILES=`find "." -name '*.php' -type f`
+		GDS_PROCESS_FILES=`(grep -R -i gutenberg |awk -F ':' '{print $1}' |grep '.php'  | sort | uniq )2>/dev/null`
 		GDS_PROCESSED_FILES_CHANGED=""
 		GDS_CALLS_REMAINING_FILES=""
 
@@ -259,12 +259,12 @@ for GDS_REPO_NAME in $(echo "$GDS_GH_REPO_NAMES") ; do
 			elif [ "$GDS_ALTERED_LINES_CNT" -gt "0" ] ; then
 
 				gds_log $GDS_TEMP_REPO_LOG "Committing..." && \
-				$GDS_GIT_PATH commit $GDS_PROCESSED_FILES_CHANGED | tee -a $GDS_TEMP_REPO_LOG && \
+				$GDS_GIT_PATH commit -m "Replacing gutenberg-ramp with filter" $GDS_PROCESSED_FILES_CHANGED | tee -a $GDS_TEMP_REPO_LOG && \
 				gds_log $GDS_TEMP_REPO_LOG "Pushing..." && \
 				$GDS_GIT_PATH push --set-upstream "origin" $GDS_NEW_BRANCH_NAME | tee -a $GDS_TEMP_REPO_LOG && \
 
 				GDS_GH_PR_TITLE="Deprecation of Gutenberg Ramp (branch: $GDS_CHECKOUT_BRANCH_NAME)"
-				GDS_GH_PR_BODY="This Pull-Request is needed in order to remove any invocations to Gutenberg Ramp."
+				GDS_GH_PR_BODY="This Pull-Request is needed in order to remove any invocations to Gutenberg Ramp. For more background information, please see our <a href=\\\"https://lobby.vip.wordpress.com/2020/11/23/removing-gutenberg-ramp/\\\">lobby post</a>."
 
 				GDS_CALLS_REMAINING_FILES_HTML=""
 
@@ -276,14 +276,14 @@ for GDS_REPO_NAME in $(echo "$GDS_GH_REPO_NAMES") ; do
 
 
 				if [ "GDS_CALLS_REMAINING_FILES_HTML" != "" ] ; then
-					GDS_GH_PR_BODY="$GDS_GH_PR_BODY<br><br>Note that there are some files that need to be inspected manually, as these still contain references to Gutenberg Ramp (look for calls to \`gutenberg_ramp_load_gutenberg()\`): %LINEBREAK%$GDS_CALLS_REMAINING_FILES_HTML"
+					GDS_GH_PR_BODY="$GDS_GH_PR_BODY<br><br>Note that there are some files that need to be inspected manually, as these may still contain references to Gutenberg Ramp (look for calls to \`gutenberg_ramp_load_gutenberg()\`): %LINEBREAK%$GDS_CALLS_REMAINING_FILES_HTML"
 				fi
 
 				GDS_GH_PR_NUMBER=`$GDS_HELPER_SCRIPT_FOLDER_PATH/json-helper.php \
 					"pr-create" \
 					"https://api.github.com/repos/$GDS_GH_REPO_OWNER/$GDS_REPO_NAME/pulls" \
 					"$GDS_GH_ACCESS_TOKEN" \
-					"{\"draft\":true,\"head\":\"$GDS_NEW_BRANCH_NAME\",\"base\":\"$GDS_CHECKOUT_BRANCH_NAME\",\"title\":\"$GDS_GH_PR_TITLE\",\"body\":\"$GDS_GH_PR_BODY\"}" \
+					"{\"head\":\"$GDS_NEW_BRANCH_NAME\",\"base\":\"$GDS_CHECKOUT_BRANCH_NAME\",\"title\":\"$GDS_GH_PR_TITLE\",\"body\":\"$GDS_GH_PR_BODY\"}" \
 					| tee -a $GDS_TEMP_REPO_LOG`
 
 				GDS_GH_PR_URL="https://github.com/$GDS_GH_REPO_OWNER/$GDS_REPO_NAME/pull/$GDS_GH_PR_NUMBER"
