@@ -197,6 +197,7 @@ for GDS_REPO_NAME in $(echo "$GDS_GH_REPO_NAMES") ; do
 
 		echo '<?php' > $GDS_VIP_GUTENBERG_CONFIG_FILE_PATH
 		echo "" >> $GDS_VIP_GUTENBERG_CONFIG_FILE_PATH
+		echo "/* VIP: Disable Gutenberg editor */" >> $GDS_VIP_GUTENBERG_CONFIG_FILE_PATH
 		echo "add_filter( 'use_block_editor_for_post', '__return_false' );" >> $GDS_VIP_GUTENBERG_CONFIG_FILE_PATH
 
 		$GDS_GIT_PATH add $GDS_VIP_GUTENBERG_CONFIG_FILE_PATH
