@@ -181,12 +181,12 @@ for GDS_REPO_NAME in $(echo "$GDS_GH_REPO_NAMES") ; do
 		gds_log $GDS_TEMP_REPO_LOG "Checking out new branch $GDS_NEW_BRANCH_NAME"
 		gds_new_branch "$GDS_NEW_BRANCH_NAME"
 
-		GDS_FOUND_GR_INVOCATIONS1=`grep -R -i gutenberg_ramp_load_gutenberg  | wc -l`
-		GDS_FOUND_GR_INVOCATIONS2=`grep -R -i ramp_for_gutenberg_load_gutenberg | wc -l`
-		GDS_FOUND_GR_INVOCATIONS3=`grep -R -i wpcom_vip_load_gutenberg | wc -l`
-		GDS_FOUND_GR_INVOCATIONS4=`grep -R -i use_block_editor_for_post | wc -l`
+		GDS_FOUND_GR_INVOCATIONS1=`grep -R -i gutenberg_ramp_load_gutenberg  | $GDS_WC_PATH -l`
+		GDS_FOUND_GR_INVOCATIONS2=`grep -R -i ramp_for_gutenberg_load_gutenberg | $GDS_WC_PATH -l`
+		GDS_FOUND_GR_INVOCATIONS3=`grep -R -i wpcom_vip_load_gutenberg | $GDS_WC_PATH -l`
+		GDS_FOUND_GR_INVOCATIONS4=`grep -R -i use_block_editor_for_post | $GDS_WC_PATH -l`
 
-		gds_log $GDS_TEMP_REPO_LOG "Found matches: $GDS_FOUND_GR_INVOCATIONS1 + $GDS_FOUND_GR_INVOCATIONS2 + $GDS_FOUND_GR_INVOCATIONS3 + $GDS_FOUND_GR_INVOCATIONS4"	
+		gds_log $GDS_TEMP_REPO_LOG "Found matches: $GDS_FOUND_GR_INVOCATIONS1 + $GDS_FOUND_GR_INVOCATIONS2 + $GDS_FOUND_GR_INVOCATIONS3 + $GDS_FOUND_GR_INVOCATIONS4"
 
 		if [ "$GDS_FOUND_GR_INVOCATIONS1" != "0" ] || [ "$GDS_FOUND_GR_INVOCATIONS2" != "0" ] || [ "$GDS_FOUND_GR_INVOCATIONS3" != "0" ] || [ "$GDS_FOUND_GR_INVOCATIONS4" != "0" ] ; then
 			gds_log $GDS_TEMP_REPO_LOG "Invocations to gutenberg-ramp found, or filters for block editor, so not adding code"
