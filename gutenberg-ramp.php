@@ -191,6 +191,16 @@ function gutenberg_ramp_admin_notice() {
 		return;
 	}
 
+	$is_vip_env = ( ( defined( 'WPCOM_IS_VIP_ENV' ) ) && ( true === WPCOM_IS_VIP_ENV ) );
+
+	if ( $is_vip_env ) {
+		$notice_url = 'https://lobby.vip.wordpress.com/2020/11/23/removing-gutenberg-ramp/';
+	}
+
+	else {
+		$notice_url = 'https://developer.wordpress.org/reference/hooks/use_block_editor_for_post/';
+	}
+
 	?>
 	<div class="notice notice-success is-dismissible">
 		<p><?php 
@@ -201,9 +211,7 @@ function gutenberg_ramp_admin_notice() {
 				),
 				sprintf(
 					'<a href="%s" target="_new">',
-					esc_url(
-						'https://developer.wordpress.org/reference/hooks/use_block_editor_for_post/'
-					)
+					esc_url( $notice_url )
 				),
 				'</a>'
 			); ?>
