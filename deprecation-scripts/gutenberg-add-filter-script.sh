@@ -60,6 +60,7 @@ GDS_GH_REPO_NAMES=`echo $GDS_GH_REPO_NAMES | sed 's/,/ /g'`
 GDS_BRANCHES=`echo $GDS_BRANCHES | sed 's/,/ /g'`
 
 GDS_PR_LOG_FILE="$GDS_WORKSPACE/pull-request-log-file.log"
+GDS_NO_PR_LOG_FILE="$GDS_WORKSPACE/non-pull-request-log-file.log"
 
 GDS_REPOS_LEFT=""
 
@@ -190,6 +191,7 @@ for GDS_REPO_NAME in $(echo "$GDS_GH_REPO_NAMES") ; do
 
 		if [ "$GDS_FOUND_GR_INVOCATIONS1" != "0" ] || [ "$GDS_FOUND_GR_INVOCATIONS2" != "0" ] || [ "$GDS_FOUND_GR_INVOCATIONS3" != "0" ] || [ "$GDS_FOUND_GR_INVOCATIONS4" != "0" ] ; then
 			gds_log $GDS_TEMP_REPO_LOG "Invocations to gutenberg-ramp found, or filters for block editor, so not adding code"
+			gds_log $GDS_NO_PR_LOG_FILE "No code added for: $GDS_REPO_NAME (branch: $GDS_CHECKOUT_BRANCH_NAME)"
 			continue
 		fi
 
