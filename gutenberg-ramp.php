@@ -207,7 +207,7 @@ function gutenberg_ramp_admin_notice() {
 		<p><?php 
 			printf(
 				esc_html__(
-					'Gutenberg Ramp is deprecated and should be replaced by filters. See %sdocumentation%s for more information.',
+					'The Gutenberg Ramp plugin is deprecated and your installation may require some changes. Please read %sour documentation%s for more information.',
 					'gutenberg-ramp' 
 				),
 				sprintf(
