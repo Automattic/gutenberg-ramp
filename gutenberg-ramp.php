@@ -50,13 +50,11 @@ function gutenberg_ramp_load_gutenberg( $criteria = true ) {
 		( rand( 0, 99 ) === 50 ) &&
 		( function_exists( 'wpcom_vip_irc' ) )
 	) {
-		global $wpdb;
-
 		wpcom_vip_irc(
 			'#vip-gutenberg-ramp-deprecation',
 			sprintf(
 				'Site with ID %d is still using Gutenberg Ramp plugin (via %s())',
-				(int) $wpdb->blogid,
+				VIP_GO_APP_ID,
 				__FUNCTION__
 			),
 			0 // Lowest priority
