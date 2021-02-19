@@ -42,14 +42,25 @@ function gutenberg_ramp_load_gutenberg( $criteria = true ) {
 	// Ignore the awkward phrasing in the 3rd param; we're skipping the word "Use" because core already adds that.
 	_deprecated_function( 'gutenberg_ramp_load_gutenberg', '0.3', ' built-in filters instead. See https://developer.wordpress.org/reference/hooks/use_block_editor_for_post/ for more information' );
 
+	$vip_go_cache_string = 'skip';
+	$vip_go_cache_group = 'vip-go-gutenberg-ramp-group';
+	$vip_go_cache_key = 'vip-go-gutenberg-ramp';
+
 	// If on VIP Go, and with only 1% of calls, alert
 	// VIP that someone is still using the plugin
 	if (
 		( defined( 'WPCOM_IS_VIP_ENV' ) ) &&
 		( true === WPCOM_IS_VIP_ENV ) &&
-		( rand( 0, 99 ) === 50 ) &&
+		( defined( 'WP_CLI' ) ) &&
+		( $vip_go_cache_string !== wp_cache_get( $vip_go_cache_key, $vip_go_cache_group ) ) &&
 		( function_exists( 'wpcom_vip_irc' ) )
 	) {
+		wp_cache_set(
+			$vip_go_cache_key,
+			$vip_go_cache_string,
+			$vip_go_cache_group
+		);
+
 		wpcom_vip_irc(
 			'#vip-gutenberg-ramp-deprecation',
 			sprintf(
