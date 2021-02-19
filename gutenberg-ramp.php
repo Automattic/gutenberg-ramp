@@ -52,6 +52,7 @@ function gutenberg_ramp_load_gutenberg( $criteria = true ) {
 		( defined( 'WPCOM_IS_VIP_ENV' ) ) &&
 		( true === WPCOM_IS_VIP_ENV ) &&
 		( defined( 'WP_CLI' ) ) &&
+		( WP_CLI ) &&
 		( $vip_go_cache_string !== wp_cache_get( $vip_go_cache_key, $vip_go_cache_group ) ) &&
 		( function_exists( 'wpcom_vip_irc' ) )
 	) {
