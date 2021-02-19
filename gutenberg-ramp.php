@@ -46,8 +46,9 @@ function gutenberg_ramp_load_gutenberg( $criteria = true ) {
 	$vip_go_cache_group = 'vip-go-gutenberg-ramp-group';
 	$vip_go_cache_key = 'vip-go-gutenberg-ramp';
 
-	// If on VIP Go, and with only 1% of calls, alert
-	// VIP that someone is still using the plugin
+	// If on VIP Go when using WP-CLI, alert
+	// VIP that someone is still using the plugin, but
+	// rate-limit this.
 	if (
 		( defined( 'WPCOM_IS_VIP_ENV' ) ) &&
 		( true === WPCOM_IS_VIP_ENV ) &&
@@ -59,7 +60,8 @@ function gutenberg_ramp_load_gutenberg( $criteria = true ) {
 		wp_cache_set(
 			$vip_go_cache_key,
 			$vip_go_cache_string,
-			$vip_go_cache_group
+			$vip_go_cache_group,
+			HOUR_IN_SECONDS * 10
 		);
 
 		wpcom_vip_irc(
