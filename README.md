@@ -69,6 +69,19 @@ gutenberg_ramp_load_gutenberg(
 ```
 
 
+To load Gutenberg based on more specific conditions and advanced logic (for example only for a specific page template) call `gutenberg_ramp_load_gutenberg()` in the init hook instead of calling it directly, and use the post ID from the page request's `post` parameter to call whatever WordPress functions you need, like `get_page_template_slug`:
+```php
+function setGutenbergRampSetting() {
+  if (isset($_REQUEST["post"])) {
+    $pageTemplate = get_page_template_slug($_REQUEST["post"]);
+    $useGutenberg = $pageTemplate === 'page-gutenberg.php';
+    // other conditions and logic could go here, then call the function with the result
+    gutenberg_ramp_load_gutenberg($useGutenberg);
+  }
+}
+add_action('init', 'setGutenbergRampSetting');
+```
+
 ### UI
 
 Gutenberg Ramp adds a section to the Settings -> Writing menu that allows post_type control of Gutenberg loading.  This can be used in place of specifying criteria in code.
