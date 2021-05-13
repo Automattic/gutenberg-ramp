@@ -1,5 +1,10 @@
 # Gutenberg Ramp
 
+
+### Deprecation notice
+
+Please note that this plugin is deprecated. The WordPress core filters should be used instead. See [here](https://developer.wordpress.org/reference/hooks/use_block_editor_for_post/).
+
 ### Overview
 
 Gutenberg Ramp is a plugin that manages the state of Gutenberg in the post-edit context.  It loads or unloads Gutenberg in post-edit according to criteria specified in theme code.  It is agnostic about whether Gutenberg is loading from core or via the plugin.
