@@ -4,7 +4,7 @@ Tags: gutenberg, ramp, classic editor, legacy editor, gutenberg ramp
 Requires at least: 4.9.8
 Tested up to: 5.0
 Requires PHP: 5.5
-Stable tag: 1.1.0
+Stable tag: 1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -94,6 +94,9 @@ Absolutely! Please create issues and pull requests on [GitHub here.](https://git
 1. Settings for Gutenberg Ramp via Settings -> Writing
 
 == Changelog ==
+
+= 1.2 =
+* added deprecation notices
 
 = 1.1.0 =
 * prepares Gutenberg Ramp for WordPress 5.0 release
